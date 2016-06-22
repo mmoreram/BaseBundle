@@ -1,0 +1,22 @@
+services:
+
+    #
+    # Providers
+    #
+    base.container_parameters:
+        class: Symfony\Component\DependencyInjection\ParameterBag\ParameterBag
+        factory:
+            - '@service_container'
+            - getParameterBag
+
+    base.entity_manager_provider:
+        class: Mmoreram\BaseBundle\Provider\EntityManagerProvider
+        arguments:
+            - '@doctrine'
+            - '@base.container_parameters'
+
+    base.repository_provider:
+        class: Mmoreram\BaseBundle\Provider\RepositoryProvider
+        arguments:
+            - '@base.entity_manager_provider'
+            - '@base.container_parameters'

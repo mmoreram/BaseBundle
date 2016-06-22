@@ -1,0 +1,1 @@
+Base Bundle for Symfony2 Bundles
