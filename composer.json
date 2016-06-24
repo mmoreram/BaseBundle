@@ -1,8 +1,8 @@
 {
-    "name": "mmoreram/common-bundle",
+    "name": "mmoreram/base-bundle",
     "description": "Base Bundle for all standard Symfony Bundles",
     "keywords": ["bundle"],
-    "homepage": "https://github.com/mmoreram/CommonBundle",
+    "homepage": "https://github.com/mmoreram/BaseBundle",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
@@ -12,7 +12,7 @@
         },
         {
             "name": "Symfony Community",
-            "homepage": "https://github.com/mmoreram/CommonBundle/contributors"
+            "homepage": "https://github.com/mmoreram/BaseBundle/contributors"
         }
     ],
     "require": {
@@ -31,10 +31,10 @@
         "friendsofphp/php-cs-fixer": "1.11",
         "mmoreram/php-formatter": "1.1.0"
     },
-    "target-dir": "Mmoreram/CommonBundle",
+    "target-dir": "Mmoreram/BaseBundle",
     "autoload": {
         "psr-4": {
-            "Mmoreram\\CommonBundle\\": ""
+            "Mmoreram\\BaseBundle\\": ""
         }
     },
     "scripts": {
