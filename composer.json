@@ -31,7 +31,6 @@
         "friendsofphp/php-cs-fixer": "1.11",
         "mmoreram/php-formatter": "1.1.0"
     },
-    "target-dir": "Mmoreram/BaseBundle",
     "autoload": {
         "psr-4": {
             "Mmoreram\\BaseBundle\\": ""
