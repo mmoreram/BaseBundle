@@ -15,7 +15,7 @@ services:
             - '@doctrine'
             - '@base.container_parameters'
 
-    base.repository_provider:
+    base.entity_repository_provider:
         class: Mmoreram\BaseBundle\Provider\RepositoryProvider
         arguments:
             - '@base.entity_manager_provider'
