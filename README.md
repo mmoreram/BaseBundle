@@ -370,6 +370,7 @@ class MyExtension extends BaseExtension
         ];
     }
 }
+```
 
 It may be larger, but seems to be easier to understand, right?
 There are only one thing this class will assume. Your services definitions use
@@ -446,6 +447,7 @@ class MyExtension extends BaseExtension implements EntitiesOverridableExtension
         ];
     }
 }
+```
 
 ## Configuration
 
