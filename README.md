@@ -2,21 +2,21 @@
 
 This bundle aims to be the base for all bundles in your Symfony project.
 
-* Bundle
-    * Extension declaration
-    * CompilerPass declaration
-    * Commands declaration
-* Extension
-    * Extending BaseExtension
-    * Implementing EntitiesOverridableExtension
+* [Bundle](#bundle)
+    * [Extension declaration](#extension-declaration)
+    * [CompilerPass declaration](#compilerpass-declaration)
+    * [Commands declaration](#commands-declaration)
+* [Extension](#extension)
+    * [Extending BaseExtension](#extending-baseextension)
+    * [Implementing EntitiesOverridableExtension](#implementing-entitiesoverridableextension)
 * Configuration
-* Compiler Pass
-    * Tag Compiler Pass
-    * Mapping Compiler Pass
-* Providers
-    * EntityManager Provider
-    * Repository Provider
-* Abstract Event Dispatcher
+* [CompilerPass](#compilerpass)
+    * [Tag CompilerPass](#tag-compilerpass)
+    * [Mapping CompilerPass](#mapping-compilerpass)
+* [Provider](#provider)
+    * [EntityManager Provider](#entitymanager-provider)
+    * [Repository Provider](#repository-provider)
+* [EventDispatcher](#eventdispatcher)
 
 ## Bundle
 
@@ -372,9 +372,10 @@ class MyExtension extends BaseExtension
 }
 ```
 
-It may be larger, but seems to be easier to understand, right?
+Maybe the file is larger, and you may notice that there are more lines of code,
+but seems to be easier to understand, right? This is what clean code means.
 There are only one thing this class will assume. Your services definitions use
-yml format. This is because is much more clear than XML and PHP, and because
+*yml* format. This is because is much more clear than XML and PHP, and because
 it's easier to interpret by humans. As you can see in the *getConfigFiles*
 method, you return the name of the file without the extension, being this always
 *yml*.
@@ -383,6 +384,8 @@ You can modify the container as well before and after the container is loaded by
 using these two methods.
 
 ``` php
+//...
+
 /**
  * Hook after pre-pending configuration.
  *
@@ -404,6 +407,8 @@ protected function postLoad(array $config, ContainerBuilder $container)
 {
     // Implement here your bundle logic
 }
+
+//...
 ```
 
 ### Implementing EntitiesOverridableExtension
