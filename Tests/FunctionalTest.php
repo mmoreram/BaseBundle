@@ -1,22 +1,29 @@
 <?php
 
 /*
- * PHP Class Header
+ * This file is part of the BaseBundle for Symfony2.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Feel free to edit as you please, and have fun.
+ *
+ * @author Marc Morera <yuhu@mmoreram.com>
  */
 
 namespace Mmoreram\BaseBundle\Tests;
 
+use Exception;
+use PHPUnit_Framework_TestCase;
+use RuntimeException;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Client;
-use Symfony\Component\Console\Application;
-use PHPUnit_Framework_TestCase;
-use RuntimeException;
-use Exception;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Class AbstractTest
+ * Class AbstractTest.
  */
 abstract class FunctionalTest extends PHPUnit_Framework_TestCase
 {
