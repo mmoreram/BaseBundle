@@ -11,12 +11,12 @@
  * @author Marc Morera <yuhu@mmoreram.com>
  */
 
-namespace Mmoreram\BaseBundle\DependencyInjection\Interfaces;
+namespace Mmoreram\BaseBundle\DependencyInjection;
 
 /**
- * Interface EntitiesOverridableExtensionInterface.
+ * Interface EntitiesOverridableExtension.
  */
-interface EntitiesOverridableExtensionInterface
+interface EntitiesOverridableExtension
 {
     /**
      * Get entities overrides.

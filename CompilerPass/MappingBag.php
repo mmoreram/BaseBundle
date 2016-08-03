@@ -11,7 +11,7 @@
  * @author Marc Morera <yuhu@mmoreram.com>
  */
 
-namespace Mmoreram\BaseBundle\CompilerPass\Abstracts;
+namespace Mmoreram\BaseBundle\CompilerPass;
 
 /**
  * Class MappingBag.

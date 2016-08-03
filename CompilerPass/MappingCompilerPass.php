@@ -11,18 +11,18 @@
  * @author Marc Morera <yuhu@mmoreram.com>
  */
 
-namespace Mmoreram\BaseBundle\CompilerPass\Abstracts;
+namespace Mmoreram\BaseBundle\CompilerPass;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-use Mmoreram\SimpleDoctrineMapping\CompilerPass\Abstracts\AbstractMappingCompilerPass as OriginalAbstractMappingCompilerPass;
+use Mmoreram\SimpleDoctrineMapping\CompilerPass\Abstracts\AbstractMappingCompilerPass;
 
 /**
- * Class AbstractMappingCompilerPass.
+ * Class MappingCompilerPass.
  */
-abstract class AbstractMappingCompilerPass extends OriginalAbstractMappingCompilerPass
+abstract class MappingCompilerPass extends AbstractMappingCompilerPass
 {
     /**
      * Add entity mapping given the entity name, given that all entity

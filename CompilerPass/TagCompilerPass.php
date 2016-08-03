@@ -11,16 +11,16 @@
  * @author Marc Morera <yuhu@mmoreram.com>
  */
 
-namespace Mmoreram\BaseBundle\CompilerPass\Abstracts;
+namespace Mmoreram\BaseBundle\CompilerPass;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Class AbstractTagCompilerPass.
+ * Class TagCompilerPass.
  */
-abstract class AbstractTagCompilerPass implements CompilerPassInterface
+abstract class TagCompilerPass implements CompilerPassInterface
 {
     /**
      * You can modify the container here before it is dumped to PHP code.

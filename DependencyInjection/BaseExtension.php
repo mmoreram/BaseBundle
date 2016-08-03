@@ -11,7 +11,7 @@
  * @author Marc Morera <yuhu@mmoreram.com>
  */
 
-namespace Mmoreram\BaseBundle\DependencyInjection\Abstracts;
+namespace Mmoreram\BaseBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
@@ -23,12 +23,10 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
-use Mmoreram\BaseBundle\DependencyInjection\Interfaces\EntitiesOverridableExtensionInterface;
-
 /**
- * Class AbstractExtension.
+ * Class BaseExtension.
  */
-abstract class AbstractExtension
+abstract class BaseExtension
     implements
     ExtensionInterface,
     ConfigurationExtensionInterface,

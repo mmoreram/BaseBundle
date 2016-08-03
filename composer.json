@@ -23,13 +23,16 @@
         "symfony/dependency-injection": "^3.0.0",
         "symfony/http-kernel": "^3.0.0",
         "symfony/config": "^3.0.0",
-        "symfony/console": "^3.0.0",
-        "symfony/event-dispatcher": "^3.0.0"
+        "symfony/console": "^3.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.19",
         "friendsofphp/php-cs-fixer": "1.11",
-        "mmoreram/php-formatter": "1.1.0"
+        "mmoreram/php-formatter": "1.1.0",
+        ""
+    },
+    "suggest": {
+          "symfony/event-dispatcher": "^3.0.0 if using EventDispatcher abstract class"
     },
     "autoload": {
         "psr-4": {
