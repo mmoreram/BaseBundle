@@ -619,11 +619,99 @@ services:
     my_service:
         class: App\MyService
         arguments:
-            - @app.entity_manager.cart
-            - @app.repository.cart
+            - ""@app.entity_manager.cart"
+            - ""@app.repository.cart"
 ```
 
 These services are automatically created, and if you change any of the entity
 mapping definition, for example, if you use it by passing config parameters
 instead of plain values, all definitions will change accordingly after clearing
 the cache.
+
+## Provider
+
+If you want to create this aliases of repositories and entity managers for your
+entities, even if you're not using this Mapping external library, you can do it
+by using these two provider services.
+
+For using them, you should add, first of all, a reference of the *providers.yml*
+file in your application configuration.
+
+``` yml
+imports:
+    - { resource: '../../vendor/mmoreram/base-bundle/Resources/config/providers.yml' }
+```
+
+### EntityManager provider
+
+Imagine that you're using Symfony and Doctrine in your project. You have an app,
+and for any reason you allowed DoctrineBundle to auto-discover all your
+entities by default. If you've created many connections and entity managers in
+your project, that example will fit your needs as well.
+
+Let's think what happens in your dependency injection files.
+
+``` yml
+services:
+    cart_manager:
+        class: AppBundle\CartManager
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+```
+
+Whats happening here? Well your service is now coupled to the entity manager
+assigned to manage your entity. If your application has only one single entity
+or one service, that should be OK, but what happens if your applications has
+many entities and many dependency injection files? What if your entity is no
+longer managed by the default entity manager, and now is being managed by
+another one called *new_entity_manager*?
+
+Will you change all your *yml* files, one by one, looking for references to the
+right entity manager, changing them all? And what happens if a service is using
+the same entity manager ofr managing two entities, and one of them is not longer
+managed by it?
+
+Think about it.
+
+Well, one of the best options here is changing a little bit the way you think
+about the entity managers. Let's assume that each entity should have it's own
+entity manager, even if all of them are the same one.
+
+Let's use the same entity example. We have an entity called cart, and is part of
+our bundle *AppBundle*. Our *CartManager* service is managing some Cart features
+and its entity manager is needed.
+
+First step, creation of a new service pointing our Cart entity manager.
+
+``` yml
+services:
+    app.entity_manager.cart:
+        parent: base.entity_manager_provider
+        arguments:
+            - "App\Entity\Cart"
+```
+
+After that, you will be able to use this new service in your other services.
+Let's go back to the last example.
+
+``` yml
+services:
+    cart_manager:
+        class: AppBundle\CartManager
+        arguments:
+            - "@app.entity_manager.cart"
+```
+
+If you're using the default Symfony implementation, with the mapping
+auto-discover, the result of both implementations will be exactly the same, but
+in the future, if you decide to remove the mapping auto-discovering, or you
+split your applications in two different connections with several entity
+managers, you will only have to focus on your doctrine configuration. After
+that, your services will continue using the right entity manager.
+
+> As you could think, using this strategy means that you should never use the
+> default entity manager again, and start using one entity manager per entity.
+> So, what if your service is managing two entities at the same time? Easy,
+> managing *n* entities means coupling to *n* entity managers, even if they are
+> the same one. So please, make sure your services are small and do **only**
+> what they have to do.
