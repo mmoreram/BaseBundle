@@ -319,7 +319,7 @@ abstract class BaseExtension
      */
     protected function overrideEntities(ContainerBuilder $container)
     {
-        if ($this instanceof EntitiesOverridableExtensionInterface) {
+        if ($this instanceof EntitiesOverridableExtension) {
             $overrides = $this->getEntitiesOverrides();
             foreach ($overrides as $interface => $override) {
                 $overrides[$interface] = $container->getParameter($override);

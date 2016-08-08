@@ -2,6 +2,7 @@
 
 This bundle aims to be the base for all bundles in your Symfony project.
 
+* [Documentation bases](#documentation-bases)
 * [Bundle](#bundle)
     * [Extension declaration](#extension-declaration)
     * [CompilerPass declaration](#compilerpass-declaration)
@@ -9,14 +10,18 @@ This bundle aims to be the base for all bundles in your Symfony project.
 * [Extension](#extension)
     * [Extending BaseExtension](#extending-baseextension)
     * [Implementing EntitiesOverridableExtension](#implementing-entitiesoverridableextension)
-* Configuration
+* [Configuration](#configuration)
+    * [Extension alias](#extension-alias)
 * [CompilerPass](#compilerpass)
     * [Tag CompilerPass](#tag-compilerpass)
-    * [Mapping CompilerPass](#mapping-compilerpass)
 * [Provider](#provider)
     * [EntityManager Provider](#entitymanager-provider)
     * [Repository Provider](#repository-provider)
 * [EventDispatcher](#eventdispatcher)
+* [Integration with SimpleDoctrineMapping](#integration-with-simpledoctrinemapping)
+    * [Exposing the mapping]
+    * [Parametrization]
+    * [Mapping CompilerPass](#mapping-compilerpass)
 
 ## Bundle
 
@@ -41,6 +46,15 @@ final class MyBundle extends Bundle
 I've personally defended some magic behind some parts of a Framework, but you
 should always know what is that magic. Let me explain a little bit your bundle
 behavior with this implementation.
+
+### Documentation bases
+
+This documentation will always work with an scenario where...
+* We have a bundle called AppBundle in our application.
+* Inside this bundle, we have an entity called Cart.
+
+Each time an example requires some extra bases, these new bases will be defined
+before the example and will extend these ones.
 
 ### Extension declaration
 
@@ -73,10 +87,13 @@ final class MyBundle extends Bundle
      */
     public function getContainerExtension()
     {
-        return new MyExtension();
+        return new MyExtension($this);
     }
 }
 ```
+
+As you can see, your extensions will require the bundle itself as the first and
+only construct parameter. Check the configuration chapter to know why.
 
 Important, if your bundle is not using any extension, use this method as well
 with a null return. Otherwise, even if you don't have any class inside the
@@ -290,7 +307,7 @@ class MyExtension extends BaseExtension
      */
     public function getAlias()
     {
-        return 'my_bundle';
+        return 'app';
     }
 
     /**
@@ -456,7 +473,81 @@ class MyExtension extends BaseExtension implements EntitiesOverridableExtension
 
 ## Configuration
 
+The way your bundle will request some data from the outside (app) is by using a
+configuration file. You can check the official
+[Configuration Documentation](http://symfony.com/doc/current/components/config/definition.html)
+if you want to know a little bit about this amazing feature.
 
+Let's create a new configuration file for our bundle, and let's discover some
+nice features this library will provide you by extending the Configuration file.
+
+``` php
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Mmoreram\BaseBundle\DependencyInjection\BaseConfiguration;
+
+/**
+ * Class AppConfiguration.
+ */
+class AppConfiguration extends BaseConfiguration
+{
+    /**
+     * {@inheritdoc}
+     */
+    protected function setupTree(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('skills')
+                    ->prototype('scalar')
+                    ->end()
+                ->end()
+            ->end();
+    }
+}
+```
+
+Ops! What happens here? Lets check it out step by step.
+
+### Extension Alias
+
+First of all, the configuration file will never define it's own name again. The
+configuration file should only define what kind of data should request to the
+app but not under what namespace.
+
+So, who should define this namespace? The Extension should as is the one that
+really extends the dependency injection environment. In other words, even if for
+sure this will never be your scenario, you should be able to share a
+configuration file between different extensions.
+
+So... how we can do that? If your configuration files extend this one, then, as
+long as you want to initialize it, you will have to define it's namespace. Take
+a look at this example. This method is part of your Extension file.
+
+``` php
+/**
+ * Return a new Configuration instance.
+ *
+ * If object returned by this method is an instance of
+ * ConfigurationInterface, extension will use the Configuration to read all
+ * bundle config definitions.
+ *
+ * Also will call getParametrizationValues method to load some config values
+ * to internal parameters.
+ *
+ * @return ConfigurationInterface Configuration file
+ */
+protected function getConfigurationInstance()
+{
+    return new Configuration(
+        $this->bundle,
+        $this->getAlias()
+    );
+}
+```
+
+Your extension defines the alias and passes it to the configuration. But, why
+are we passing the bundle as well in the configuration? Check the
+[integration with SimpleDoctrineMapping chapter](#integration-with-simpledoctrinemapping).
 
 ## Compiler Pass
 
@@ -522,116 +613,10 @@ In this case, first of all we will check that a service with name
 
 Simple.
 
-### Mapping CompilerPass
-
-Another compiler pass interface this package provides you is the one you should
-use in order to add your Doctrine entities definition.
-
-> If you use [SimpleDoctrineMapping](https://github.com/mmoreram/SimpleDoctrineMapping)
-> this CompilerPass will reduce the complexity of your mapping definition. Use
-> this project in order to take control of your mapping definition.
-
-This provided compiler pass is just an extra layer of simplicity for your entity
-mapping definition. Let's take a look on how you can do it.
-
-``` php
-use Mmoreram\BaseBundle\CompilerPass\MappingCompilerPass;
-use Mmoreram\BaseBundle\CompilerPass\MappingBag;
-use Mmoreram\BaseBundle\CompilerPass\MappingBagCollection;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-
-/**
- * Class MappingCompilerPass
- */
-class MappingCompilerPass extends AbstractMappingCompilerPass
-{
-    /**
-     * You can modify the container here before it is dumped to PHP code.
-     *
-     * @param ContainerBuilder $container
-     */
-    public function process(ContainerBuilder $container)
-    {
-        $mappingBagCollection = new MappingBagCollection();
-
-        $mappingBagCollection->addMappingBag(
-            new MappingBag(
-                'app',
-                'cart',
-                'doctrine.orm.default_entity_manager',
-                'App\Entity\Cart',
-                '@AppBundle/Resources/config/doctrine/Cart.orm.yml',
-                'true'
-            )
-        );
-
-        $this->addEntityMappings(
-            $container,
-            $mappingBagCollection
-        );
-    }
-}
-```
-
-As you can see, for this mapping definition we're not using simple data anymore,
-but value objects. It is important to know how this *MappingBag* object works in
-order to understand how you can setup this mapping data for each active entity.
-
-``` php
-
-/**
- * Class MappingBag.
- */
-class MappingBag
-{
-    /**
-     * MappingBag constructor.
-     *
-     * @param string      $bundle      Bundle name
-     * @param string      $name        Name of the entity
-     * @param string      $manager     Name of the manager who will manage it
-     * @param string      $class       Entity namespace
-     * @param string      $mappingFile Mapping file
-     * @param string|bool $enabled     This entity is enabled
-     */
-    public function __construct(
-        string $bundle,
-        string $name,
-        string $manager,
-        string $class,
-        string $mappingFile,
-        $enabled
-    );
-}
-```
-
-**Why using this compiler pass?** Well, not only because you can perfectly know
-how your entities are mapped in your project, but because using this
-*addEntityMappings* method you will create as well a service per each entity
-repository and entity manager.
-
-For example, in the last piece of code we will be able to use as well these
-service in our dependency injection definition.
-
-``` yml
-services:
-
-    my_service:
-        class: App\MyService
-        arguments:
-            - ""@app.entity_manager.cart"
-            - ""@app.repository.cart"
-```
-
-These services are automatically created, and if you change any of the entity
-mapping definition, for example, if you use it by passing config parameters
-instead of plain values, all definitions will change accordingly after clearing
-the cache.
-
 ## Provider
 
 If you want to create this aliases of repositories and entity managers for your
-entities, even if you're not using this Mapping external library, you can do it
+entities, even if you're not using any Mapping external library, you can do it
 by using these two provider services.
 
 For using them, you should add, first of all, a reference of the *providers.yml*
@@ -739,3 +724,420 @@ services:
         arguments:
             - "@app.entity_repository.cart"
 ```
+
+## Integration with SimpleDoctrineMapping
+
+Let's assume that Doctrine is no longer responsible to auto-discover our entity
+mapping information.
+
+Before continuing reading, please, take a look at
+[SimpleDoctrineMapping](http://github.com/mmoreram/SimpleDoctrineMapping)
+repository in order to understand what is the real purpose of this bundle and to
+understand properly how this bundle can be really useful in your implementation.
+
+Here some tips.
+
+* Doctrine is not longer responsible for your entity mapping auto-discovering
+* You **must** define your own mapping definition
+* Each bundle will provide this information to the final app, making each
+  package responsible of what is providing
+
+### Exposing the mapping
+
+This chapter is only useful if you want to expose this mapping information to
+the final app. By doing it, you provide to each app the possibility of defining
+their own mapping data, exposing a default one.
+
+Remember what data we need to define an entity mapping?
+* Entity namespace
+* Entity mapping file path
+* Entity manager name
+* Is entity enabled?
+
+The last one makes sense only in that case, so even if you provide an entity
+definition by default in your bundle, final user should be able to remove it.
+
+First of all, we need to expose this configuration to the application, and the
+way Symfony allow us to do such thing is by using the Configuration file. Of
+course, we need to extend the *BaseBundle* configuration file to have some nice
+methods available.
+
+The first one allow us to define, one by one, each entity mapping definition.
+
+``` php
+/**
+ * Add a mapping node into configuration.
+ *
+ * @param string $nodeName          Node name
+ * @param string $entityClass       Class of the entity
+ * @param string $entityMappingFile Path of the file where the mapping is defined
+ * @param string $entityManager     Name of the entityManager assigned to manage the entity
+ * @param bool   $entityEnabled     The entity mapping will be added to the application
+ *
+ * @return NodeDefinition Node
+ */
+protected function addCompleteMappingNode(
+    string $nodeName,
+    string $entityClass,
+    string $entityMappingFile,
+    string $entityManager,
+    bool $entityEnabled
+)
+```
+
+So, if your Configuration file is something like that...
+
+``` php
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Mmoreram\BaseBundle\DependencyInjection\BaseConfiguration;
+
+/**
+ * Class AppConfiguration.
+ */
+class AppConfiguration extends BaseConfiguration
+{
+    /**
+     * {@inheritdoc}
+     */
+    protected function setupTree(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('mapping')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->append($this->addCompleteMappingNode(
+                            'cart',
+                            'AppBundle\Entity\Cart',
+                            '@AppBundle/Resources/config/doctrine/Cart.orm.yml',
+                            'default',
+                            true
+                        ))
+                    ->end()
+                ->end()
+            ->end();
+    }
+}
+```
+
+... your application configuration snippet will be defined as is shown here.
+
+``` yml
+app:
+    mapping:
+        cart:
+            class: "AppBundle\Entity\Cart"
+            mapping_file: "@AppBundle/Resources/config/doctrine/Cart.orm.yml"
+            manager: "default"
+            enabled: true
+```
+
+If you follow the Symfony standards, you can make it much easier by using some
+batch methods.
+
+``` php
+/**
+ * Add a mapping node into configuration.
+ *
+ * @param string $nodeName      Node name
+ * @param string $className     Class name
+ * @param string $entityManager Entity Manager
+ *
+ * @return NodeDefinition Node
+ */
+protected function addMappingNode(
+    string $nodeName,
+    string $className,
+    string $entityManager = 'default'
+)
+```
+
+So, if the result of this piece of code will be exactly the same one than the
+last one.
+
+``` php
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Mmoreram\BaseBundle\DependencyInjection\BaseConfiguration;
+
+/**
+ * Class AppConfiguration.
+ */
+class AppConfiguration extends BaseConfiguration
+{
+    /**
+     * {@inheritdoc}
+     */
+    protected function setupTree(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('mapping')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->append($this->addMappingNode(
+                            'cart',
+                            'Cart
+                        ))
+                    ->end()
+                ->end()
+            -end();
+    }
+}
+```
+
+Finally, if your bundle defines more than one entity, all these entities will
+always be managed by the same entity manager (yes, you can take this decision if
+all these entities are related by mapping specifications), and all of them
+follow the standard defined by Symfony, then you can use this batch method as
+well.
+
+``` php
+/**
+ * Add all mapping nodes.
+ *
+ * @param ArrayNodeDefinition $rootNode      Root node
+ * @param array               $entities      Entities
+ * @param string              $entityManager Entity Manager
+ */
+protected function addMappingNodes(
+    ArrayNodeDefinition $rootNode,
+    array $entities,
+    string $entityManager = 'default'
+)
+```
+
+So, if your Configuration file is something like that...
+
+``` php
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Mmoreram\BaseBundle\DependencyInjection\BaseConfiguration;
+
+/**
+ * Class AppConfiguration.
+ */
+class AppConfiguration extends BaseConfiguration
+{
+    /**
+     * {@inheritdoc}
+     */
+    protected function setupTree(ArrayNodeDefinition $rootNode)
+    {
+        $this->addMappingNodes(
+            $rootNode,
+            [
+                'cart' => 'Cart',
+                'order' => 'Order'
+            ],
+            'default'
+        );
+    }
+}
+```
+
+... your application configuration snippet will be defined as is shown here.
+
+``` yml
+app:
+    mapping:
+        cart:
+            class: "AppBundle\Entity\Cart"
+            mapping_file: "@AppBundle/Resources/config/doctrine/Cart.orm.yml"
+            manager: "default"
+            enabled: true
+        order:
+            class: "AppBundle\Entity\Order"
+            mapping_file: "@AppBundle/Resources/config/doctrine/Order.orm.yml"
+            manager: "default"
+            enabled: true
+```
+
+As you can see, using this strategy, anyone can change everything, so each
+application has the power of easily customize its own domain.
+
+### Parametrization
+
+As soon as we have the right mapping information in our bundle configuration,
+and properly processed, we should expose these values into our container in
+order to make them accessible by some compiler passes.
+
+This step is quite easy, as you only need to use the BaseExtension
+*getParametrizationValues* method in order to convert configuration values into
+container parameters.
+
+``` php
+// ...
+
+/**
+ * Load Parametrization definition.
+ *
+ * return array(
+ *      'parameter1' => $config['parameter1'],
+ *      'parameter2' => $config['parameter2'],
+ *      ...
+ * );
+ *
+ * @param array $config Bundles config values
+ *
+ * @return array Parametrization values
+ */
+protected function getParametrizationValues(array $config)
+{
+    return [
+        'app.mapping.cart.class' => $config['mapping']['cart']['class'],
+        'app.mapping.cart.mapping_file' => $config['mapping']['cart']['mapping_file'],
+        'app.mapping.cart.manager' => $config['mapping']['cart']['manager'],
+        'app.mapping.cart.enabled' => $config['mapping']['cart']['enabled'],
+    ];
+}
+
+// ...
+```
+
+That's it.
+
+### Mapping CompilerPass
+
+So what's next.
+
+Another compiler pass interface this package provides you is the one you should
+use in order to add your Doctrine entities definition.
+
+This provided compiler pass is just an extra layer of simplicity for your entity
+mapping definition. Let's take a look on how you can do it.
+
+``` php
+use Mmoreram\BaseBundle\CompilerPass\MappingCompilerPass;
+use Mmoreram\BaseBundle\CompilerPass\MappingBag;
+use Mmoreram\BaseBundle\CompilerPass\MappingBagCollection;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+/**
+ * Class MappingCompilerPass
+ */
+class MappingCompilerPass extends AbstractMappingCompilerPass
+{
+    /**
+     * You can modify the container here before it is dumped to PHP code.
+     *
+     * @param ContainerBuilder $container
+     */
+    public function process(ContainerBuilder $container)
+    {
+        $mappingBagCollection = new MappingBagCollection();
+
+        $mappingBagCollection->addMappingBag(
+            new MappingBag(
+                'app',
+                'cart',
+                'doctrine.orm.default_entity_manager',
+                'App\Entity\Cart',
+                '@AppBundle/Resources/config/doctrine/Cart.orm.yml',
+                'true'
+            )
+        );
+
+        $this->addEntityMappings(
+            $container,
+            $mappingBagCollection
+        );
+    }
+}
+```
+
+As the main library explains, you can use as well parameters instead of using
+plain values here, so if you followed first two steps of this chapter, remember
+the names of your parameters. Otherwise, continue.
+
+``` php
+use Mmoreram\BaseBundle\CompilerPass\MappingCompilerPass;
+use Mmoreram\BaseBundle\CompilerPass\MappingBag;
+use Mmoreram\BaseBundle\CompilerPass\MappingBagCollection;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+/**
+ * Class MappingCompilerPass
+ */
+class MappingCompilerPass extends AbstractMappingCompilerPass
+{
+    /**
+     * You can modify the container here before it is dumped to PHP code.
+     *
+     * @param ContainerBuilder $container
+     */
+    public function process(ContainerBuilder $container)
+    {
+        $mappingBagCollection = new MappingBagCollection();
+
+        $mappingBagCollection->addMappingBag(
+            new MappingBag(
+                'app',
+                'cart',
+                'app.mapping.cart.manager',
+                'app.mapping.cart.class',
+                'app.mapping.cart.mapping_file',
+                'app.mapping.cart.enabled'
+            )
+        );
+
+        $this->addEntityMappings(
+            $container,
+            $mappingBagCollection
+        );
+    }
+}
+```
+
+As you can see, for this mapping definition we're not using simple data anymore,
+but value objects. It is important to know how this *MappingBag* object works in
+order to understand how you can setup this mapping data for each active entity.
+
+``` php
+
+/**
+ * Class MappingBag.
+ */
+class MappingBag
+{
+    /**
+     * MappingBag constructor.
+     *
+     * @param string      $bundle      Bundle name
+     * @param string      $name        Name of the entity
+     * @param string      $manager     Name of the manager who will manage it
+     * @param string      $class       Entity namespace
+     * @param string      $mappingFile Mapping file
+     * @param string|bool $enabled     This entity is enabled
+     */
+    public function __construct(
+        string $bundle,
+        string $name,
+        string $manager,
+        string $class,
+        string $mappingFile,
+        $enabled
+    );
+}
+```
+
+**Why using this compiler pass?** Well, not only because you can perfectly know
+how your entities are mapped in your project, but because using this
+*addEntityMappings* method you will create as well a service per each entity
+repository and entity manager.
+
+For example, in the last piece of code we will be able to use as well these
+service in our dependency injection definition.
+
+``` yml
+services:
+
+    my_service:
+        class: App\MyService
+        arguments:
+            - ""@app.entity_manager.cart"
+            - ""@app.repository.cart"
+```
+
+These services are automatically created, and if you change any of the entity
+mapping definition, for example, if you use it by passing config parameters
+instead of plain values, all definitions will change accordingly after clearing
+the cache.
