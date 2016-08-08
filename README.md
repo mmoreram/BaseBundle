@@ -24,8 +24,8 @@ This bundle aims to be the base for all bundles in your Symfony project.
     * [Repository Provider](#repository-provider)
 * [EventDispatcher](#eventdispatcher)
 * [Integration with SimpleDoctrineMapping](#integration-with-simpledoctrinemapping)
-    * [Exposing the mapping]
-    * [Parametrization]
+    * [Exposing the mapping](#exposing-the-mapping)
+    * [Parametrization](#parametrization)
     * [Mapping CompilerPass](#mapping-compilerpass)
 
 ## Bundle
