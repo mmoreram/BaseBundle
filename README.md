@@ -642,7 +642,7 @@ imports:
     - { resource: '../../vendor/mmoreram/base-bundle/Resources/config/providers.yml' }
 ```
 
-### EntityManager provider
+### EntityManager Provider
 
 Imagine that you're using Symfony and Doctrine in your project. You have an app,
 and for any reason you allowed DoctrineBundle to auto-discover all your
@@ -715,3 +715,27 @@ that, your services will continue using the right entity manager.
 > managing *n* entities means coupling to *n* entity managers, even if they are
 > the same one. So please, make sure your services are small and do **only**
 > what they have to do.
+
+### Repository Provider
+
+Same for repositories. What if you want to inject your entity repository in your
+services? Well, you can do it by using the same strategy that you did in entity
+managers.
+
+``` yml
+services:
+    app.entity_repository.cart:
+        parent: base.entity_repository_provider
+        arguments:
+            - "App\Entity\Cart"
+```
+
+After that, you'll be able to inject this new service in your domain.
+
+``` yml
+services:
+    cart_manager:
+        class: AppBundle\CartManager
+        arguments:
+            - "@app.entity_repository.cart"
+```
