@@ -1,5 +1,10 @@
 # Base Bundle
 
+**❮ NOTE ❯** This library is not production ready. Meanwhile is not tagged as
+stable, use it as simple guide for your work.
+
+-----
+
 This bundle aims to be the base for all bundles in your Symfony project.
 
 * [Documentation bases](#documentation-bases)
