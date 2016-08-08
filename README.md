@@ -463,7 +463,7 @@ class MyExtension extends BaseExtension implements EntitiesOverridableExtension
 This library provides you some abstractions for your compiler passes to cover
 some specific use cases. Let's check them all.
 
-### Tag Compiler Pass
+### Tag CompilerPass
 
 Imagine you want to get all service with an specific tag. Then you want to call
 another service's method with each one of these found services. This scenario is
@@ -478,5 +478,152 @@ Let's check the TagCompilerPass, an abstract class that will make this task
 as easy as implementing just 3 tiny methods.
 
 ``` php
+use Mmoreram\BaseBundle\CompilerPass\FeederCompilerPass;
 
+/**
+ * Class FeederCompilerPass.
+ */
+final class FeederCompilerPass extends AbstractTagCompilerPass
+{
+    /**
+     * Get collector service name.
+     *
+     * @return string Collector service name
+     */
+    public function getCollectorServiceName()
+    {
+        return 'my.collector.service';
+    }
+    /**
+     * Get collector method name.
+     *
+     * @return string Collector method name
+     */
+    public function getCollectorMethodName()
+    {
+        return 'addClass';
+    }
+    /**
+     * Get tag name.
+     *
+     * @return string Tag name
+     */
+    public function getTagName()
+    {
+        return 'my.tag';
+    }
+}
 ```
+
+In this case, first of all we will check that a service with name
+*my.collector.service* exists. If exists, we will look for all services with tag
+*my.tag* and we will add them into this collector by using the collector method
+*addClass*.
+
+Simple.
+
+### Mapping CompilerPass
+
+Another compiler pass interface this package provides you is the one you should
+use in order to add your Doctrine entities definition.
+
+> If you use [SimpleDoctrineMapping](https://github.com/mmoreram/SimpleDoctrineMapping)
+> this CompilerPass will reduce the complexity of your mapping definition. Use
+> this project in order to take control of your mapping definition.
+
+This provided compiler pass is just an extra layer of simplicity for your entity
+mapping definition. Let's take a look on how you can do it.
+
+``` php
+use Mmoreram\BaseBundle\CompilerPass\MappingCompilerPass;
+use Mmoreram\BaseBundle\CompilerPass\MappingBag;
+use Mmoreram\BaseBundle\CompilerPass\MappingBagCollection;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+/**
+ * Class MappingCompilerPass
+ */
+class MappingCompilerPass extends AbstractMappingCompilerPass
+{
+    /**
+     * You can modify the container here before it is dumped to PHP code.
+     *
+     * @param ContainerBuilder $container
+     */
+    public function process(ContainerBuilder $container)
+    {
+        $mappingBagCollection = new MappingBagCollection();
+
+        $mappingBagCollection->addMappingBag(
+            new MappingBag(
+                'app',
+                'cart',
+                'doctrine.orm.default_entity_manager',
+                'App\Entity\Cart',
+                '@AppBundle/Resources/config/doctrine/Cart.orm.yml',
+                'true'
+            )
+        );
+
+        $this->addEntityMappings(
+            $container,
+            $mappingBagCollection
+        );
+    }
+}
+```
+
+As you can see, for this mapping definition we're not using simple data anymore,
+but value objects. It is important to know how this *MappingBag* object works in
+order to understand how you can setup this mapping data for each active entity.
+
+``` php
+
+/**
+ * Class MappingBag.
+ */
+class MappingBag
+{
+    /**
+     * MappingBag constructor.
+     *
+     * @param string      $bundle      Bundle name
+     * @param string      $name        Name of the entity
+     * @param string      $manager     Name of the manager who will manage it
+     * @param string      $class       Entity namespace
+     * @param string      $mappingFile Mapping file
+     * @param string|bool $enabled     This entity is enabled
+     */
+    public function __construct(
+        string $bundle,
+        string $name,
+        string $manager,
+        string $class,
+        string $mappingFile,
+        $enabled
+    );
+}
+```
+
+**Why using this compiler pass?** Well, not only because you can perfectly know
+how your entities are mapped in your project, but because using this
+*addEntityMappings* method you will create as well a service per each entity
+repository and entity manager.
+
+For example, in the last piece of code we will be able to use as well these
+service in our dependency injection definition.
+
+``` yml
+services:
+
+    my_service:
+        class: App\MyService
+        arguments:
+            - @app.entity_manager.cart
+            - @app.repository.cart
+```
+
+These services are automatically created, and if you change any of the entity
+mapping definition, for example, if you use it by passing config parameters
+instead of plain values, all definitions will change accordingly after clearing
+the cache.
