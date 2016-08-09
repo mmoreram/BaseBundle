@@ -29,6 +29,22 @@ This bundle aims to be the base for all bundles in your Symfony project.
     * [Parametrization](#parametrization)
     * [Mapping CompilerPass](#mapping-compilerpass)
 
+## Documentation bases
+
+This documentation will always work with an scenario where...
+* We have a bundle called AppBundle in our application.
+* Inside this bundle, we have an entity called Cart.
+
+Each time an example requires some extra bases, these new bases will be defined
+before the example and will extend these ones.
+
+Some libraries will be used as well during the documentation. We encourage you
+to check them all in order to increase the quality of your bundles and the way
+you know them.
+
+* [Simple Doctrine Mapping](http://github.com/mmoreram/simple-doctrine-mapping)
+* [Symfony Bundle Dependencies](http://github.com/mmoreram/symfony-bundle-dependencies)
+
 ## Bundle
 
 All bundles in Symfony should start with a PHP class, the Bundle class. This
@@ -52,22 +68,6 @@ final class MyBundle extends Bundle
 I've personally defended some magic behind some parts of a Framework, but you
 should always know what is that magic. Let me explain a little bit your bundle
 behavior with this implementation.
-
-### Documentation bases
-
-This documentation will always work with an scenario where...
-* We have a bundle called AppBundle in our application.
-* Inside this bundle, we have an entity called Cart.
-
-Each time an example requires some extra bases, these new bases will be defined
-before the example and will extend these ones.
-
-Some libraries will be used as well during the documentation. We encourage you
-to check them all in order to increase the quality of your bundles and the way
-you know them.
-
-* [Simple Doctrine Mapping](http://github.com/mmoreram/simple-doctrine-mapping)
-* [Symfony Bundle Dependencies](http://github.com/mmoreram/symfony-bundle-dependencies)
 
 ### Bundle dependencies
 
