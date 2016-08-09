@@ -62,6 +62,13 @@ This documentation will always work with an scenario where...
 Each time an example requires some extra bases, these new bases will be defined
 before the example and will extend these ones.
 
+Some libraries will be used as well during the documentation. We encourage you
+to check them all in order to increase the quality of your bundles and the way
+you know them.
+
+* [Simple Doctrine Mapping](http://github.com/mmoreram/simple-doctrine-mapping)
+* [Symfony Bundle Dependencies](http://github.com/mmoreram/symfony-bundle-dependencies)
+
 ### Bundle dependencies
 
 When we talk about dependencies we are used to talking about PHP dependencies.
