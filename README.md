@@ -947,7 +947,7 @@ class AppConfiguration extends BaseConfiguration
                     ->children()
                         ->append($this->addMappingNode(
                             'cart',
-                            'Cart
+                            'Cart'
                         ))
                     ->end()
                 ->end()
