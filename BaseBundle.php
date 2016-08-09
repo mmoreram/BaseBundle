@@ -13,16 +13,18 @@
 
 namespace Mmoreram\BaseBundle;
 
+use Mmoreram\SymfonyBundleDependencies\DependentBundleInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class AbstractBundle.
  */
-abstract class BaseBundle extends Bundle
+abstract class BaseBundle extends Bundle implements DependentBundleInterface
 {
     /**
      * Builds bundle.
@@ -71,6 +73,16 @@ abstract class BaseBundle extends Bundle
      * @return CompilerPassInterface[]
      */
     public function getCompilerPasses()
+    {
+        return [];
+    }
+
+    /**
+     * Create instance of current bundle, and return dependent bundle namespaces
+     *
+     * @return array Bundle instances
+     */
+    public static function getBundleDependencies(KernelInterface $kernel)
     {
         return [];
     }

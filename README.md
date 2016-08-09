@@ -9,6 +9,7 @@ This bundle aims to be the base for all bundles in your Symfony project.
 
 * [Documentation bases](#documentation-bases)
 * [Bundle](#bundle)
+    * [Bundle dependencies](#bundle-dependencies)
     * [Extension declaration](#extension-declaration)
     * [CompilerPass declaration](#compilerpass-declaration)
     * [Commands declaration](#commands-declaration)
@@ -60,6 +61,54 @@ This documentation will always work with an scenario where...
 
 Each time an example requires some extra bases, these new bases will be defined
 before the example and will extend these ones.
+
+### Bundle dependencies
+
+When we talk about dependencies we are used to talking about PHP dependencies.
+If we use a file, then this file should be inside our vendor folder, right? That
+sounds great, but what about if a bundle needs another bundle to be instanced as
+well in our kernel? How Symfony is supposed to handle this need?
+
+Well, the project itself is not providing this feature at the moment, but even
+if the theory says that a bundle should never have an external bundle
+dependency, the reality is another one, and as far as I know, implementations
+cover mostly real problems.
+
+Let's check [Symfony Bundle Dependencies](https://github.com/mmoreram/symfony-bundle-dependencies).
+By using this *BaseBundle*, your bundle has automatically dependencies (by
+default none).
+
+``` php
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Mmoreram\SymfonyBundleDependencies\DependentBundleInterface;
+
+/**
+ * Class AbstractBundle.
+ */
+abstract class BaseBundle extends Bundle implements DependentBundleInterface
+{
+    //...
+
+    /**
+     * Create instance of current bundle, and return dependent bundle namespaces
+     *
+     * @return array Bundle instances
+     */
+    public static function getBundleDependencies(KernelInterface $kernel)
+    {
+        return [];
+    }
+}
+```
+
+If your bundle has dependencies, feel free to overwrite this method in your
+class and add them all. Take a look at the main library documentation to learn
+a bit more about how to work with dependencies in your Kernel.
+
+> If you use the *BaseBundle* class, you should need to add this
+> *mmoreram/symfony-bundle-dependencies* dependency in your project composer
+> file. I strongly recommend to start using this package in all your Symfony
+> projects.
 
 ### Extension declaration
 
