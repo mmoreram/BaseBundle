@@ -615,6 +615,14 @@ are we passing the bundle as well in the configuration? Check the
 This library provides you some abstractions for your compiler passes to cover
 some specific use cases. Let's check them all.
 
+In case you don't know what a CompilerPass is yet, I encourage you to start with
+the documentation with
+[How to work with compiler passes in bundles](http://symfony.com/doc/current/service_container/compiler_passes.html).
+The sooner you understand the importance of this class, the sooner you will have
+better bundles in your projects.
+
+That simple.
+
 ### Tag CompilerPass
 
 Imagine you want to get all service with an specific tag. Then you want to call
@@ -646,6 +654,7 @@ final class FeederCompilerPass extends AbstractTagCompilerPass
     {
         return 'my.collector.service';
     }
+
     /**
      * Get collector method name.
      *
@@ -655,6 +664,7 @@ final class FeederCompilerPass extends AbstractTagCompilerPass
     {
         return 'addClass';
     }
+
     /**
      * Get tag name.
      *
