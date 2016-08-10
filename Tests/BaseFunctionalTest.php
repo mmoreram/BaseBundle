@@ -17,15 +17,14 @@ use Exception;
 use PHPUnit_Framework_TestCase;
 use RuntimeException;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Client;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Class AbstractTest.
+ * Class BaseFunctionalTest.
  */
-abstract class FunctionalTest extends PHPUnit_Framework_TestCase
+abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var Application
@@ -37,7 +36,7 @@ abstract class FunctionalTest extends PHPUnit_Framework_TestCase
     /**
      * @var KernelInterface
      *
-     * kernel
+     * kernel being used
      */
     protected static $kernel;
 
@@ -49,23 +48,13 @@ abstract class FunctionalTest extends PHPUnit_Framework_TestCase
     protected static $container;
 
     /**
-     * Reload scenario.
-     *
-     * @throws RuntimeException unable to start the application
-     */
-    protected function reloadScenario()
-    {
-        static::setUpBeforeClass();
-    }
-
-    /**
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
      */
     protected function setUp()
     {
         try {
-            static::$kernel = new AppKernel('Test', false);
+            static::$kernel = $this->getKernel();
             static::$kernel->boot();
             static::$application = new Application(static::$kernel);
             static::$application->setAutoExit(false);
@@ -80,22 +69,6 @@ abstract class FunctionalTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tears down the fixture, for example, close a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-        if (static::$application) {
-            static::$application->run(new ArrayInput([
-                'command' => 'doctrine:database:drop',
-                '--no-interaction' => true,
-                '--force' => true,
-                '--quiet' => true,
-            ]));
-        }
-    }
-
-    /**
      * Creates a Client.
      *
      * @param array $server An array of server parameters
@@ -104,10 +77,7 @@ abstract class FunctionalTest extends PHPUnit_Framework_TestCase
      */
     protected static function createClient(array $server = [])
     {
-        $client = static::$kernel
-            ->getContainer()
-            ->get('test.client');
-
+        $client = static::$container->get('test.client');
         $client->setServerParameters($server);
 
         return $client;
@@ -120,8 +90,27 @@ abstract class FunctionalTest extends PHPUnit_Framework_TestCase
      *
      * @return mixed The associated service
      */
-    public function get($serviceName)
+    public function get(string $serviceName)
     {
         return self::$container->get($serviceName);
     }
+
+    /**
+     * Get container parameter.
+     *
+     * @param string $parameterName
+     *
+     * @return string
+     */
+    public function getParameter(string $parameterName) : string
+    {
+        return self::$container->getParameter($parameterName);
+    }
+
+    /**
+     * Get kernel.
+     *
+     * @return KernelInterface
+     */
+    abstract protected function getKernel();
 }

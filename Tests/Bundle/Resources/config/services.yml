@@ -1,0 +1,4 @@
+services:
+
+    test.service:
+        class: Mmoreram\BaseBundle\Tests\Bundle\TestClass

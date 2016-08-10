@@ -1,0 +1,78 @@
+<?php
+
+/*
+ * This file is part of the BaseBundle for Symfony2.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Feel free to edit as you please, and have fun.
+ *
+ * @author Marc Morera <yuhu@mmoreram.com>
+ */
+
+namespace Mmoreram\BaseBundle\Test\CompilerPass;
+
+use Symfony\Component\HttpKernel\KernelInterface;
+
+use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
+use Mmoreram\BaseBundle\Tests\BaseKernel;
+
+/**
+ * Class TagCompilerPassTest.
+ */
+final class TagCompilerPassTest extends BaseFunctionalTest
+{
+    /**
+     * Get kernel.
+     *
+     * @return KernelInterface
+     */
+    protected function getKernel()
+    {
+        return new BaseKernel(
+            [
+                'Mmoreram\BaseBundle\Tests\Bundle\TestBundle',
+            ],
+            [
+                'services' => [
+                    'test.collector' => [
+                        'class' => 'Mmoreram\BaseBundle\Tests\Bundle\Collector\TestCollector',
+                    ],
+                    'class0' => [
+                        'abstract' => true,
+                        'class' => 'Mmoreram\BaseBundle\Tests\Bundle\TestClass',
+                    ],
+                    'class1' => [
+                        'parent' => 'class0',
+                        'arguments' => [
+                            'c1',
+                        ],
+                        'tags' => [
+                            ['name' => 'test.tag'],
+                        ],
+                    ],
+                    'class2' => [
+                        'parent' => 'class0',
+                        'arguments' => [
+                            'c2',
+                        ],
+                        'tags' => [
+                            ['name' => 'test.tag'],
+                        ],
+                    ],
+                ],
+            ],
+            []
+        );
+    }
+
+    /**
+     * Test compiler pass.
+     */
+    public function testCompilerPass()
+    {
+        $collector = $this->get('test.collector');
+        $this->assertCount(2, $collector->getTestClasses());
+    }
+}

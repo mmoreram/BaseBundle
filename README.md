@@ -23,7 +23,9 @@ This bundle aims to be the base for all bundles in your Symfony project.
 * [Provider](#provider)
     * [EntityManager Provider](#entitymanager-provider)
     * [Repository Provider](#repository-provider)
-* [EventDispatcher](#eventdispatcher)
+* [Functional Tests](#functional-tests)
+    * [BaseKernel](#basekernel)
+    * [BaseFunctionalTest](#basefuncionaltest
 * [Integration with SimpleDoctrineMapping](#integration-with-simpledoctrinemapping)
     * [Exposing the mapping](#exposing-the-mapping)
     * [Parametrization](#parametrization)
@@ -795,6 +797,177 @@ services:
         arguments:
             - "@app.entity_repository.cart"
 ```
+
+## Functional Tests
+
+Some of the issues many projects have when they want to start testing their
+application in a functional way is that they don't really know how to manage the
+kernel, the differents states this kernel can handle and the whole application.
+
+Well, this is not going to be a problem anymore, at least with this library.
+Let's see a functional test and the way you can do it since this moment.
+
+``` php
+use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
+use Mmoreram\BaseBundle\Tests\BaseKernel;
+
+/**
+ * Class TagCompilerPassTest.
+ */
+final class TagCompilerPassTest extends BaseFunctionalTest
+{
+    /**
+     * Get kernel.
+     *
+     * @return KernelInterface
+     */
+    protected function getKernel()
+    {
+        return new BaseKernel(
+            [
+                'Mmoreram\BaseBundle\Tests\Bundle\TestBundle',
+            ],
+            [
+                'services' => [
+                    'my.service' => [
+                        'class' => 'My\Class',
+                        'arguments' => '[
+                            "a string",
+                            "@another.service"
+                        ]
+                    ]
+                ],
+                'parameters' => [
+                    'locale' => 'es'
+                ],
+                'framework' => [
+                    'form' => true
+                ]
+            ],
+            [
+                ['/login', '@MyBundle:User:login', 'user_login'],
+                ['/logout', '@MyBundle:User:logout', 'user_logout'],
+            ]
+        );
+    }
+
+    /**
+     * Test compiler pass.
+     */
+    public function testCompilerPass()
+    {
+        // do your tests
+    }
+}
+```
+
+As you can see, you can do as many things as you need in order to create a
+unique scenario.
+
+Let's see step by step what can you do here
+
+### BaseKernel
+
+This library provides you a special kernel for your tests. This kernel is test
+ready and allow you to customize as much as you need your application in each
+scenario.
+
+This kernel uses the
+[Symfony Bundle Dependencies project](http://github.com/mmoreram/symfony-bundle-dependencies)
+by default, so make sure you take a look at this project. Using it is not a must
+but a great option.
+
+Let's see what do you need to create your own Kernel using the one this library
+offers to you.
+
+``` php
+new BaseKernel(
+    [
+        'Mmoreram\BaseBundle\Tests\Bundle\TestBundle',
+    ],
+    [
+        'services' => [
+            'my.service' => [
+                'class' => 'My\Class',
+                'arguments' => '[
+                    "a string",
+                    "@another.service"
+                ]
+            ]
+        ],
+        'parameters' => [
+            'locale' => 'es'
+        ],
+        'framework' => [
+            'form' => true
+        ]
+    ],
+    [
+        ['/login', '@MyBundle:User:login', 'user_login'],
+        ['/logout', '@MyBundle:User:logout', 'user_logout'],
+    ]
+);
+```
+
+Only three needed parameters for the kernel creation.
+
+* Array of bundle namespaces you need to instance the kernel. If you don't want
+to use the Symfony Bundle Dependencies project, make sure you add all of them.
+Otherwise, if you use the project, you should only add the bundle/s you want to
+test.
+
+* Configuration for the dependency injection component. Use the same format as
+you were using *yml* files but in PHP.
+
+* Routes. Each route is composed by three positions. The first one is the path,
+the second one the Controller notation and the last one, the name of the route.
+
+As you can see, you can define a different and unique kernel per each of your
+scenarios.
+
+### BaseFunctionalTest
+
+As soon as you have the definition of how you should instance you kernel, we
+should create our first functional test. Let's take a look at how we can do
+that.
+
+``` php
+use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
+use Mmoreram\BaseBundle\Tests\BaseKernel;
+
+/**
+ * Class TagCompilerPassTest.
+ */
+final class TagCompilerPassTest extends BaseFunctionalTest
+{
+    /**
+     * Get kernel.
+     *
+     * @return KernelInterface
+     */
+    protected function getKernel()
+    {
+        return $kernel;
+    }
+
+    /**
+     * Test compiler pass.
+     */
+    public function testCompilerPass()
+    {
+        // do your tests
+    }
+}
+```
+
+In every scenario your kernel will be created and saved locally. You can create
+your own kernel or use the *BaseKernel*, in both cases this will work properly,
+but take in account that this kernel will be active in the whole scenario.
+
+Inside your tests you can use then these methods:
+
+* *get($serviceName)* if you want to use any container service
+* *getParameter($parameterName)* if you want to use any container parameter
 
 ## Integration with SimpleDoctrineMapping
 
