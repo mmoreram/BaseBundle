@@ -11,15 +11,15 @@ This bundle aims to be the base for all bundles in your Symfony project.
 * [Bundle](#bundle)
     * [Bundle dependencies](#bundle-dependencies)
     * [Extension declaration](#extension-declaration)
-    * [CompilerPass declaration](#compilerpass-declaration)
+    * [Compiler Pass declaration](#compiler-pass-declaration)
     * [Commands declaration](#commands-declaration)
 * [Extension](#extension)
     * [Extending BaseExtension](#extending-baseextension)
     * [Implementing EntitiesOverridableExtension](#implementing-entitiesoverridableextension)
 * [Configuration](#configuration)
     * [Extension alias](#extension-alias)
-* [CompilerPass](#compilerpass)
-    * [Tag CompilerPass](#tag-compilerpass)
+* [Compiler Pass](#compiler-pass)
+    * [Tag Compiler Pass](#tag-compiler-pass)
 * [Provider](#provider)
     * [EntityManager Provider](#entitymanager-provider)
     * [Repository Provider](#repository-provider)
@@ -29,7 +29,7 @@ This bundle aims to be the base for all bundles in your Symfony project.
 * [Integration with SimpleDoctrineMapping](#integration-with-simpledoctrinemapping)
     * [Exposing the mapping](#exposing-the-mapping)
     * [Parametrization](#parametrization)
-    * [Mapping CompilerPass](#mapping-compilerpass)
+    * [Mapping Compiler Pass](#mapping-compiler-pass)
 
 ## Documentation bases
 
@@ -184,14 +184,14 @@ final class MyBundle extends Bundle
 }
 ```
 
-### CompilerPass declaration
+### Compiler Pass declaration
 
-One of the most unknown Symfony features is the CompilerPass. If you want to
+One of the most unknown Symfony features is the Compiler Pass. If you want to
 know a little bit about what are they and how to use them, take a look at the
 fantastic cookbook
-[How to work with compiler passes in bundles](http://symfony.com/doc/current/cookbook/service_container/compiler_passes.html).
+[How to work with Compiler Passes in bundles](http://symfony.com/doc/current/cookbook/service_container/compiler_passes.html).
 
-You can instance your compiler passes by using the *build* method inside your
+You can instance your Compiler Passes by using the *build* method inside your
 bundle as you can see in this example.
 
 ``` php
@@ -212,7 +212,7 @@ final class MyBundle extends Bundle
         parent::build($container);
 
         /**
-         * Adds compiler passes.
+         * Adds Compiler Passes.
          */
         $container->addCompilerPass(new MyCompilerPass());
     }
@@ -617,7 +617,7 @@ are we passing the bundle as well in the configuration? Check the
 This library provides you some abstractions for your compiler passes to cover
 some specific use cases. Let's check them all.
 
-In case you don't know what a CompilerPass is yet, I encourage you to start with
+In case you don't know what a Compiler Pass is yet, I encourage you to start with
 the documentation with
 [How to work with compiler passes in bundles](http://symfony.com/doc/current/service_container/compiler_passes.html).
 The sooner you understand the importance of this class, the sooner you will have
@@ -625,7 +625,7 @@ better bundles in your projects.
 
 That simple.
 
-### Tag CompilerPass
+### Tag Compiler Pass
 
 Imagine you want to get all service with an specific tag. Then you want to call
 another service's method with each one of these found services. This scenario is
@@ -1202,7 +1202,7 @@ application has the power of easily customize its own domain.
 
 As soon as we have the right mapping information in our bundle configuration,
 and properly processed, we should expose these values into our container in
-order to make them accessible by some compiler passes.
+order to make them accessible by some Compiler Passes.
 
 This step is quite easy, as you only need to use the BaseExtension
 *getParametrizationValues* method in order to convert configuration values into
@@ -1239,14 +1239,14 @@ protected function getParametrizationValues(array $config)
 
 That's it.
 
-### Mapping CompilerPass
+### Mapping Compiler Pass
 
 So what's next.
 
 Another compiler pass interface this package provides you is the one you should
 use in order to add your Doctrine entities definition.
 
-This provided compiler pass is just an extra layer of simplicity for your entity
+This provided Compiler Pass is just an extra layer of simplicity for your entity
 mapping definition. Let's take a look on how you can do it.
 
 ``` php
@@ -1363,7 +1363,7 @@ class MappingBag
 }
 ```
 
-**Why using this compiler pass?** Well, not only because you can perfectly know
+**Why using this Compiler Pass?** Well, not only because you can perfectly know
 how your entities are mapped in your project, but because using this
 *addEntityMappings* method you will create as well a service per each entity
 repository and entity manager.
