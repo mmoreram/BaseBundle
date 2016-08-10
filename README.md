@@ -831,7 +831,7 @@ final class TagCompilerPassTest extends BaseFunctionalTest
                 'services' => [
                     'my.service' => [
                         'class' => 'My\Class',
-                        'arguments' => '[
+                        'arguments' => [
                             "a string",
                             "@another.service"
                         ]
@@ -889,7 +889,7 @@ new BaseKernel(
         'services' => [
             'my.service' => [
                 'class' => 'My\Class',
-                'arguments' => '[
+                'arguments' => [
                     "a string",
                     "@another.service"
                 ]
