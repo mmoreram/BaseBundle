@@ -40,6 +40,6 @@ class BundleWithExtensionTest extends BaseFunctionalTest
      */
     public function testHasExtension()
     {
-        $this->get('test.service');
+        $this->assertTrue($this->has('test.service'));
     }
 }

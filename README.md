@@ -967,6 +967,7 @@ but take in account that this kernel will be active in the whole scenario.
 Inside your tests you can use then these methods:
 
 * *get($serviceName)* if you want to use any container service
+* *has($serviceName)* if you want to check if a container service exists
 * *getParameter($parameterName)* if you want to use any container parameter
 
 ## Integration with SimpleDoctrineMapping

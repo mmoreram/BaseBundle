@@ -86,13 +86,25 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
     /**
      * Get container service.
      *
-     * @param string $serviceName Container service name
+     * @param string $serviceName
      *
      * @return mixed The associated service
      */
     public function get(string $serviceName)
     {
         return self::$container->get($serviceName);
+    }
+
+    /**
+     * Container has service.
+     *
+     * @param string $serviceName
+     *
+     * @return bool The container has the service
+     */
+    public function has(string $serviceName) : bool 
+    {
+        return self::$container->has($serviceName);
     }
 
     /**

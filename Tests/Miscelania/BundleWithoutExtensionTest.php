@@ -41,11 +41,6 @@ class BundleWithoutExtensionTest extends BaseFunctionalTest
      */
     public function testHasNoExtension()
     {
-        try {
-            $this->get('test.service');
-            $this->fail('test.service should not be available');
-        } catch (ServiceNotFoundException $e) {
-            // Silent pass
-        }
+        $this->assertFalse($this->has('test.service'));
     }
 }
