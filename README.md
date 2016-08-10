@@ -25,7 +25,7 @@ This bundle aims to be the base for all bundles in your Symfony project.
     * [Repository Provider](#repository-provider)
 * [Functional Tests](#functional-tests)
     * [BaseKernel](#basekernel)
-    * [BaseFunctionalTest](#basefuncionaltest
+    * [BaseFunctionalTest](#basefuncionaltest)
 * [Integration with SimpleDoctrineMapping](#integration-with-simpledoctrinemapping)
     * [Exposing the mapping](#exposing-the-mapping)
     * [Parametrization](#parametrization)
