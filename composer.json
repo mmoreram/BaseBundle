@@ -30,6 +30,7 @@
         "mmoreram/php-formatter": "1.1.0",
 
         "symfony/framework-bundle": "^3.0.0",
+        "doctrine/doctrine-bundle": "~1.6.4",
         "symfony/event-dispatcher": "^3.0.0",
         "mmoreram/simple-doctrine-mapping": "^1.1.0",
         "mmoreram/symfony-bundle-dependencies": "^1.0"

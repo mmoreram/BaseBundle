@@ -102,7 +102,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      *
      * @return bool The container has the service
      */
-    public function has(string $serviceName) : bool 
+    public function has(string $serviceName) : bool
     {
         return self::$container->has($serviceName);
     }

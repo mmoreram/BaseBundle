@@ -13,7 +13,6 @@
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;

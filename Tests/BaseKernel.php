@@ -113,8 +113,10 @@ final class BaseKernel extends Kernel
      * @param ContainerBuilder $c
      * @param LoaderInterface  $loader
      */
-    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
-    {
+    protected function configureContainer(
+        ContainerBuilder $c,
+        LoaderInterface $loader
+    ) {
         $yamlContent = Yaml::dump($this->configuration);
         $filePath = tempnam(sys_get_temp_dir(), 'tst');
         $fileName = str_replace(sys_get_temp_dir() . '/', '', $filePath);

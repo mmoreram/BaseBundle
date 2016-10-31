@@ -744,9 +744,9 @@ First step, creation of a new service pointing our Cart entity manager.
 ``` yml
 services:
     app.entity_manager.cart:
-        parent: base.entity_manager_provider
+        parent: base.abstract_entity_manager
         arguments:
-            - "App\Entity\Cart"
+            - App\Entity\Cart
 ```
 
 After that, you will be able to use this new service in your other services.
@@ -783,9 +783,9 @@ managers.
 ``` yml
 services:
     app.entity_repository.cart:
-        parent: base.entity_repository_provider
+        parent: base.abstract_repository
         arguments:
-            - "App\Entity\Cart"
+            - App\Entity\Cart
 ```
 
 After that, you'll be able to inject this new service in your domain.
