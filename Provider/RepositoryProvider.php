@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 /**
  * Class RepositoryProvider.
  */
-class RepositoryProvider
+final class RepositoryProvider
 {
     /**
      * @var EntityManagerProvider

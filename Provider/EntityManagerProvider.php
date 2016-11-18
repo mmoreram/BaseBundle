@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 /**
  * Class EntityManagerProvider.
  */
-class EntityManagerProvider
+final class EntityManagerProvider
 {
     /**
      * @var AbstractManagerRegistry

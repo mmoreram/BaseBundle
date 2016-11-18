@@ -1,0 +1,22 @@
+language: php
+
+sudo: false
+
+matrix:
+    include:
+        - php: 7.0
+          env: $SYMFONY_VERSION="^3.0.0"
+        - php: 7.1
+          env: $SYMFONY_VERSION="^3.1.0"
+
+before_install:
+    - 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update symfony/symfony:${SYMFONY_VERSION}; fi;'
+
+install:
+    - composer update --prefer-source --no-interaction ${COMPOSER_OPTIONS}
+
+script:
+    - phpunit
+
+notifications:
+    email: false

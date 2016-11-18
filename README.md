@@ -1,7 +1,8 @@
 # Base Bundle
 
-**❮ NOTE ❯** This library is not production ready. Meanwhile is not tagged as
-stable, use it as simple guide for your work.
+[![Build Status](https://travis-ci.org/mmoreram/BaseBundle.png?branch=master)](https://travis-ci.org/mmoreram/BaseBundle)
+[![Latest Stable Version](https://poser.pugx.org/mmoreram/base-bundle/v/stable.png)](https://packagist.org/packages/mmoreram/base-bundle)
+[![Latest Unstable Version](https://poser.pugx.org/mmoreram/base-bundle/v/unstable.png)](https://packagist.org/packages/mmoreram/base-bundle)
 
 -----
 
