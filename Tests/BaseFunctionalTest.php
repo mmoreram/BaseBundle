@@ -16,7 +16,7 @@ namespace Mmoreram\BaseBundle\Tests;
 use Exception;
 use PHPUnit_Framework_TestCase;
 use RuntimeException;
-use Symfony\Component\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Client;
 use Symfony\Component\HttpKernel\KernelInterface;
