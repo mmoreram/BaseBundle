@@ -66,8 +66,6 @@ final class BaseKernel extends Kernel
         array $configuration = [],
         array $routes = []
     ) {
-        parent::__construct('test', false);
-
         $this->bundlesToLoad = $bundlesToLoad;
         $this->routes = $routes;
         $this->configuration = array_merge(
@@ -78,6 +76,8 @@ final class BaseKernel extends Kernel
             ],
             $configuration
         );
+
+        parent::__construct('test', false);
     }
 
     /**
@@ -137,22 +137,24 @@ final class BaseKernel extends Kernel
     protected function configureRoutes(RouteCollectionBuilder $routes)
     {
         foreach ($this->routes as $route) {
-            $routes->add(
-                $route[0],
-                $route[1],
-                $route[2]
-            );
+            is_array($route)
+                ? $routes->add(
+                    $route[0],
+                    $route[1],
+                    $route[2]
+                )
+                : $routes->import($route);
         }
     }
 
     /**
-     * Gets the cache directory.
+     * Gets the application root dir.
      *
-     * @return string The cache directory
+     * @return string The application root dir
      */
-    public function getCacheDir()
+    public function getRootDir()
     {
-        return parent::getCacheDir() . '/' . substr(
+        return sys_get_temp_dir() . '/' . 'base-kernel-' . substr(
             hash(
                 'md5',
                 json_encode([
@@ -162,7 +164,7 @@ final class BaseKernel extends Kernel
                 ])
             ),
             0,
-            5
+            10
         );
     }
 }

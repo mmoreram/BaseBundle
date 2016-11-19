@@ -906,6 +906,7 @@ new BaseKernel(
     [
         ['/login', '@MyBundle:User:login', 'user_login'],
         ['/logout', '@MyBundle:User:logout', 'user_logout'],
+        '@MyBundle/Resources/routing.yml',
     ]
 );
 ```
@@ -920,8 +921,9 @@ test.
 * Configuration for the dependency injection component. Use the same format as
 you were using *yml* files but in PHP.
 
-* Routes. Each route is composed by three positions. The first one is the path,
-the second one the Controller notation and the last one, the name of the route.
+* Routes. You can define single routes with an array of three positions. The 
+first one is the path, the second one the Controller notation and the last one,
+the name of the route. You can define resources with the resource name.
 
 As you can see, you can define a different and unique kernel per each of your
 scenarios.
