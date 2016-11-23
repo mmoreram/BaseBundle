@@ -95,7 +95,7 @@ abstract class BaseConfiguration implements ConfigurationInterface
                 $name,
                 $entityManager
             ));
-        };
+        }
     }
 
     /**

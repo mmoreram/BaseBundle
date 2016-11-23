@@ -26,8 +26,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 /**
  * Class BaseExtension.
  */
-abstract class BaseExtension
-    implements
+abstract class BaseExtension implements
     ExtensionInterface,
     ConfigurationExtensionInterface,
     PrependExtensionInterface
