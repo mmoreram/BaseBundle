@@ -61,6 +61,20 @@ class MappingBag
     private $enabled;
 
     /**
+     * @var string
+     *
+     * Object manager name
+     */
+    private $objectManagerName;
+
+    /**
+     * @var string
+     *
+     * Object repository name
+     */
+    private $objectRepositoryName;
+
+    /**
      * MappingBag constructor.
      *
      * @param string      $bundle
@@ -69,6 +83,8 @@ class MappingBag
      * @param string      $class
      * @param string      $mappingFile
      * @param string|bool $enabled
+     * @param string      $objectManagerName
+     * @param string      $objectRepositoryName
      */
     public function __construct(
         string $bundle,
@@ -76,7 +92,9 @@ class MappingBag
         string $manager,
         string $class,
         string $mappingFile,
-        $enabled
+        $enabled,
+        string $objectManagerName = 'object_manager',
+        string $objectRepositoryName = 'object_repository'
     ) {
         $this->bundle = $bundle;
         $this->name = $name;
@@ -84,6 +102,8 @@ class MappingBag
         $this->class = $class;
         $this->mappingFile = $mappingFile;
         $this->enabled = $enabled;
+        $this->objectManagerName = $objectManagerName;
+        $this->objectRepositoryName = $objectRepositoryName;
     }
 
     /**
@@ -144,5 +164,25 @@ class MappingBag
     public function isEnabled()
     {
         return $this->enabled;
+    }
+
+    /**
+     * Get ObjectManagerName.
+     *
+     * @return string
+     */
+    public function getObjectManagerName() : string
+    {
+        return $this->objectManagerName;
+    }
+
+    /**
+     * Get ObjectRepositoryName.
+     *
+     * @return string
+     */
+    public function getObjectRepositoryName() : string
+    {
+        return $this->objectRepositoryName;
     }
 }

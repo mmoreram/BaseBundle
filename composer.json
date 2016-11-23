@@ -26,9 +26,9 @@
         "mmoreram/symfony-bundle-dependencies": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.8.19",
-        "friendsofphp/php-cs-fixer": "1.11",
-        "mmoreram/php-formatter": "1.1.0",
+        "phpunit/phpunit": "^5.6.4",
+        "friendsofphp/php-cs-fixer": "^1.12.4",
+        "mmoreram/php-formatter": "^1.1.0",
 
         "symfony/framework-bundle": "^3.0.0",
         "doctrine/doctrine-bundle": "~1.6.4",

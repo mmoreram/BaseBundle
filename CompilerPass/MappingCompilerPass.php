@@ -80,7 +80,7 @@ abstract class MappingCompilerPass extends AbstractMappingCompilerPass
         $class = $this->resolveParameterName($container, $mappingBag->getClass());
         $definition->setArguments([$class]);
         $container->setDefinition(
-            $mappingBag->getBundle() . '.entity_manager.' . $mappingBag->getName(),
+            $mappingBag->getBundle() . '.' . $mappingBag->getObjectManagerName() . '.' . $mappingBag->getName(),
             $definition
         );
     }
@@ -103,7 +103,7 @@ abstract class MappingCompilerPass extends AbstractMappingCompilerPass
         $class = $this->resolveParameterName($container, $mappingBag->getClass());
         $definition->setArguments([$class]);
         $container->setDefinition(
-            $mappingBag->getBundle() . '.entity_repository.' . $mappingBag->getName(),
+            $mappingBag->getBundle() . '.' . $mappingBag->getObjectRepositoryName() . '.' . $mappingBag->getName(),
             $definition
         );
     }
