@@ -14,10 +14,8 @@
 namespace Mmoreram\BaseBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
@@ -118,11 +116,9 @@ final class BaseKernel extends Kernel
         LoaderInterface $loader
     ) {
         $yamlContent = Yaml::dump($this->configuration);
-        $filePath = tempnam(sys_get_temp_dir(), 'tst');
-        $fileName = str_replace(sys_get_temp_dir() . '/', '', $filePath);
+        $filePath = tempnam(sys_get_temp_dir(), 'test') . '.yml';
         file_put_contents($filePath, $yamlContent);
-        $loader = new YamlFileLoader($c, new FileLocator(sys_get_temp_dir()));
-        $loader->load($fileName);
+        $loader->load($filePath);
         unlink($filePath);
     }
 
