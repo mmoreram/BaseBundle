@@ -17,12 +17,12 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
- * Class RepositoryProvider.
+ * Class ObjectRepositoryProvider.
  */
-final class RepositoryProvider
+final class ObjectRepositoryProvider
 {
     /**
-     * @var EntityManagerProvider
+     * @var ObjectManagerProvider
      *
      * Manager
      */
@@ -38,11 +38,11 @@ final class RepositoryProvider
     /**
      * Construct method.
      *
-     * @param EntityManagerProvider $managerProvider Manager
+     * @param ObjectManagerProvider $managerProvider Manager
      * @param ParameterBagInterface $parameterBag    Parameter bag
      */
     public function __construct(
-        EntityManagerProvider $managerProvider,
+        ObjectManagerProvider $managerProvider,
         ParameterBagInterface $parameterBag
     ) {
         $this->managerProvider = $managerProvider;
@@ -50,17 +50,17 @@ final class RepositoryProvider
     }
 
     /**
-     * Given an entity namespace, return associated repository.
+     * Given an entity namespace, return associated object repository.
      *
      * @param string $entityNamespace Entity Namespace
      *
      * @return ObjectRepository Repository
      */
-    public function getRepositoryByEntityNamespace($entityNamespace)
+    public function getObjectRepositoryByEntityNamespace(string $entityNamespace)
     {
         return $this
             ->managerProvider
-            ->getEntityManagerByEntityNamespace($entityNamespace)
+            ->getObjectManagerByEntityNamespace($entityNamespace)
             ->getRepository($entityNamespace);
     }
 
@@ -75,12 +75,12 @@ final class RepositoryProvider
      *
      * @return ObjectRepository Repository
      */
-    public function getRepositoryByEntityParameter($entityParameter)
+    public function getObjectRepositoryByEntityParameter(string $entityParameter)
     {
         $entityNamespace = $this
             ->parameterBag
             ->get($entityParameter);
 
-        return $this->getRepositoryByEntityNamespace($entityNamespace);
+        return $this->getObjectRepositoryByEntityNamespace($entityNamespace);
     }
 }

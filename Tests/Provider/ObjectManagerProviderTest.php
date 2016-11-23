@@ -20,9 +20,9 @@ use Mmoreram\BaseBundle\Tests\BaseKernel;
 use Mmoreram\BaseBundle\Tests\Bundle\TestEntityBundle;
 
 /**
- * Class EntityManagerProviderTest.
+ * Class ObjectManagerProviderTest.
  */
-class EntityManagerProviderTest extends BaseFunctionalTest
+class ObjectManagerProviderTest extends BaseFunctionalTest
 {
     /**
      * Get kernel.
@@ -65,7 +65,7 @@ class EntityManagerProviderTest extends BaseFunctionalTest
             ],
             'services' => [
                 'base.entity_manager.user' => [
-                    'parent' => 'base.abstract_entity_manager',
+                    'parent' => 'base.abstract_object_manager',
                     'arguments' => [
                         'Mmoreram\BaseBundle\Tests\Bundle\Entity\User',
                     ],
