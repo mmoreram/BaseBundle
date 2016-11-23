@@ -22,8 +22,8 @@ This bundle aims to be the base for all bundles in your Symfony project.
 * [Compiler Pass](#compiler-pass)
     * [Tag Compiler Pass](#tag-compiler-pass)
 * [Provider](#provider)
-    * [EntityManager Provider](#entitymanager-provider)
-    * [Repository Provider](#repository-provider)
+    * [ObjectManager Provider](#objectmanager-provider)
+    * [ObjectRepository Provider](#objectrepository-provider)
 * [Functional Tests](#functional-tests)
     * [BaseKernel](#basekernel)
     * [BaseFunctionalTest](#basefuncionaltest)
@@ -701,7 +701,7 @@ imports:
     - { resource: '../../vendor/mmoreram/base-bundle/Resources/config/providers.yml' }
 ```
 
-### EntityManager Provider
+### ObjectManager Provider
 
 Imagine that you're using Symfony and Doctrine in your project. You have an app,
 and for any reason you allowed DoctrineBundle to auto-discover all your
@@ -745,7 +745,7 @@ First step, creation of a new service pointing our Cart entity manager.
 ``` yml
 services:
     app.entity_manager.cart:
-        parent: base.abstract_entity_manager
+        parent: base.abstract_object_manager
         arguments:
             - App\Entity\Cart
 ```
@@ -775,7 +775,7 @@ that, your services will continue using the right entity manager.
 > the same one. So please, make sure your services are small and do **only**
 > what they have to do.
 
-### Repository Provider
+### ObjectRepository Provider
 
 Same for repositories. What if you want to inject your entity repository in your
 services? Well, you can do it by using the same strategy that you did in entity
@@ -784,7 +784,7 @@ managers.
 ``` yml
 services:
     app.entity_repository.cart:
-        parent: base.abstract_repository
+        parent: base.abstract_object_repository
         arguments:
             - App\Entity\Cart
 ```
