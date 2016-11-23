@@ -73,6 +73,6 @@ class BaseBundleTest extends BaseFunctionalTest
      */
     public function testBundleInstance()
     {
-        $this->assertTrue($this->has('base.entity_manager_provider'));
+        $this->assertTrue($this->has('base.object_manager_provider'));
     }
 }

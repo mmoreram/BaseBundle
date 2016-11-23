@@ -74,8 +74,8 @@ abstract class MappingCompilerPass extends AbstractMappingCompilerPass
     ) {
         $definition = new Definition('Doctrine\Common\Persistence\ObjectManager');
         $definition->setFactory([
-            new Reference('base.entity_manager_provider'),
-            'getEntityManagerByEntityNamespace',
+            new Reference('base.object_manager_provider'),
+            'getObjectManagerByEntityNamespace',
         ]);
         $class = $this->resolveParameterName($container, $mappingBag->getClass());
         $definition->setArguments([$class]);
@@ -97,8 +97,8 @@ abstract class MappingCompilerPass extends AbstractMappingCompilerPass
     ) {
         $definition = new Definition('Doctrine\Common\Persistence\ObjectRepository');
         $definition->setFactory([
-            new Reference('base.entity_repository_provider'),
-            'getRepositoryByEntityNamespace',
+            new Reference('base.object_repository_provider'),
+            'getObjectRepositoryByEntityNamespace',
         ]);
         $class = $this->resolveParameterName($container, $mappingBag->getClass());
         $definition->setArguments([$class]);

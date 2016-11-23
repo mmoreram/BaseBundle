@@ -18,9 +18,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 /**
- * Class EntityManagerProvider.
+ * Class ObjectManagerProvider.
  */
-final class EntityManagerProvider
+final class ObjectManagerProvider
 {
     /**
      * @var AbstractManagerRegistry
@@ -57,7 +57,7 @@ final class EntityManagerProvider
      *
      * @return ObjectManager|null Object manager
      */
-    public function getEntityManagerByEntityNamespace($entityNamespace)
+    public function getObjectManagerByEntityNamespace(string $entityNamespace)
     {
         return $this
             ->manager
@@ -75,12 +75,12 @@ final class EntityManagerProvider
      *
      * @return ObjectManager|null Object manager
      */
-    public function getEntityManagerByEntityParameter($entityParameter)
+    public function getObjectManagerByEntityParameter(string $entityParameter)
     {
         $entityNamespace = $this
             ->parameterBag
             ->get($entityParameter);
 
-        return $this->getEntityManagerByEntityNamespace($entityNamespace);
+        return $this->getObjectManagerByEntityNamespace($entityNamespace);
     }
 }

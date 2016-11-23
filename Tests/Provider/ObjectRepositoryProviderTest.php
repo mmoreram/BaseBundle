@@ -20,9 +20,9 @@ use Mmoreram\BaseBundle\Tests\BaseKernel;
 use Mmoreram\BaseBundle\Tests\Bundle\TestEntityBundle;
 
 /**
- * File header placeholder.
+ * Class ObjectRepositoryProviderTest.
  */
-class RepositoryProviderTest extends BaseFunctionalTest
+class ObjectRepositoryProviderTest extends BaseFunctionalTest
 {
     /**
      * Get kernel.
@@ -65,7 +65,7 @@ class RepositoryProviderTest extends BaseFunctionalTest
             ],
             'services' => [
                 'base.repository.user' => [
-                    'parent' => 'base.abstract_repository',
+                    'parent' => 'base.abstract_object_repository',
                     'arguments' => [
                         'Mmoreram\BaseBundle\Tests\Bundle\Entity\User',
                     ],

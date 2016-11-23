@@ -10,33 +10,33 @@ services:
             - getParameterBag
 
     #
-    # Entity Manager abstraction
+    # Object Manager abstraction
     #
-    base.entity_manager_provider:
-        class: Mmoreram\BaseBundle\Provider\EntityManagerProvider
+    base.object_manager_provider:
+        class: Mmoreram\BaseBundle\Provider\ObjectManagerProvider
         arguments:
             - '@doctrine'
             - '@base.container_parameters'
 
-    base.abstract_entity_manager:
+    base.abstract_object_manager:
         class: Doctrine\Common\Persistence\ObjectManager
         factory:
-            - '@base.entity_manager_provider'
-            - getEntityManagerByEntityNamespace
+            - '@base.object_manager_provider'
+            - getObjectManagerByEntityNamespace
         abstract: true
 
     #
     # Repository abstraction
     #
-    base.entity_repository_provider:
-        class: Mmoreram\BaseBundle\Provider\RepositoryProvider
+    base.object_repository_provider:
+        class: Mmoreram\BaseBundle\Provider\ObjectRepositoryProvider
         arguments:
-            - '@base.entity_manager_provider'
+            - '@base.object_manager_provider'
             - '@base.container_parameters'
 
-    base.abstract_repository:
+    base.abstract_object_repository:
         class: Doctrine\Common\Persistence\ObjectRepository
         factory:
-            - '@base.entity_repository_provider'
-            - getRepositoryByEntityNamespace
+            - '@base.object_repository_provider'
+            - getObjectRepositoryByEntityNamespace
         abstract: true
