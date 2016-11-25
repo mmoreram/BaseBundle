@@ -17,35 +17,68 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
+use Mmoreram\BaseBundle\Mapping\MappingBag;
+use Mmoreram\BaseBundle\Mapping\MappingBagProvider;
 use Mmoreram\SimpleDoctrineMapping\CompilerPass\Abstracts\AbstractMappingCompilerPass;
 
 /**
  * Class MappingCompilerPass.
  */
-abstract class MappingCompilerPass extends AbstractMappingCompilerPass
+class MappingCompilerPass extends AbstractMappingCompilerPass
 {
+    /**
+     * @var MappingBagProvider
+     *
+     * Mapping bag provider
+     */
+    private $mappingBagProvider;
+
+    /**
+     * MappingCompilerPass constructor.
+     *
+     * @param MappingBagProvider $mappingBagProvider
+     */
+    public function __construct(MappingBagProvider $mappingBagProvider)
+    {
+        $this->mappingBagProvider = $mappingBagProvider;
+    }
+
+    /**
+     * You can modify the container here before it is dumped to PHP code.
+     *
+     * @param ContainerBuilder $container
+     */
+    public function process(ContainerBuilder $container)
+    {
+        $this->addEntityMappings(
+            $container,
+            $this->mappingBagProvider
+        );
+    }
+
     /**
      * Add entity mapping given the entity name, given that all entity
      * definitions are built the same way and given as well that the method
      * addEntityMapping exists and is accessible.
      *
-     * @param ContainerBuilder     $container
-     * @param MappingBagCollection $mappingBags
-     *
-     * @return $this Self object
+     * @param ContainerBuilder   $container
+     * @param MappingBagProvider $mappingBagProvider
      */
-    protected function addEntityMappings(
+    private function addEntityMappings(
         ContainerBuilder $container,
-        MappingBagCollection $mappingBags
+        MappingBagProvider $mappingBagProvider
     ) {
-        foreach ($mappingBags->all() as $mappingBag) {
+        $mappingBagCollection = $mappingBagProvider->getMappingBagCollection();
+
+        foreach ($mappingBagCollection->all() as $mappingBag) {
+            $reducedMappingBag = $mappingBag->getReducedMappingBag();
             $this
                 ->addEntityMapping(
                     $container,
-                    $mappingBag->getManager(),
-                    $mappingBag->getClass(),
-                    $mappingBag->getMappingFile(),
-                    $mappingBag->isEnabled()
+                    $reducedMappingBag->getManagerName(),
+                    $reducedMappingBag->getEntityClass(),
+                    $reducedMappingBag->getEntityMappingFile(),
+                    $reducedMappingBag->getEntityIsEnabled()
                 );
             $this
                 ->addEntityManager(
@@ -58,8 +91,6 @@ abstract class MappingCompilerPass extends AbstractMappingCompilerPass
                     $mappingBag
                 );
         }
-
-        return $this;
     }
 
     /**
@@ -72,15 +103,16 @@ abstract class MappingCompilerPass extends AbstractMappingCompilerPass
         ContainerBuilder $container,
         MappingBag $mappingBag
     ) {
+        $reducedMappingBag = $mappingBag->getReducedMappingBag();
         $definition = new Definition('Doctrine\Common\Persistence\ObjectManager');
         $definition->setFactory([
             new Reference('base.object_manager_provider'),
             'getObjectManagerByEntityNamespace',
         ]);
-        $class = $this->resolveParameterName($container, $mappingBag->getClass());
+        $class = $this->resolveParameterName($container, $reducedMappingBag->getEntityClass());
         $definition->setArguments([$class]);
         $container->setDefinition(
-            $mappingBag->getBundle() . '.' . $mappingBag->getObjectManagerName() . '.' . $mappingBag->getName(),
+            $mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectManagerName() . '.' . $mappingBag->getEntityName(),
             $definition
         );
     }
@@ -95,15 +127,16 @@ abstract class MappingCompilerPass extends AbstractMappingCompilerPass
         ContainerBuilder $container,
         MappingBag $mappingBag
     ) {
+        $reducedMappingBag = $mappingBag->getReducedMappingBag();
         $definition = new Definition('Doctrine\Common\Persistence\ObjectRepository');
         $definition->setFactory([
             new Reference('base.object_repository_provider'),
             'getObjectRepositoryByEntityNamespace',
         ]);
-        $class = $this->resolveParameterName($container, $mappingBag->getClass());
+        $class = $this->resolveParameterName($container, $reducedMappingBag->getEntityClass());
         $definition->setArguments([$class]);
         $container->setDefinition(
-            $mappingBag->getBundle() . '.' . $mappingBag->getObjectRepositoryName() . '.' . $mappingBag->getName(),
+            $mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectRepositoryName() . '.' . $mappingBag->getEntityName(),
             $definition
         );
     }

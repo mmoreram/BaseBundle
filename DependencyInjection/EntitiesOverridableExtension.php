@@ -27,5 +27,5 @@ interface EntitiesOverridableExtension
      *
      * @return array Overrides definition
      */
-    public function getEntitiesOverrides();
+    public function getEntitiesOverrides() : array;
 }

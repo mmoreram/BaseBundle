@@ -13,12 +13,14 @@
 
 namespace Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+
 use Mmoreram\BaseBundle\DependencyInjection\BaseExtension;
 
 /**
- * Class TestExtension.
+ * Class TestMappingExtension.
  */
-class TestExtension extends BaseExtension
+class TestMappingExtension extends BaseExtension
 {
     /**
      * Returns the recommended alias to use in XML.
@@ -42,6 +44,26 @@ class TestExtension extends BaseExtension
     protected function getConfigFilesLocation() : string
     {
         return __DIR__ . '/../Resources/config';
+    }
+
+    /**
+     * Return a new Configuration instance.
+     *
+     * If object returned by this method is an instance of
+     * ConfigurationInterface, extension will use the Configuration to read all
+     * bundle config definitions.
+     *
+     * Also will call getParametrizationValues method to load some config values
+     * to internal parameters.
+     *
+     * @return ConfigurationInterface|null
+     */
+    protected function getConfigurationInstance() : ? ConfigurationInterface
+    {
+        return new TestMappingConfiguration(
+            $this->getAlias(),
+            $this->mappingBagProvider
+        );
     }
 
     /**

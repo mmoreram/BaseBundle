@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.1",
 
         "doctrine/common": "^2.2",
         "symfony/dependency-injection": "^3.0",
@@ -36,9 +36,7 @@
         "mmoreram/simple-doctrine-mapping": "^1.1.0"
     },
     "suggest": {
-        "symfony/event-dispatcher": "^3.0.0 if using EventDispatcher abstract class",
-        "mmoreram/simple-doctrine-mapping": "^1.1.0 if using the Manual Doctrine Entity Mapping",
-        "mmoreram/symfony-bundle-dependencies": "^1.0 if using the Bundle abstract class"
+        "mmoreram/simple-doctrine-mapping": "^1.1.0 if using the Manual Doctrine Entity Mapping"
     },
     "autoload": {
         "psr-4": {

@@ -17,7 +17,9 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+
+use Mmoreram\BaseBundle\Mapping\MappingBagCollection;
+use Mmoreram\BaseBundle\Mapping\MappingBagProvider;
 
 /**
  * Class BaseConfiguration.
@@ -25,31 +27,31 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 abstract class BaseConfiguration implements ConfigurationInterface
 {
     /**
-     * @var BundleInterface
-     *
-     * Bundle
-     */
-    protected $bundle;
-
-    /**
      * @var string
      *
-     * Extension name
+     * Extension alias
      */
-    protected $extensionName;
+    private $extensionAlias;
 
     /**
-     * Construct method.
+     * @var null|MappingBagProvider
      *
-     * @var BundleInterface Bundle
-     * @var string          $extensionName Extension name
+     * Mapping bag provider
+     */
+    private $mappingBagProvider;
+
+    /**
+     * BaseConfiguration constructor.
+     *
+     * @param string             $extensionAlias
+     * @param MappingBagProvider $mappingBagProvider
      */
     public function __construct(
-        BundleInterface $bundle,
-        string $extensionName
+        string $extensionAlias,
+        MappingBagProvider $mappingBagProvider = null
     ) {
-        $this->bundle = $bundle;
-        $this->extensionName = $extensionName;
+        $this->extensionAlias = $extensionAlias;
+        $this->mappingBagProvider = $mappingBagProvider;
     }
 
     /**
@@ -58,8 +60,17 @@ abstract class BaseConfiguration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root($this->extensionName);
+        $rootNode = $treeBuilder->root($this->extensionAlias);
         $this->setupTree($rootNode);
+
+        if ($this->mappingBagProvider instanceof MappingBagProvider) {
+            $this->addDetectedMappingNodes(
+                $rootNode,
+                $this
+                    ->mappingBagProvider
+                    ->getMappingBagCollection()
+            );
+        }
 
         return $treeBuilder;
     }
@@ -69,76 +80,29 @@ abstract class BaseConfiguration implements ConfigurationInterface
      *
      * @param ArrayNodeDefinition $rootNode Root node
      */
-    abstract protected function setupTree(ArrayNodeDefinition $rootNode);
-
-    /**
-     * Add all mapping nodes.
-     *
-     * @param ArrayNodeDefinition $rootNode      Root node
-     * @param array               $entities      Entities
-     * @param string              $entityManager Entity Manager
-     */
-    protected function addMappingNodes(
-        ArrayNodeDefinition $rootNode,
-        array $entities,
-        string $entityManager = 'default'
-    ) {
-        $mappingNode = $rootNode
-            ->children()
-                ->arrayNode('mapping')
-                    ->addDefaultsIfNotSet()
-                    ->children();
-
-        foreach ($entities as $alias => $name) {
-            $mappingNode = $mappingNode->append($this->addMappingNode(
-                $alias,
-                $name,
-                $entityManager
-            ));
-        }
+    protected function setupTree(ArrayNodeDefinition $rootNode)
+    {
+        // Silent pass. Nothing to do here by default
     }
 
     /**
      * Add a mapping node into configuration.
      *
-     * @param string $nodeName      Node name
-     * @param string $className     Class name
-     * @param string $entityManager Entity Manager
+     * @param string $nodeName
+     * @param string $entityClass
+     * @param string $entityMappingFile
+     * @param string $entityManager
+     * @param bool   $entityEnabled
      *
      * @return NodeDefinition Node
      */
     protected function addMappingNode(
         string $nodeName,
-        string $className,
-        string $entityManager = 'default'
-    ) {
-        return $this->addCompleteMappingNode(
-            $nodeName,
-            $this->bundle->getNamespace() . '\Entity\\' . $className,
-            '@' . $this->bundle->getName() . '/Resources/config/doctrine/' . $className . '.orm.yml',
-            $entityManager,
-            true
-        );
-    }
-
-    /**
-     * Add a mapping node into configuration.
-     *
-     * @param string $nodeName          Node name
-     * @param string $entityClass       Class of the entity
-     * @param string $entityMappingFile Path of the file where the mapping is defined
-     * @param string $entityManager     Name of the entityManager assigned to manage the entity
-     * @param bool   $entityEnabled     The entity mapping will be added to the application
-     *
-     * @return NodeDefinition Node
-     */
-    protected function addCompleteMappingNode(
-        string $nodeName,
         string $entityClass,
         string $entityMappingFile,
         string $entityManager,
         bool $entityEnabled
-    ) {
+    ) : NodeDefinition {
         $builder = new TreeBuilder();
         $node = $builder->root($nodeName);
         $node
@@ -166,5 +130,34 @@ abstract class BaseConfiguration implements ConfigurationInterface
         ->end();
 
         return $node;
+    }
+
+    /**
+     * Add all mapping nodes injected in the mappingBagCollection.
+     *
+     * @param ArrayNodeDefinition  $rootNode
+     * @param MappingBagCollection $mappingBagCollection
+     */
+    private function addDetectedMappingNodes(
+        ArrayNodeDefinition $rootNode,
+        MappingBagCollection $mappingBagCollection
+    ) {
+        $mappingNode = $rootNode
+            ->children()
+            ->arrayNode('mapping')
+            ->addDefaultsIfNotSet()
+            ->children();
+
+        foreach ($mappingBagCollection->all() as $mappingBag) {
+            if ($mappingBag->isOverwritable()) {
+                $mappingNode->append($this->addMappingNode(
+                    $mappingBag->getEntityName(),
+                    $mappingBag->getEntityNamespace(),
+                    $mappingBag->getEntityMappingFilePath(),
+                    $mappingBag->getManagerName(),
+                    $mappingBag->getEntityIsEnabled()
+                ));
+            }
+        }
     }
 }
