@@ -11,18 +11,20 @@
  * @author Marc Morera <yuhu@mmoreram.com>
  */
 
-namespace Mmoreram\BaseBundle\Test\Provider;
+namespace Mmoreram\BaseBundle\Tests\Mapping;
 
+use RuntimeException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use Mmoreram\BaseBundle\Tests\BaseKernel;
-use Mmoreram\BaseBundle\Tests\Bundle\TestEntityBundle;
+use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestMappingBagProvider;
+use Mmoreram\BaseBundle\Tests\Bundle\TestMappingBundle;
 
 /**
- * Class ObjectManagerProviderTest.
+ * Class BundleMappingNotOverwritableTest.
  */
-class ObjectManagerProviderTest extends BaseFunctionalTest
+class BundleMappingNotOverwritableTest extends BaseFunctionalTest
 {
     /**
      * Get kernel.
@@ -32,7 +34,16 @@ class ObjectManagerProviderTest extends BaseFunctionalTest
     protected function getKernel()
     {
         return new BaseKernel([
-            new TestEntityBundle(),
+            new TestMappingBundle(new TestMappingBagProvider(
+                ['user' => 'User'],
+                '@TestMappingBundle',
+                'Mmoreram\BaseBundle\Tests\Bundle\Entity',
+                'my_prefix',
+                'default',
+                'object_manager',
+                'repository_manager',
+                false
+            )),
         ], [
             'doctrine' => [
                 'dbal' => [
@@ -58,16 +69,10 @@ class ObjectManagerProviderTest extends BaseFunctionalTest
                     ],
                 ],
             ],
-            'imports' => [
-                [
-                    'resource' => __DIR__ . '/../../Resources/config/providers.yml',
-                ],
-            ],
-            'services' => [
-                'base.entity_manager.user' => [
-                    'parent' => 'base.abstract_object_manager',
-                    'arguments' => [
-                        'Mmoreram\BaseBundle\Tests\Bundle\Entity\User',
+            'test' => [
+                'mapping' => [
+                    'user' => [
+                        'enabled' => false,
                     ],
                 ],
             ],
@@ -75,13 +80,24 @@ class ObjectManagerProviderTest extends BaseFunctionalTest
     }
 
     /**
-     * Test repository availability.
+     * Sets up the fixture, for example, open a network connection.
+     * This method is called before a test is executed.
      */
-    public function testRepositoryExists()
+    protected function setUp()
     {
-        $this->assertInstanceOf(
-            'Doctrine\Common\Persistence\ObjectManager',
-            $this->get('base.entity_manager.user')
-        );
+        try {
+            parent::setUp();
+        } catch (RuntimeException $e) {
+            return true;
+        }
+
+        $this->fail('This test should fail as some configuration is defined while should\'t be possible');
+    }
+
+    /**
+     * force kernel creation.
+     */
+    public function testKernelCreation()
+    {
     }
 }

@@ -11,18 +11,19 @@
  * @author Marc Morera <yuhu@mmoreram.com>
  */
 
-namespace Mmoreram\BaseBundle\Test\Provider;
+namespace Mmoreram\BaseBundle\Tests\Mapping;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use Mmoreram\BaseBundle\Tests\BaseKernel;
-use Mmoreram\BaseBundle\Tests\Bundle\TestEntityBundle;
+use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestMappingBagProvider;
+use Mmoreram\BaseBundle\Tests\Bundle\TestMappingBundle;
 
 /**
- * Class ObjectManagerProviderTest.
+ * Class BundleMappingOverwritableTest.
  */
-class ObjectManagerProviderTest extends BaseFunctionalTest
+class BundleMappingOverwritableTest extends BaseFunctionalTest
 {
     /**
      * Get kernel.
@@ -32,7 +33,16 @@ class ObjectManagerProviderTest extends BaseFunctionalTest
     protected function getKernel()
     {
         return new BaseKernel([
-            new TestEntityBundle(),
+            new TestMappingBundle(new TestMappingBagProvider(
+                ['user' => 'User'],
+                '@TestMappingBundle',
+                'Mmoreram\BaseBundle\Tests\Bundle\Entity',
+                'my_prefix',
+                'default',
+                'object_manager',
+                'object_repository',
+                true
+            )),
         ], [
             'doctrine' => [
                 'dbal' => [
@@ -63,25 +73,39 @@ class ObjectManagerProviderTest extends BaseFunctionalTest
                     'resource' => __DIR__ . '/../../Resources/config/providers.yml',
                 ],
             ],
-            'services' => [
-                'base.entity_manager.user' => [
-                    'parent' => 'base.abstract_object_manager',
-                    'arguments' => [
-                        'Mmoreram\BaseBundle\Tests\Bundle\Entity\User',
-                    ],
-                ],
-            ],
         ]);
     }
 
     /**
-     * Test repository availability.
+     * Test bundle all expected services and parameters.
      */
-    public function testRepositoryExists()
+    public function testHasExtension()
     {
+        $this->assertEquals(
+            'Mmoreram\BaseBundle\Tests\Bundle\Entity\User',
+            $this->getParameter('my_prefix.entity.user.class')
+        );
+
+        $this->assertEquals(
+            '@TestMappingBundle/Resources/config/doctrine/User.orm.yml',
+            $this->getParameter('my_prefix.entity.user.mapping_file')
+        );
+
+        $this->assertEquals(
+            'default',
+            $this->getParameter('my_prefix.entity.user.manager')
+        );
+
+        $this->assertTrue($this->getParameter('my_prefix.entity.user.enabled'));
+
         $this->assertInstanceOf(
             'Doctrine\Common\Persistence\ObjectManager',
-            $this->get('base.entity_manager.user')
+            $this->get('my_prefix.object_manager.user')
+        );
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\Persistence\ObjectRepository',
+            $this->get('my_prefix.object_repository.user')
         );
     }
 }

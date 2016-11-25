@@ -18,7 +18,8 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\BaseBundle;
-use Mmoreram\BaseBundle\Tests\Bundle\CompilerPass\MappingCompilerPass;
+use Mmoreram\BaseBundle\CompilerPass\MappingCompilerPass;
+use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestStandardMappingBagProvider;
 
 /**
  * Class TestEntityBundle.
@@ -33,7 +34,7 @@ final class TestEntityBundle extends BaseBundle
     public function getCompilerPasses()
     {
         return [
-            new MappingCompilerPass(),
+            new MappingCompilerPass(new TestStandardMappingBagProvider()),
         ];
     }
 
@@ -47,6 +48,7 @@ final class TestEntityBundle extends BaseBundle
         return [
             'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
             'Doctrine\Bundle\DoctrineBundle\DoctrineBundle',
+            'Mmoreram\BaseBundle\Tests\Bundle\TestBaseBundle',
         ];
     }
 

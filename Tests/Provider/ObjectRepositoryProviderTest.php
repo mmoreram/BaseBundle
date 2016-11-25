@@ -80,7 +80,7 @@ class ObjectRepositoryProviderTest extends BaseFunctionalTest
     public function testRepositoryExists()
     {
         $this->assertInstanceOf(
-            'Doctrine\ORM\EntityRepository',
+            'Doctrine\Common\Persistence\ObjectRepository',
             $this->get('base.repository.user')
         );
     }

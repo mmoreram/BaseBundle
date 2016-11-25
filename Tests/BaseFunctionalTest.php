@@ -114,7 +114,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      *
      * @return string
      */
-    public function getParameter(string $parameterName) : string
+    public function getParameter(string $parameterName)
     {
         return self::$container->getParameter($parameterName);
     }

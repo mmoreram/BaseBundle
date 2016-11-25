@@ -18,14 +18,32 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\BaseBundle;
-use Mmoreram\BaseBundle\Tests\Bundle\CompilerPass\TestCompilerPass;
-use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestExtension;
+use Mmoreram\BaseBundle\CompilerPass\MappingCompilerPass;
+use Mmoreram\BaseBundle\Mapping\MappingBagProvider;
+use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestMappingExtension;
 
 /**
- * Class TestBundle.
+ * Class TestMappingBundle.
  */
-final class TestBundle extends BaseBundle
+final class TestMappingBundle extends BaseBundle
 {
+    /**
+     * @var MappingBagProvider
+     *
+     * Mapping bag provider
+     */
+    private $mappingBagProvider;
+
+    /**
+     * TestMappingBundle constructor.
+     *
+     * @param MappingBagProvider $mappingBagProvider
+     */
+    public function __construct(MappingBagProvider $mappingBagProvider)
+    {
+        $this->mappingBagProvider = $mappingBagProvider;
+    }
+
     /**
      * Return a CompilerPass instance array.
      *
@@ -34,7 +52,7 @@ final class TestBundle extends BaseBundle
     public function getCompilerPasses()
     {
         return [
-            new TestCompilerPass(),
+            new MappingCompilerPass($this->mappingBagProvider),
         ];
     }
 
@@ -47,6 +65,7 @@ final class TestBundle extends BaseBundle
     {
         return [
             'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
+            'Doctrine\Bundle\DoctrineBundle\DoctrineBundle',
             'Mmoreram\BaseBundle\Tests\Bundle\TestBaseBundle',
         ];
     }
@@ -60,6 +79,6 @@ final class TestBundle extends BaseBundle
      */
     public function getContainerExtension()
     {
-        return new TestExtension();
+        return new TestMappingExtension($this->mappingBagProvider);
     }
 }

@@ -14,51 +14,28 @@
 namespace Mmoreram\BaseBundle\Tests\Bundle\Entity;
 
 /**
- * File header placeholder.
+ * Interface UserInterface.
  */
-class User implements UserInterface
+interface UserInterface
 {
-    /**
-     * @var int
-     *
-     * Id
-     */
-    protected $id;
-
-    /**
-     * @var string
-     *
-     * Name
-     */
-    protected $name;
-
     /**
      * Get Id.
      *
      * @return int|null
      */
-    public function getId() : ? int
-    {
-        return $this->id;
-    }
+    public function getId() : ? int;
 
     /**
      * Get Name.
      *
      * @return string|null
      */
-    public function getName() : string
-    {
-        return $this->name;
-    }
+    public function getName() : string;
 
     /**
      * Set Name.
      *
      * @param string|null $name
      */
-    public function setName( ? string $name)
-    {
-        $this->name = $name;
-    }
+    public function setName( ? string $name);
 }

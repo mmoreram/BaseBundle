@@ -11,18 +11,19 @@
  * @author Marc Morera <yuhu@mmoreram.com>
  */
 
-namespace Mmoreram\BaseBundle\Test\Provider;
+namespace Mmoreram\BaseBundle\Tests\Mapping;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use Mmoreram\BaseBundle\Tests\BaseKernel;
-use Mmoreram\BaseBundle\Tests\Bundle\TestEntityBundle;
+use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestMappingBagProvider;
+use Mmoreram\BaseBundle\Tests\Bundle\TestMappingBundle;
 
 /**
- * Class ObjectManagerProviderTest.
+ * Class BundleMappingSpecialDICTest.
  */
-class ObjectManagerProviderTest extends BaseFunctionalTest
+class BundleMappingSpecialDICTest extends BaseFunctionalTest
 {
     /**
      * Get kernel.
@@ -32,7 +33,16 @@ class ObjectManagerProviderTest extends BaseFunctionalTest
     protected function getKernel()
     {
         return new BaseKernel([
-            new TestEntityBundle(),
+            new TestMappingBundle(new TestMappingBagProvider(
+                ['user' => 'User'],
+                '@TestMappingBundle',
+                'Mmoreram\BaseBundle\Tests\Bundle\Entity',
+                'another_prefix',
+                'another_entity_manager',
+                'manager',
+                'repository',
+                false
+            )),
         ], [
             'doctrine' => [
                 'dbal' => [
@@ -48,7 +58,7 @@ class ObjectManagerProviderTest extends BaseFunctionalTest
                 ],
                 'orm' => [
                     'entity_managers' => [
-                        'default' => [
+                        'another_entity_manager' => [
                             'connection' => 'default',
                             'auto_mapping' => false,
                             'metadata_cache_driver' => [],
@@ -63,25 +73,22 @@ class ObjectManagerProviderTest extends BaseFunctionalTest
                     'resource' => __DIR__ . '/../../Resources/config/providers.yml',
                 ],
             ],
-            'services' => [
-                'base.entity_manager.user' => [
-                    'parent' => 'base.abstract_object_manager',
-                    'arguments' => [
-                        'Mmoreram\BaseBundle\Tests\Bundle\Entity\User',
-                    ],
-                ],
-            ],
         ]);
     }
 
     /**
-     * Test repository availability.
+     * Test providers generation.
      */
-    public function testRepositoryExists()
+    public function testProviderAutogeneration()
     {
         $this->assertInstanceOf(
             'Doctrine\Common\Persistence\ObjectManager',
-            $this->get('base.entity_manager.user')
+            $this->get('another_prefix.manager.user')
+        );
+
+        $this->assertInstanceOf(
+            'Doctrine\Common\Persistence\ObjectRepository',
+            $this->get('another_prefix.repository.user')
         );
     }
 }

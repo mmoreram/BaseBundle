@@ -21,7 +21,8 @@ use Symfony\Component\DependencyInjection\Extension\ConfigurationExtensionInterf
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+
+use Mmoreram\BaseBundle\Mapping\MappingBagProvider;
 
 /**
  * Class BaseExtension.
@@ -32,20 +33,20 @@ abstract class BaseExtension implements
     PrependExtensionInterface
 {
     /**
-     * @var BundleInterface
+     * @var MappingBagProvider
      *
-     * Bundle
+     * Mapping bag provider
      */
-    protected $bundle;
+    protected $mappingBagProvider;
 
     /**
-     * Construct method.
+     * BaseExtension constructor.
      *
-     * @var BundleInterface Bundle
+     * @param MappingBagProvider $mappingBagProvider
      */
-    public function __construct(BundleInterface $bundle)
+    public function __construct(MappingBagProvider $mappingBagProvider = null)
     {
-        $this->bundle = $bundle;
+        $this->mappingBagProvider = $mappingBagProvider;
     }
 
     /**
@@ -119,11 +120,11 @@ abstract class BaseExtension implements
 
             $config = $this->processConfiguration($configuration, $config);
             $config = $container->getParameterBag()->resolveValue($config);
+            $this->applyMappingParametrization($config, $container);
             $this->applyParametrizedValues($config, $container);
         }
 
         $this->overrideEntities($container);
-
         $this->preLoad($config, $container);
     }
 
@@ -154,14 +155,18 @@ abstract class BaseExtension implements
     /**
      * Get the Config file location.
      *
-     * @return string Config file location
+     * @return string
      */
-    protected function getConfigFilesLocation()
+    protected function getConfigFilesLocation() : string
     {
-        throw new \RuntimeException(sprintf(
-            'Method "getConfigFiles" returns non-empty, but "getConfigFilesLocation" is not implemented in "%s" extension.',
-            $this->getAlias()
-        ));
+        if (!empty($this->getConfigFiles([]))) {
+            throw new \RuntimeException(sprintf(
+                'Method "getConfigFiles" returns non-empty, but "getConfigFilesLocation" is not implemented in "%s" extension.',
+                $this->getAlias()
+            ));
+        }
+
+        return '';
     }
 
     /**
@@ -185,7 +190,7 @@ abstract class BaseExtension implements
      *
      * @return array Config files
      */
-    protected function getConfigFiles(array $config)
+    protected function getConfigFiles(array $config) : array
     {
         return [];
     }
@@ -200,11 +205,11 @@ abstract class BaseExtension implements
      * Also will call getParametrizationValues method to load some config values
      * to internal parameters.
      *
-     * @return ConfigurationInterface Configuration file
+     * @return ConfigurationInterface|null
      */
-    protected function getConfigurationInstance()
+    protected function getConfigurationInstance() : ? ConfigurationInterface
     {
-        return;
+        return null;
     }
 
     /**
@@ -218,9 +223,9 @@ abstract class BaseExtension implements
      *
      * @param array $config Bundles config values
      *
-     * @return array Parametrization values
+     * @return array
      */
-    protected function getParametrizationValues(array $config)
+    protected function getParametrizationValues(array $config) : array
     {
         return [];
     }
@@ -255,7 +260,7 @@ abstract class BaseExtension implements
      *
      * @return array configuration processed
      */
-    protected function processConfiguration(ConfigurationInterface $configuration, array $configs)
+    private function processConfiguration(ConfigurationInterface $configuration, array $configs)
     {
         $processor = new Processor();
 
@@ -265,21 +270,64 @@ abstract class BaseExtension implements
     /**
      * Apply parametrized values.
      *
-     * @param array            $config    Configuration
-     * @param ContainerBuilder $container Container
-     *
-     * @return $this Self object
+     * @param array            $config
+     * @param ContainerBuilder $container
      */
-    protected function applyParametrizedValues(array $config, ContainerBuilder $container)
-    {
+    private function applyParametrizedValues(
+        array $config,
+        ContainerBuilder $container
+    ) {
         $parametrizationValues = $this->getParametrizationValues($config);
         if (is_array($parametrizationValues)) {
             $container
                 ->getParameterBag()
                 ->add($parametrizationValues);
         }
+    }
 
-        return $this;
+    /**
+     * Apply parametrization for Mapping data.
+     * This method is only applied if the extension implements
+     * EntitiesMappedExtension.
+     *
+     * @param array            $config
+     * @param ContainerBuilder $container
+     */
+    private function applyMappingParametrization(
+        array $config,
+        ContainerBuilder $container
+    ) {
+        if (!$this->mappingBagProvider instanceof MappingBagProvider) {
+            return;
+        }
+
+        $mappingBagCollection = $this
+            ->mappingBagProvider
+            ->getMappingBagCollection();
+
+        $mappedParameters = [];
+        foreach ($mappingBagCollection->all() as $mappingBag) {
+            $entityName = $mappingBag->getEntityName();
+            $isOverwritable = $mappingBag->isOverwritable();
+            $mappedParameters = array_merge($mappedParameters, [
+                $mappingBag->getParamFormat('class') => $isOverwritable
+                    ? $config['mapping'][$entityName]['class']
+                    : $mappingBag->getEntityClass(),
+                $mappingBag->getParamFormat('mapping_file') => $isOverwritable
+                    ? $config['mapping'][$entityName]['mapping_file']
+                    : $mappingBag->getEntityMappingFile(),
+                $mappingBag->getParamFormat('manager') => $isOverwritable
+                    ? $config['mapping'][$entityName]['manager']
+                    : $mappingBag->getManagerName(),
+                $mappingBag->getParamFormat('enabled') => $isOverwritable
+                    ? $config['mapping'][$entityName]['enabled']
+                    : $mappingBag->getEntityIsEnabled(),
+            ]);
+        }
+
+        $container
+            ->getParameterBag()
+            ->add($mappedParameters);
     }
 
     /**
@@ -287,10 +335,8 @@ abstract class BaseExtension implements
      *
      * @param array            $configFiles Config files
      * @param ContainerBuilder $container   Container
-     *
-     * @return $this Self object
      */
-    protected function loadFiles(array $configFiles, ContainerBuilder $container)
+    private function loadFiles(array $configFiles, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator($this->getConfigFilesLocation()));
 
@@ -305,18 +351,14 @@ abstract class BaseExtension implements
 
             $loader->load($configFile . '.yml');
         }
-
-        return $this;
     }
 
     /**
      * Override Doctrine entities.
      *
      * @param ContainerBuilder $container Container
-     *
-     * @return $this Self object
      */
-    protected function overrideEntities(ContainerBuilder $container)
+    private function overrideEntities(ContainerBuilder $container)
     {
         if ($this instanceof EntitiesOverridableExtension) {
             $overrides = $this->getEntitiesOverrides();
@@ -330,7 +372,5 @@ abstract class BaseExtension implements
                 ],
             ]);
         }
-
-        return $this;
     }
 }
