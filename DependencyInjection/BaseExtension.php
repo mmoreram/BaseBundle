@@ -50,17 +50,6 @@ abstract class BaseExtension implements
     }
 
     /**
-     * Returns the recommended alias to use in XML.
-     *
-     * This alias is also the mandatory prefix to use when using YAML.
-     *
-     * @return string The alias
-     *
-     * @api
-     */
-    abstract public function getAlias();
-
-    /**
      * Returns extension configuration.
      *
      * @param array            $config    An array of configuration values
