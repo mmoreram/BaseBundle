@@ -49,6 +49,6 @@
             "vendor/bin/php-formatter f:h:f .",
             "vendor/bin/php-formatter f:u:s ."
         ],
-        "test": "phpunit"
+        "test": "vendor/bin/phpunit"
     }
 }

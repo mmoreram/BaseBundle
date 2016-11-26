@@ -24,7 +24,7 @@ use Mmoreram\BaseBundle\Mapping\MappingBagProvider;
 /**
  * Class BaseConfiguration.
  */
-abstract class BaseConfiguration implements ConfigurationInterface
+class BaseConfiguration implements ConfigurationInterface
 {
     /**
      * @var string
