@@ -14,7 +14,7 @@ install:
     - composer update --prefer-source --no-interaction ${COMPOSER_OPTIONS}
 
 script:
-    - phpunit
+    - php vendor/bin/phpunit
 
 notifications:
     email: false
