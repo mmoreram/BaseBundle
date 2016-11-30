@@ -11,5 +11,5 @@ framework:
         resource: ~
     form: true
     default_locale: "%locale%"
-    templating:
-        engines: ['php']
+    templating: false
+    assets: false
