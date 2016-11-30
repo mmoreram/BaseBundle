@@ -12,4 +12,4 @@ framework:
     form: true
     default_locale: "%locale%"
     templating:
-        engines: ['php'] }
+        engines: ['php']
