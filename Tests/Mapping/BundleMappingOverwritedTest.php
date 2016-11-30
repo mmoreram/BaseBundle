@@ -31,7 +31,7 @@ class BundleMappingOverwritedTest extends BaseFunctionalTest
      *
      * @return KernelInterface
      */
-    protected function getKernel()
+    protected static function getKernel() : KernelInterface
     {
         return new BaseKernel([
             new TestMappingBundle(new TestMappingBagProvider(
@@ -45,18 +45,11 @@ class BundleMappingOverwritedTest extends BaseFunctionalTest
                 true
             )),
         ], [
+            'imports' => [
+                ['resource' => '@BaseBundle/Resources/config/providers.yml'],
+                ['resource' => '@BaseBundle/Resources/test/doctrine.test.yml'],
+            ],
             'doctrine' => [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'driver' => 'pdo_sqlite',
-                            'dbname' => 'test.sqlite',
-                            'path' => '%kernel.root_dir%/cache/test/test.sqlite',
-                            'memory' => true,
-                            'charset' => 'UTF8',
-                        ],
-                    ],
-                ],
                 'orm' => [
                     'entity_managers' => [
                         'default' => [
@@ -74,11 +67,6 @@ class BundleMappingOverwritedTest extends BaseFunctionalTest
                             'result_cache_driver' => [],
                         ],
                     ],
-                ],
-            ],
-            'imports' => [
-                [
-                    'resource' => __DIR__ . '/../../Resources/config/providers.yml',
                 ],
             ],
             'test' => [

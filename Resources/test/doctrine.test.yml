@@ -1,0 +1,28 @@
+parameters:
+    database_driver: pdo_sqlite
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: test
+    database_user: root
+    database_password: root
+    database_path: %kernel.cache_dir%/test.test
+    database_memory: false
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   "%database_driver%"
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        path:     "%database_path%"
+        memory:   "%database_memory%"
+        charset:  UTF8
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        metadata_cache_driver: array
+        query_cache_driver: array
+        result_cache_driver: array
+        auto_mapping: false

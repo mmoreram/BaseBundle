@@ -28,7 +28,7 @@ class BundleWithoutExtensionTest extends BaseFunctionalTest
      *
      * @return KernelInterface
      */
-    protected function getKernel()
+    protected static function getKernel() : KernelInterface
     {
         return new BaseKernel([
             'Mmoreram\BaseBundle\Tests\Bundle\TestEmptyBundle',
