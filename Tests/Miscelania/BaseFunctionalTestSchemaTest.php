@@ -65,6 +65,6 @@ class BaseFunctionalTestSchemaTest extends BaseFunctionalTest
      */
     public function testElementsLoadedFromFixtures()
     {
-        $this->assertCount(3, $this->findAll('TestMappingBundle:User'));
+        $this->assertCount(3, $this->findAll('Mmoreram\BaseBundle\Tests\Bundle\Entity\User'));
     }
 }
