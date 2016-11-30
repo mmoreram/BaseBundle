@@ -130,14 +130,13 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Reset database.
+     * Reset fixtures.
      *
-     * Performs a completed database reset
+     * Performs a completed fixtures reset
      */
-    protected function resetDatabase()
+    protected function reloadFixtures()
     {
-        static::tearDownAfterClass();
-        static::createSchema();
+        static::loadFixtures();
     }
 
     /**
@@ -402,8 +401,8 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      *
      * MyBundle\Entity\Namespace\User - Namespace
      * MyBundle:User - Doctrine short alias
-     * ~my_prefix:user~ - When using short DoctrineExtraMapping, ~prefix:name~
-     * ~my_prefix.entity.user.class~ - When using DoctrineExtraMapping class param
+     * my_prefix:user - When using short DoctrineExtraMapping, prefix:name
+     * my_prefix.entity.user.class - When using DoctrineExtraMapping class param
      *
      * @param string $entityAlias
      *
@@ -411,14 +410,17 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      */
     private function locateEntity($entityAlias)
     {
-        if (1 === preg_match('/^~.*?\\.entity\\..*?\\.class~$/', $entityAlias)) {
-            return $this->getParameter(trim($entityAlias, '~'));
+        if (1 === preg_match('/^.*?\\.entity\\..*?\\.class$/', $entityAlias)) {
+            if (self::$container->hasParameter($entityAlias)) {
+                return $this->getParameter($entityAlias);
+            }
         }
 
-        if (1 === preg_match('/^~[^:]+:[^:]+~$/', $entityAlias)) {
-            return $this->getParameter(
-                str_replace(':', '.entity.', trim($entityAlias, '~') . '.class')
-            );
+        if (1 === preg_match('/^[^:]+:[^:]+$/', $entityAlias)) {
+            $possibleEntityAliasShortMapping = str_replace(':', '.entity.', $entityAlias . '.class');
+            if (self::$container->hasParameter($possibleEntityAliasShortMapping)) {
+                return $this->getParameter($possibleEntityAliasShortMapping);
+            }
         }
 
         return $entityAlias;

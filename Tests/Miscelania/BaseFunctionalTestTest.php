@@ -158,7 +158,7 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
      */
     public function testSave(string $entityNamespace)
     {
-        $this->resetDatabase();
+        $this->reloadFixtures();
 
         // In fixtures, saved 3 users already
         $user4 = new User();
@@ -193,8 +193,8 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
         return [
             ['Mmoreram\BaseBundle\Tests\Bundle\Entity\User'],
             //['TestMappingBundle:User'],
-            ['~my_prefix.entity.user.class~'],
-            ['~my_prefix:user~'],
+            ['my_prefix.entity.user.class'],
+            ['my_prefix:user'],
         ];
     }
 }

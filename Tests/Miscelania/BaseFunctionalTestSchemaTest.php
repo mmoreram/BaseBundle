@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use Mmoreram\BaseBundle\Tests\BaseKernel;
 use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestStandardMappingBagProvider;
+use Mmoreram\BaseBundle\Tests\Bundle\Entity\User;
 use Mmoreram\BaseBundle\Tests\Bundle\TestMappingBundle;
 
 /**
@@ -26,8 +27,6 @@ use Mmoreram\BaseBundle\Tests\Bundle\TestMappingBundle;
  */
 class BaseFunctionalTestSchemaTest extends BaseFunctionalTest
 {
-    protected static $debug = true;
-
     /**
      * Get kernel.
      *
@@ -66,5 +65,20 @@ class BaseFunctionalTestSchemaTest extends BaseFunctionalTest
     public function testElementsLoadedFromFixtures()
     {
         $this->assertCount(3, $this->findAll('Mmoreram\BaseBundle\Tests\Bundle\Entity\User'));
+    }
+
+    /**
+     * Test reload fixtures.
+     */
+    public function testReloadFixtures()
+    {
+        $user = new User();
+        $user->setName('alehop');
+        $this->save($user);
+        $this->assertCount(4, $this->findAll('my_prefix:user'));
+
+        $this->reloadFixtures();
+
+        $this->assertCount(3, $this->findAll('my_prefix:user'));
     }
 }
