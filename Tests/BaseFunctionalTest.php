@@ -388,7 +388,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      */
     private static function addDebugInConfiguration(array $configuration) : array
     {
-        if (!self::$debug) {
+        if (!static::$debug) {
             $configuration['--quiet'] = true;
         }
 
