@@ -48,6 +48,7 @@ final class TestBundle extends BaseBundle
         return [
             'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
             'Mmoreram\BaseBundle\Tests\Bundle\TestBaseBundle',
+            'Mmoreram\BaseBundle\BaseBundle',
         ];
     }
 

@@ -29,41 +29,16 @@ class BaseBundleTest extends BaseFunctionalTest
      *
      * @return KernelInterface
      */
-    protected function getKernel()
+    protected static function getKernel() : KernelInterface
     {
         return new BaseKernel([
             new FrameworkBundle(),
             new BaseBundle(),
             new DoctrineBundle(),
         ], [
-            'doctrine' => [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'driver' => 'pdo_sqlite',
-                            'dbname' => 'test.sqlite',
-                            'path' => '%kernel.root_dir%/cache/test/test.sqlite',
-                            'memory' => true,
-                            'charset' => 'UTF8',
-                        ],
-                    ],
-                ],
-                'orm' => [
-                    'entity_managers' => [
-                        'default' => [
-                            'connection' => 'default',
-                            'auto_mapping' => false,
-                            'metadata_cache_driver' => [],
-                            'query_cache_driver' => [],
-                            'result_cache_driver' => [],
-                        ],
-                    ],
-                ],
-            ],
             'imports' => [
-                [
-                    'resource' => '@BaseBundle/Resources/config/providers.yml',
-                ],
+                ['resource' => '@BaseBundle/Resources/config/providers.yml'],
+                ['resource' => '@BaseBundle/Resources/test/doctrine.test.yml'],
             ],
         ]);
     }

@@ -30,7 +30,7 @@ class BundleMappingSpecialDICTest extends BaseFunctionalTest
      *
      * @return KernelInterface
      */
-    protected function getKernel()
+    protected static function getKernel() : KernelInterface
     {
         return new BaseKernel([
             new TestMappingBundle(new TestMappingBagProvider(
@@ -44,18 +44,11 @@ class BundleMappingSpecialDICTest extends BaseFunctionalTest
                 false
             )),
         ], [
+            'imports' => [
+                ['resource' => '@BaseBundle/Resources/config/providers.yml'],
+                ['resource' => '@BaseBundle/Resources/test/doctrine.test.yml'],
+            ],
             'doctrine' => [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'driver' => 'pdo_sqlite',
-                            'dbname' => 'test.sqlite',
-                            'path' => '%kernel.root_dir%/cache/test/test.sqlite',
-                            'memory' => true,
-                            'charset' => 'UTF8',
-                        ],
-                    ],
-                ],
                 'orm' => [
                     'entity_managers' => [
                         'another_entity_manager' => [
@@ -66,11 +59,6 @@ class BundleMappingSpecialDICTest extends BaseFunctionalTest
                             'result_cache_driver' => [],
                         ],
                     ],
-                ],
-            ],
-            'imports' => [
-                [
-                    'resource' => __DIR__ . '/../../Resources/config/providers.yml',
                 ],
             ],
         ]);

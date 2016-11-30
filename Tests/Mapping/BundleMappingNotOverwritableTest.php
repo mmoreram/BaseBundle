@@ -31,7 +31,7 @@ class BundleMappingNotOverwritableTest extends BaseFunctionalTest
      *
      * @return KernelInterface
      */
-    protected function getKernel()
+    protected static function getKernel() : KernelInterface
     {
         return new BaseKernel([
             new TestMappingBundle(new TestMappingBagProvider(
@@ -45,29 +45,9 @@ class BundleMappingNotOverwritableTest extends BaseFunctionalTest
                 false
             )),
         ], [
-            'doctrine' => [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'driver' => 'pdo_sqlite',
-                            'dbname' => 'test.sqlite',
-                            'path' => '%kernel.root_dir%/cache/test/test.sqlite',
-                            'memory' => true,
-                            'charset' => 'UTF8',
-                        ],
-                    ],
-                ],
-                'orm' => [
-                    'entity_managers' => [
-                        'default' => [
-                            'connection' => 'default',
-                            'auto_mapping' => false,
-                            'metadata_cache_driver' => [],
-                            'query_cache_driver' => [],
-                            'result_cache_driver' => [],
-                        ],
-                    ],
-                ],
+            'imports' => [
+                ['resource' => '@BaseBundle/Resources/config/providers.yml'],
+                ['resource' => '@BaseBundle/Resources/test/doctrine.test.yml'],
             ],
             'test' => [
                 'mapping' => [
@@ -82,16 +62,18 @@ class BundleMappingNotOverwritableTest extends BaseFunctionalTest
     /**
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
+     *
+     * @throws RuntimeException unable to start the application
      */
-    protected function setUp()
+    public static function setUpBeforeClass()
     {
         try {
-            parent::setUp();
+            parent::setUpBeforeClass();
         } catch (RuntimeException $e) {
             return true;
         }
 
-        $this->fail('This test should fail as some configuration is defined while should\'t be possible');
+        self::fail('This test should fail as some configuration is defined while should\'t be possible');
     }
 
     /**

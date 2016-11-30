@@ -49,6 +49,7 @@ final class TestEntityBundle extends BaseBundle
             'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
             'Doctrine\Bundle\DoctrineBundle\DoctrineBundle',
             'Mmoreram\BaseBundle\Tests\Bundle\TestBaseBundle',
+            'Mmoreram\BaseBundle\BaseBundle',
         ];
     }
 
