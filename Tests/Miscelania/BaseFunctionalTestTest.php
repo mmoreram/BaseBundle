@@ -13,6 +13,7 @@
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
+use Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
@@ -34,6 +35,7 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
     protected static function getKernel() : KernelInterface
     {
         return new BaseKernel([
+            new DoctrineFixturesBundle(),
             new TestMappingBundle(
                 new TestStandardMappingBagProvider()
             ),
@@ -82,15 +84,17 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
     public function testGetParameter()
     {
         $this->assertEquals(
-            'en',
-            $this->getParameter('secret')
+            '1234',
+            $this->getParameter('kernel.secret')
         );
     }
 
     /**
      * Test get object manager.
+     *
+     * @dataProvider getEntityNamespace
      */
-    public function testGetObjectManager()
+    public function testGetObjectManager(string $entityNamespace)
     {
         $this->assertInstanceOf(
             'Doctrine\Common\Persistence\ObjectManager',
@@ -99,14 +103,16 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
 
         $this->assertInstanceOf(
             'Doctrine\Common\Persistence\ObjectManager',
-            $this->getObjectManager('BaseBundle:User')
+            $this->getObjectManager($entityNamespace)
         );
     }
 
     /**
      * Test get object repository.
+     *
+     * @dataProvider getEntityNamespace
      */
-    public function testGetObjectRepository()
+    public function testGetObjectRepository(string $entityNamespace)
     {
         $this->assertInstanceOf(
             'Doctrine\Common\Persistence\ObjectRepository',
@@ -115,70 +121,80 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
 
         $this->assertInstanceOf(
             'Doctrine\Common\Persistence\ObjectRepository',
-            $this->getObjectRepository('BaseBundle:User')
+            $this->getObjectRepository($entityNamespace)
         );
     }
 
     /**
      * Test find.
+     *
+     * @dataProvider getEntityNamespace
      */
-    public function testFind()
+    public function testFind(string $entityNamespace)
     {
-        $user1 = new User();
-        $user1->setName('Marc');
-        $this->save($user1);
-
         $this->assertEquals(
             1,
-            $this->find('BaseBundle:User', 1)
+            $this->find($entityNamespace, 1)->getId()
         );
     }
 
     /**
      * Test find all.
+     *
+     * @dataProvider getEntityNamespace
      */
-    public function testFindAll()
+    public function testFindAll(string $entityNamespace)
     {
-        $user1 = new User();
-        $user1->setName('Marc');
-        $this->save($user1);
-
-        $user2 = new User();
-        $user2->setName('India');
-        $this->save($user2);
-
         $this->assertCount(
-            2,
-            $this->findAll('BaseBundle:User')
+            3,
+            $this->findAll($entityNamespace)
         );
     }
 
     /**
      * Test save.
+     *
+     * @dataProvider getEntityNamespace
      */
-    public function testSave()
+    public function testSave(string $entityNamespace)
     {
-        $user1 = new User();
-        $user1->setName('Marc');
+        $this->resetDatabase();
 
-        $this->save($user1);
-        $this->assertNotNull($user1->getId());
+        // In fixtures, saved 3 users already
+        $user4 = new User();
+        $user4->setName('Marc');
 
-        $user1->setName('India');
-        $user2 = new User();
-        $user2->setName('Sara');
+        $this->save($user4);
+        $this->assertNotNull($user4->getId());
 
-        $user3 = new User();
-        $user3->setName('Yepa');
+        $user4->setName('India');
+        $user5 = new User();
+        $user5->setName('Sara');
+
+        $user6 = new User();
+        $user6->setName('Yepa');
 
         $this->save([
-            $user1,
-            $user2,
-            $user3,
+            $user4,
+            $user5,
+            $user6,
         ]);
 
-        $this->assertEquals('India', $this->find('BaseBundle:User', 1));
-        $this->assertEquals('Sara', $this->find('BaseBundle:User', 2));
-        $this->assertEquals('Yepa', $this->find('BaseBundle:User', 3));
+        $this->assertEquals('India', $this->find($entityNamespace, 4)->getName());
+        $this->assertEquals('Sara', $this->find($entityNamespace, 5)->getName());
+        $this->assertEquals('Yepa', $this->find($entityNamespace, 6)->getName());
+    }
+
+    /**
+     * Get entity namespace.
+     */
+    public function getEntityNamespace()
+    {
+        return [
+            ['Mmoreram\BaseBundle\Tests\Bundle\Entity\User'],
+            //['TestMappingBundle:User'],
+            ['~my_prefix.entity.user.class~'],
+            ['~my_prefix:user~'],
+        ];
     }
 }

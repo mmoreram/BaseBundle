@@ -301,7 +301,7 @@ abstract class BaseExtension implements
             $mappedParameters = array_merge($mappedParameters, [
                 $mappingBag->getParamFormat('class') => $isOverwritable
                     ? $config['mapping'][$entityName]['class']
-                    : $mappingBag->getEntityClass(),
+                    : $mappingBag->getEntityNamespace(),
                 $mappingBag->getParamFormat('mapping_file') => $isOverwritable
                     ? $config['mapping'][$entityName]['mapping_file']
                     : $mappingBag->getEntityMappingFile(),

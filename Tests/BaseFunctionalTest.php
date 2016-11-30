@@ -109,12 +109,13 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
         }
 
         if (static::$application) {
-            static::$application->run(new ArrayInput([
-                'command' => 'doctrine:database:drop',
-                '--no-interaction' => true,
-                '--force' => true,
-                '--quiet' => true,
-            ]));
+            static::$application->run(new ArrayInput(
+                self::addDebugInConfiguration([
+                    'command' => 'doctrine:database:drop',
+                    '--no-interaction' => true,
+                    '--force' => true,
+                ])
+            ));
         }
     }
 
@@ -126,6 +127,17 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
     protected static function loadFixturePaths() : array
     {
         return [];
+    }
+
+    /**
+     * Reset database.
+     *
+     * Performs a completed database reset
+     */
+    protected function resetDatabase()
+    {
+        static::tearDownAfterClass();
+        static::createSchema();
     }
 
     /**
@@ -207,7 +219,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
 
         $fixturePaths = static::loadFixturePaths();
 
-        if (!empty($fixturesBundles)) {
+        if (!empty($fixturePaths)) {
             $formattedPaths = array_map(function ($path) {
                 return static::$kernel->locateResource($path);
             }, $fixturePaths);
@@ -271,7 +283,9 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
     {
         return $this
             ->get('base.object_repository_provider')
-            ->getObjectRepositoryByEntityNamespace($entityNamespace);
+            ->getObjectRepositoryByEntityNamespace(
+                $this->locateEntity($entityNamespace)
+            );
     }
 
     /**
@@ -285,38 +299,53 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
     {
         return $this
             ->get('base.object_manager_provider')
-            ->getObjectManagerByEntityNamespace($entityNamespace);
+            ->getObjectManagerByEntityNamespace(
+                $this->locateEntity($entityNamespace)
+            );
     }
 
     /**
      * Get the entity instance with id $id.
      *
-     * @param string $entityName
+     * @param string $entityNamespace
      * @param mixed  $id
      *
      * @return object
      */
     public function find(
-        string $entityName,
+        string $entityNamespace,
         $id
     ) {
         return $this
-            ->getObjectRepository($entityName)
+            ->getObjectRepository($this->locateEntity($entityNamespace))
             ->find($id);
     }
 
     /**
      * Get all entity instances.
      *
-     * @param string $entityName Entity name
+     * @param string $entityNamespace
      *
      * @return array
      */
-    public function findAll($entityName)
+    public function findAll($entityNamespace)
     {
         return $this
-            ->getObjectRepository($entityName)
+            ->getObjectRepository($this->locateEntity($entityNamespace))
             ->findAll();
+    }
+
+    /**
+     * Clear the object manager tracking of an entity.
+     *
+     * @param string $entityNamespace
+     */
+    public function clear($entityNamespace)
+    {
+        $entityNamespace = $this->locateEntity($entityNamespace);
+        $this
+            ->getObjectManager($entityNamespace)
+            ->clear($entityNamespace);
     }
 
     /**
@@ -364,5 +393,34 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
         }
 
         return $configuration;
+    }
+
+    /**
+     * Get entity locator given a string.
+     *
+     * Available formats:
+     *
+     * MyBundle\Entity\Namespace\User - Namespace
+     * MyBundle:User - Doctrine short alias
+     * ~my_prefix:user~ - When using short DoctrineExtraMapping, ~prefix:name~
+     * ~my_prefix.entity.user.class~ - When using DoctrineExtraMapping class param
+     *
+     * @param string $entityAlias
+     *
+     * @return string
+     */
+    private function locateEntity($entityAlias)
+    {
+        if (1 === preg_match('/^~.*?\\.entity\\..*?\\.class~$/', $entityAlias)) {
+            return $this->getParameter(trim($entityAlias, '~'));
+        }
+
+        if (1 === preg_match('/^~[^:]+:[^:]+~$/', $entityAlias)) {
+            return $this->getParameter(
+                str_replace(':', '.entity.', trim($entityAlias, '~') . '.class')
+            );
+        }
+
+        return $entityAlias;
     }
 }
