@@ -11,6 +11,8 @@
  * @author Marc Morera <yuhu@mmoreram.com>
  */
 
+declare(strict_types=1);
+
 namespace Mmoreram\BaseBundle\Mapping;
 
 /**
@@ -58,7 +60,7 @@ class ReducedMappingBag
         string $entityClass,
         string $entityMappingFile,
         string $managerName,
-        string $entityIsEnabled
+        $entityIsEnabled
     ) {
         $this->entityClass = $entityClass;
         $this->entityMappingFile = $entityMappingFile;

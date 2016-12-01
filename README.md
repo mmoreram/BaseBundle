@@ -45,6 +45,10 @@ about these three big blocks.
     * [Bundles and Components](#bundles-and-components)
     * [Exposing your mapping without BaseBundle](#exposing-your-mapping-without-basebundle)
 
+The minimum requirements of this bundle is **PHP 7.1** and **Symfony 3.2** 
+because the bundle is using features on both versions. If you're not using them 
+yet, I encourage you to do it.
+
 ## Bundle extension
 
 All bundles in Symfony should start with a PHP class, the Bundle class. This
@@ -720,6 +724,9 @@ In this case, first of all we will check that a service with name
 *addClass*.
 
 Simple.
+
+> The Compiler Pass sorts as well the services before adding them all in the
+> collector. To make this happen, you can add the `priority` in your tag line.
 
 ## Provider
 

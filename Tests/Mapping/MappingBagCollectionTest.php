@@ -11,6 +11,8 @@
  * @author Marc Morera <yuhu@mmoreram.com>
  */
 
+declare(strict_types=1);
+
 namespace Mmoreram\BaseBundle\Tests\Mapping;
 
 use PHPUnit_Framework_TestCase;

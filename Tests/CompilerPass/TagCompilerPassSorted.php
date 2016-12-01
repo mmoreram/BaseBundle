@@ -21,9 +21,9 @@ use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use Mmoreram\BaseBundle\Tests\BaseKernel;
 
 /**
- * Class TagCompilerPassTest.
+ * Class TagCompilerPassSorted.
  */
-final class TagCompilerPassTest extends BaseFunctionalTest
+final class TagCompilerPassSorted extends BaseFunctionalTest
 {
     /**
      * Get kernel.
@@ -51,13 +51,22 @@ final class TagCompilerPassTest extends BaseFunctionalTest
                             'c1',
                         ],
                         'tags' => [
-                            ['name' => 'test.tag'],
+                            ['name' => 'test.tag', 'priority' => -3],
                         ],
                     ],
                     'class2' => [
                         'parent' => 'class0',
                         'arguments' => [
                             'c2',
+                        ],
+                        'tags' => [
+                            ['name' => 'test.tag', 'priority' => 10],
+                        ],
+                    ],
+                    'class3' => [
+                        'parent' => 'class0',
+                        'arguments' => [
+                            'c3',
                         ],
                         'tags' => [
                             ['name' => 'test.tag'],
@@ -75,6 +84,18 @@ final class TagCompilerPassTest extends BaseFunctionalTest
     public function testCompilerPass()
     {
         $collector = $this->get('test.collector');
-        $this->assertCount(2, $collector->getTestClasses());
+        $testClasses = $collector->getTestClasses();
+        $this->assertEquals(
+            'c2',
+            $testClasses[0]->getName()
+        );
+        $this->assertEquals(
+            'c3',
+            $testClasses[1]->getName()
+        );
+        $this->assertEquals(
+            'c1',
+            $testClasses[2]->getName()
+        );
     }
 }

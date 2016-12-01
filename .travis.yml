@@ -5,7 +5,7 @@ sudo: false
 matrix:
     include:
         - php: 7.1
-          env: $SYMFONY_VERSION="^3.0.0"
+          env: $SYMFONY_VERSION="^3.2"
 
 before_install:
     - 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update symfony/symfony:${SYMFONY_VERSION}; fi;'
