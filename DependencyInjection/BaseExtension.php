@@ -304,7 +304,7 @@ abstract class BaseExtension implements
                     : $mappingBag->getEntityNamespace(),
                 $mappingBag->getParamFormat('mapping_file') => $isOverwritable
                     ? $config['mapping'][$entityName]['mapping_file']
-                    : $mappingBag->getEntityMappingFile(),
+                    : $mappingBag->getEntityMappingFilePath(),
                 $mappingBag->getParamFormat('manager') => $isOverwritable
                     ? $config['mapping'][$entityName]['manager']
                     : $mappingBag->getManagerName(),

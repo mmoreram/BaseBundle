@@ -116,7 +116,7 @@ final class BaseKernel extends Kernel
         LoaderInterface $loader
     ) {
         $yamlContent = Yaml::dump($this->configuration);
-        $filePath = tempnam(sys_get_temp_dir(), 'test') . '.yml';
+        $filePath = sys_get_temp_dir() . '/base-test-' . rand(1, 9999999) . '.yml';
         file_put_contents($filePath, $yamlContent);
         $loader->load($filePath);
         unlink($filePath);
@@ -150,7 +150,7 @@ final class BaseKernel extends Kernel
      */
     public function getRootDir()
     {
-        return sys_get_temp_dir() . '/' . 'base-kernel-' . substr(
+        return sys_get_temp_dir() . '/base-kernel/' . 'kernel-' . substr(
             hash(
                 'md5',
                 json_encode([

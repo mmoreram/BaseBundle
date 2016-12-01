@@ -208,7 +208,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      * Only load fixtures if loadFixtures() is set to true.
      * All other methods will be loaded if this one is loaded.
      *
-     * Otherwise, will return.
+     * Otherwise, will skip.
      */
     protected static function loadFixtures()
     {
@@ -240,7 +240,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      *
      * @param string $serviceName
      *
-     * @return mixed The associated service
+     * @return mixed
      */
     public function get(string $serviceName)
     {
@@ -252,7 +252,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      *
      * @param string $serviceName
      *
-     * @return bool The container has the service
+     * @return bool
      */
     public function has(string $serviceName) : bool
     {
@@ -264,7 +264,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      *
      * @param string $parameterName
      *
-     * @return string
+     * @return mixed
      */
     public function getParameter(string $parameterName)
     {
@@ -321,13 +321,30 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Get the entity instance with criteria.
+     *
+     * @param string $entityNamespace
+     * @param array  $criteria
+     *
+     * @return object
+     */
+    public function findOneBy(
+        string $entityNamespace,
+        array $criteria
+    ) {
+        return $this
+            ->getObjectRepository($this->locateEntity($entityNamespace))
+            ->findOneBy($criteria);
+    }
+
+    /**
      * Get all entity instances.
      *
      * @param string $entityNamespace
      *
      * @return array
      */
-    public function findAll($entityNamespace)
+    public function findAll($entityNamespace) : array
     {
         return $this
             ->getObjectRepository($this->locateEntity($entityNamespace))
@@ -335,11 +352,28 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Get all entity instances.
+     *
+     * @param string $entityNamespace
+     * @param array  $criteria
+     *
+     * @return array
+     */
+    public function findBy(
+        string $entityNamespace,
+        array $criteria
+    ) : array {
+        return $this
+            ->getObjectRepository($this->locateEntity($entityNamespace))
+            ->findBy($criteria);
+    }
+
+    /**
      * Clear the object manager tracking of an entity.
      *
      * @param string $entityNamespace
      */
-    public function clear($entityNamespace)
+    public function clear(string $entityNamespace)
     {
         $entityNamespace = $this->locateEntity($entityNamespace);
         $this

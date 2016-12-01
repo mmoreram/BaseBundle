@@ -325,7 +325,7 @@ class MappingBag
      */
     public function getParamFormat(string $type) : string
     {
-        return $this->containerPrefix . '.entity.' . $this->entityName . '.' . $type;
+        return ltrim(($this->containerPrefix . '.entity.' . $this->entityName . '.' . $type), '.');
     }
 
     /**
