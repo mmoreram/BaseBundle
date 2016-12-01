@@ -6,6 +6,10 @@
 
 -----
 
+> The minimum requirements of this bundle is **PHP 7.1** and **Symfony 3.2** 
+> because the bundle is using features on both versions. If you're not using
+> them yet, I encourage you to do it.
+
 This bundle aims to be the base for all bundles in your Symfony project. Know
 about these three big blocks.
 
@@ -44,10 +48,6 @@ about these three big blocks.
     * [Public bundles](#public-bundles)
     * [Bundles and Components](#bundles-and-components)
     * [Exposing your mapping without BaseBundle](#exposing-your-mapping-without-basebundle)
-
-The minimum requirements of this bundle is **PHP 7.1** and **Symfony 3.2** 
-because the bundle is using features on both versions. If you're not using them 
-yet, I encourage you to do it.
 
 ## Bundle extension
 
