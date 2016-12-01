@@ -11,6 +11,8 @@
  * @author Marc Morera <yuhu@mmoreram.com>
  */
 
+declare(strict_types=1);
+
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
 use Symfony\Component\HttpKernel\KernelInterface;
