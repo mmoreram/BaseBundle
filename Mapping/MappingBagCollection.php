@@ -63,7 +63,7 @@ class MappingBagCollection
         array $entities,
         string $bundleNamespace,
         string $componentNamespace,
-        string $containerPrefix,
+        string $containerPrefix = '',
         string $managerName = 'default',
         string $containerObjectManagerName = 'object_manager',
         string $containerObjectRepositoryName = 'object_repository',

@@ -139,6 +139,21 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
     }
 
     /**
+     * Test find one by.
+     *
+     * @dataProvider getEntityNamespace
+     */
+    public function testFindOneBy(string $entityNamespace)
+    {
+        $this->assertEquals(
+            1,
+            $this->findOneBy($entityNamespace, [
+                'name' => 'Joan',
+            ])->getId()
+        );
+    }
+
+    /**
      * Test find all.
      *
      * @dataProvider getEntityNamespace
@@ -148,6 +163,27 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
         $this->assertCount(
             3,
             $this->findAll($entityNamespace)
+        );
+    }
+
+    /**
+     * Test find by.
+     *
+     * @dataProvider getEntityNamespace
+     */
+    public function testFindBy(string $entityNamespace)
+    {
+        $this->reloadFixtures();
+
+        $user = new User();
+        $user->setName('Joan');
+        $this->save($user);
+
+        $this->assertCount(
+            2,
+            $this->findBy($entityNamespace, [
+                'name' => 'Joan',
+            ])
         );
     }
 

@@ -112,7 +112,7 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
         $class = $this->resolveParameterName($container, $reducedMappingBag->getEntityClass());
         $definition->setArguments([$class]);
         $container->setDefinition(
-            $mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectManagerName() . '.' . $mappingBag->getEntityName(),
+            ltrim(($mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectManagerName() . '.' . $mappingBag->getEntityName()), '.'),
             $definition
         );
     }
@@ -136,7 +136,7 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
         $class = $this->resolveParameterName($container, $reducedMappingBag->getEntityClass());
         $definition->setArguments([$class]);
         $container->setDefinition(
-            $mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectRepositoryName() . '.' . $mappingBag->getEntityName(),
+            ltrim(($mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectRepositoryName() . '.' . $mappingBag->getEntityName()), '.'),
             $definition
         );
     }

@@ -91,24 +91,24 @@ class TestMappingBagProvider implements MappingBagProvider
     /**
      * Create by shortcut bloc.
      *
-     * @param array  $entities
-     * @param string $bundleNamespace
-     * @param string $componentNamespace
-     * @param string $containerPrefix
-     * @param string $managerName
-     * @param string $containerObjectManagerName
-     * @param string $containerObjectRepositoryName
-     * @param bool   $isOverwritable
+     * @param array     $entities
+     * @param string    $bundleNamespace
+     * @param string    $componentNamespace
+     * @param string    $containerPrefix
+     * @param string    $managerName
+     * @param string    $containerObjectManagerName
+     * @param string    $containerObjectRepositoryName
+     * @param bool|null $isOverwritable
      */
     public function __construct(
         array $entities,
         string $bundleNamespace,
         string $componentNamespace,
-        string $containerPrefix,
-        string $managerName,
-        string $containerObjectManagerName,
-        string $containerObjectRepositoryName,
-        bool $isOverwritable
+        string $containerPrefix = '',
+        string $managerName = 'default',
+        string $containerObjectManagerName = 'object_manager',
+        string $containerObjectRepositoryName = 'object_repository',
+        bool $isOverwritable = false
     ) {
         $this->entities = $entities;
         $this->bundleNamespace = $bundleNamespace;

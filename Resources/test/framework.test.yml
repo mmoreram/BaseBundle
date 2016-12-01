@@ -9,7 +9,7 @@ framework:
     secret: "%secret%"
     router:
         resource: ~
-    form: true
+    form: false
     default_locale: "%locale%"
     templating: false
     assets: false
