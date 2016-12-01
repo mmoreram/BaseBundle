@@ -39,20 +39,11 @@ about these three big blocks.
 
 **Entity mapping**
 
-* [Integration with SimpleDoctrineMapping](#integration-with-simpledoctrinemapping)
+* [Entity Mapping](#entity-mapping)
     * [Private bundles](#private-bundles)
     * [Public bundles](#public-bundles)
     * [Bundles and Components](#bundles-and-components)
     * [Exposing your mapping without BaseBundle](#exposing-your-mapping-without-basebundle)
-
-## Documentation bases
-
-Some libraries will be used as well during the documentation. We encourage you
-to check them all in order to increase the quality of your bundles and the way
-you know them.
-
-* [Simple Doctrine Mapping](http://github.com/mmoreram/simple-doctrine-mapping)
-* [Symfony Bundle Dependencies](http://github.com/mmoreram/symfony-bundle-dependencies)
 
 ## Bundle extension
 
@@ -1684,3 +1675,12 @@ What these two classes do for you is just adding all the fields in your
 configuration tree, validating them all and adding the resulting values in your
 container as parameters, so if you want to do these steps without BaseBundle
 make sure that, at the end, you have the right parameters in your container.
+
+## Documentation extra
+
+Some libraries will be used as well during the documentation. We encourage you
+to check them all in order to increase the quality of your bundles and the way
+you know them.
+
+* [Simple Doctrine Mapping](http://github.com/mmoreram/simple-doctrine-mapping)
+* [Symfony Bundle Dependencies](http://github.com/mmoreram/symfony-bundle-dependencies)
