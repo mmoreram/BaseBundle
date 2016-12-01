@@ -1349,8 +1349,9 @@ As you can see, one simple method and that will be enough. Let's see a simple
 implementation of this class for your bundle. For this scenario, imagine that we
 have this bundle configuration.
 
-* Two entities under `@MyBundle/Entity` folder
-* Two mapping files under `@MyBundle/Resources/config/doctrine` folder
+* One entity called User under `MyBundle\Entity` namespace.
+* One mapping file under `@MyBundle/Resources/config/doctrine` folder called
+  `User.orm.yml`
 
 Our MappingBagProvider should be something like this
 
@@ -1380,7 +1381,8 @@ As you can see, this method returns a `MappingBagCollection` instance with some
 simple data.
 
 * An associative array of your entities
-* A bundle path where to look for the mapping files
+* A bundle path where to look for the mapping files (you can use the short
+  notation here)
 * The namespace where to find the entity classes
 
 The second and last step to start working with your entities is the creation of
@@ -1404,13 +1406,13 @@ final class MyBundle extends BaseBundle
 }
 ```
 
-and that's it, you model is already built with this amazing features.
+and that's it, you model is already built with these amazing features.
 
 * Your entities are mapped with the YAML files inside the Resources path,
   created from the MappingBagCollection construct data. You should follow the
   Symfony standard by placing these mapping files inside the folder
   `@MyBundle/Resources/config/doctrine` with the standard name `User.orm.yml`.
-  At the moment, only for YAML files.
+  At the moment, only available for YAML files.
 * Per each entity mapped, the library has created two services.
     * `object_manager.{entity_name}` is an alias for the object manager assigned
       to this entity. You can inject it in your services. In that case you could
