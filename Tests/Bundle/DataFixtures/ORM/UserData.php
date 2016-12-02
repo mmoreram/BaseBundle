@@ -15,15 +15,15 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Bundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Mmoreram\BaseBundle\DataFixtures\BaseFixture;
 use Mmoreram\BaseBundle\Tests\Bundle\Entity\User;
 
 /**
  * Class UserData.
  */
-class UserData implements FixtureInterface
+class UserData extends BaseFixture
 {
     /**
      * Load data fixtures with the passed EntityManager.
@@ -32,17 +32,16 @@ class UserData implements FixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $user = new User();
-        $user->setName('Joan');
-        $manager->persist($user);
+        $user1 = new User();
+        $user1->setName('Joan');
+        $this->save($user1);
 
-        $user = new User();
-        $user->setName('Maria');
-        $manager->persist($user);
+        $user2 = new User();
+        $user2->setName('Maria');
+        $this->save($user2);
 
-        $user = new User();
-        $user->setName('Pere');
-        $manager->persist($user);
-        $manager->flush();
+        $user3 = new User();
+        $user3->setName('Pere');
+        $this->save($user3);
     }
 }
