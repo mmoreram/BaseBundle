@@ -40,6 +40,7 @@ about these three big blocks.
     * [Fast testing methods](#fast-testing-methods)
     * [Working with Database](#working-with-database)
     * [Working with Fixtures](#working-with-fixtures)
+    * [BaseFixture](#base-fixture)
 
 **Entity mapping**
 
@@ -1307,6 +1308,47 @@ with the first current Test Case method.
 ```php
 $this->reloadFixtures();
 ```
+
+### BaseFixture
+
+As long as you need to create your Fixtures, this library provides you as well
+the same container accessors than provided in tests. Just make sure that your
+fixtures extend the `BaseFixture` class, and you'll be able to use all these
+methods as well.
+
+``` php
+/**
+ * Class UserData.
+ */
+class UserData extends BaseFixture
+{
+    /**
+     * Load data fixtures with the passed EntityManager.
+     *
+     * @param ObjectManager $manager
+     */
+    public function load(ObjectManager $manager)
+    {
+        $user1 = new User();
+        $user1->setName('Joan');
+        $this->save($user1);
+
+        $this->find('my_prefix:user');
+        $this->getObjectManager('my_prefix:user');
+
+        // ...
+    }
+}
+```
+
+Even if you extend `BaseFixture` you can implement the same interfaces you've
+been using until now for dependent fixtures and ordered fixtures.
+
+> To make sure your fixtures are valid even if you decide in the future that
+> your entity User is not managed anymore by the default Doctrine entity
+> manager, use the ->save() method to persist and flush all entities. With these
+> helpers should should never use the manager passed as parameter. If you need
+> to get the whole object manager, use the ->getObjectManager() method.
 
 ## Entity Mapping
 
