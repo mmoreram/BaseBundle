@@ -40,7 +40,7 @@ about these three big blocks.
     * [Fast testing methods](#fast-testing-methods)
     * [Working with Database](#working-with-database)
     * [Working with Fixtures](#working-with-fixtures)
-    * [BaseFixture](#base-fixture)
+    * [BaseFixture](#basefixture)
 
 **Entity mapping**
 
@@ -1733,5 +1733,5 @@ Some libraries will be used as well during the documentation. We encourage you
 to check them all in order to increase the quality of your bundles and the way
 you know them.
 
-* [Simple Doctrine Mapping](http://github.com/mmoreram/simple-doctrine-mapping)
+* [Simple Doctrine Mapping](http://github.com/mmoreram/SimpleDoctrineMapping)
 * [Symfony Bundle Dependencies](http://github.com/mmoreram/symfony-bundle-dependencies)
