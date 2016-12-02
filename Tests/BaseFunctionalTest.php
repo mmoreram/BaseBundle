@@ -135,6 +135,14 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Reset schema.
+     */
+    protected function reloadSchema()
+    {
+        static::createSchema();
+    }
+
+    /**
      * Has fixtures to load.
      *
      * @return bool
