@@ -151,9 +151,9 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
     /**
      * Schema must be loaded in all test cases.
      *
-     * @return bool Load schema
+     * @return bool
      */
-    protected static function loadSchema()
+    protected static function loadSchema() : bool
     {
         return static::hasFixturePaths();
     }
