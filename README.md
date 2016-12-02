@@ -1257,6 +1257,14 @@ of your test case and will be dropped after it. By loaded we mean these steps
 > bin/console doctrine:schema:create
 ```
 
+You can reload the schema during a test scenario as well, by invoking the
+`->reloadSchema()` method. After this call, your schema will be clean (unless
+you use fixtures).
+
+``` php
+$this->reloadSchema();
+```
+
 You can debug your console output by overwriding the `debug` protected variable
 in your test case.
 
@@ -1308,6 +1316,10 @@ with the first current Test Case method.
 ```php
 $this->reloadFixtures();
 ```
+
+This method will cause the same change in your database state than the method
+`->reloadSchema()`, so apart of cleaning your schema and building it again, all
+fixtures will be loaded as well.
 
 ### BaseFixture
 
