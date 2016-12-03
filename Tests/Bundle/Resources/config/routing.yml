@@ -1,0 +1,3 @@
+annotatted:
+    resource: "@TestBaseBundle/Controller/AnnotattedController.php"
+    type:     annotation

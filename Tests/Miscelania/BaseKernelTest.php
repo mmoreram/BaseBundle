@@ -1,7 +1,17 @@
 <?php
-/**
- * File header placeholder
+
+/*
+ * This file is part of the BaseBundle for Symfony2.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Feel free to edit as you please, and have fun.
+ *
+ * @author Marc Morera <yuhu@mmoreram.com>
  */
+
+declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
@@ -12,18 +22,18 @@ use Mmoreram\BaseBundle\Tests\Bundle\TestMappingBundle;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class BaseKernelTest
+ * Class BaseKernelTest.
  */
 class BaseKernelTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * Test unsorted but equals == same kernel
+     * Test unsorted but equals == same kernel.
      */
     public function testUnsorted()
     {
         $kernel1 = new BaseKernel([
             TestBundle::class,
-            new TestEntityBundle()
+            new TestEntityBundle(),
         ], [
             'key1' => [
                 'key1' => 'value1',
@@ -31,15 +41,15 @@ class BaseKernelTest extends PHPUnit_Framework_TestCase
                 'keyX' => [
                     ['a1', 'an'],
                     'a2',
-                ]
+                ],
             ],
             'key2' => [
                 'key3' => 'value3',
                 'key4' => 'value4',
-            ]
+            ],
         ], [
             ['route1', 'key1', 'value1'],
-            ['@Bundle1/routing.yml']
+            ['@Bundle1/routing.yml'],
         ]);
 
         $kernel2 = new BaseKernel([
@@ -57,7 +67,7 @@ class BaseKernelTest extends PHPUnit_Framework_TestCase
                     ['an', 'a1'],
                 ],
                 'key1' => 'value1',
-            ]
+            ],
         ], [
             ['@Bundle1/routing.yml'],
             ['route1', 'key1', 'value1'],
@@ -70,36 +80,36 @@ class BaseKernelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test same bundles, same configuration, same routes == same kernel
+     * Test same bundles, same configuration, same routes == same kernel.
      */
     public function testSameBundlesSameConfigurationSameRoutes()
     {
         $kernel1 = new BaseKernel([
             TestBundle::class,
-            new TestEntityBundle()
+            new TestEntityBundle(),
         ], [
             [
                 'key1' => [
-                    'key2' => 'value2'
-                ]
-            ]
+                    'key2' => 'value2',
+                ],
+            ],
         ], [
             ['route1', 'key1', 'value1'],
-            ['@Bundle1/routing.yml']
+            ['@Bundle1/routing.yml'],
         ]);
 
         $kernel2 = new BaseKernel([
             new TestBundle(),
-            TestEntityBundle::class
+            TestEntityBundle::class,
         ], [
             [
                 'key1' => [
-                    'key2' => 'value2'
-                ]
-            ]
+                    'key2' => 'value2',
+                ],
+            ],
         ], [
             ['route1', 'key1', 'value1'],
-            ['@Bundle1/routing.yml']
+            ['@Bundle1/routing.yml'],
         ]);
 
         $this->assertEquals(
@@ -109,35 +119,35 @@ class BaseKernelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test same bundles, same configuration, diff routes != same kernel
+     * Test same bundles, same configuration, diff routes != same kernel.
      */
     public function testSameBundlesSameConfigurationDiffRoutes()
     {
         $kernel1 = new BaseKernel([
             TestBundle::class,
-            new TestEntityBundle()
+            new TestEntityBundle(),
         ], [
             [
                 'key1' => [
-                    'key2' => 'value2'
-                ]
-            ]
+                    'key2' => 'value2',
+                ],
+            ],
         ], [
             ['route1', 'key1', 'value1'],
-            ['@Bundle1/routing.yml']
+            ['@Bundle1/routing.yml'],
         ]);
 
         $kernel2 = new BaseKernel([
             new TestBundle(),
-            TestEntityBundle::class
+            TestEntityBundle::class,
         ], [
             [
                 'key1' => [
-                    'key2' => 'value2'
-                ]
-            ]
+                    'key2' => 'value2',
+                ],
+            ],
         ], [
-            ['route1', 'key1', 'value1']
+            ['route1', 'key1', 'value1'],
         ]);
 
         $this->assertNotEquals(
@@ -147,36 +157,36 @@ class BaseKernelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test same bundles, diff configuration, same routes != same kernel
+     * Test same bundles, diff configuration, same routes != same kernel.
      */
     public function testSameBundlesDiffConfigurationSameRoutes()
     {
         $kernel1 = new BaseKernel([
             TestBundle::class,
-            new TestEntityBundle()
+            new TestEntityBundle(),
         ], [
             [
                 'key1' => [
-                    'key2' => 'value2'
-                ]
-            ]
+                    'key2' => 'value2',
+                ],
+            ],
         ], [
             ['route1', 'key1', 'value1'],
-            ['@Bundle1/routing.yml']
+            ['@Bundle1/routing.yml'],
         ]);
 
         $kernel2 = new BaseKernel([
             new TestBundle(),
-            TestEntityBundle::class
+            TestEntityBundle::class,
         ], [
             [
                 'key1' => [
-                    'key2' => 'value1'
-                ]
-            ]
+                    'key2' => 'value1',
+                ],
+            ],
         ], [
             ['route1', 'key1', 'value1'],
-            ['@Bundle1/routing.yml']
+            ['@Bundle1/routing.yml'],
         ]);
 
         $this->assertNotEquals(
@@ -186,36 +196,36 @@ class BaseKernelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test diff bundles, same configuration, same routes = same kernel
+     * Test diff bundles, same configuration, same routes = same kernel.
      */
     public function testDiffBundlesSameConfigurationSameRoutes()
     {
         $kernel1 = new BaseKernel([
             TestBundle::class,
-            new TestEntityBundle()
+            new TestEntityBundle(),
         ], [
             [
                 'key1' => [
-                    'key2' => 'value2'
-                ]
-            ]
+                    'key2' => 'value2',
+                ],
+            ],
         ], [
             ['route1', 'key1', 'value1'],
-            ['@Bundle1/routing.yml']
+            ['@Bundle1/routing.yml'],
         ]);
 
         $kernel2 = new BaseKernel([
             new TestBundle(),
-            TestMappingBundle::class
+            TestMappingBundle::class,
         ], [
             [
                 'key1' => [
-                    'key2' => 'value2'
-                ]
-            ]
+                    'key2' => 'value2',
+                ],
+            ],
         ], [
             ['route1', 'key1', 'value1'],
-            ['@Bundle1/routing.yml']
+            ['@Bundle1/routing.yml'],
         ]);
 
         $this->assertNotEquals(

@@ -152,7 +152,7 @@ final class BaseKernel extends Kernel
      */
     public function getRootDir()
     {
-        $bundles = array_map(function($bundle) {
+        $bundles = array_map(function ($bundle) {
             return is_object($bundle)
                 ? get_class($bundle)
                 : $bundle;
@@ -162,6 +162,7 @@ final class BaseKernel extends Kernel
         sort($bundles);
         sort($routes);
         $this->sortArray($config);
+
         return sys_get_temp_dir() . '/base-kernel/' . 'kernel-' . (
             hash(
                 'md5',
@@ -176,7 +177,7 @@ final class BaseKernel extends Kernel
 
     /**
      * Sort array's first level, taking in account if associative array or
-     * sequential array
+     * sequential array.
      *
      * @param mixed $element
      */
