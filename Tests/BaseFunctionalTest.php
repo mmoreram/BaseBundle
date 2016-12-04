@@ -193,12 +193,15 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
             ])
         ));
 
-        static::$application->run(new ArrayInput(
-            self::addDebugInConfiguration([
-                'command' => 'doctrine:schema:create',
-                '--no-interaction' => true,
-            ])
-        ));
+        foreach (self::getManagersName() as $managerName) {
+            static::$application->run(new ArrayInput(
+                self::addDebugInConfiguration([
+                    'command' => 'doctrine:schema:create',
+                    '--no-interaction' => true,
+                    '--em' => $managerName,
+                ])
+            ));
+        }
 
         static::loadFixtures();
     }
@@ -262,5 +265,19 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
         }
 
         return $configuration;
+    }
+
+    /**
+     * Get all available entity_managers.
+     *
+     * @return string[]
+     */
+    private static function getManagersName()
+    {
+        return array_keys(self::
+            $container
+            ->get('doctrine')
+            ->getManagers()
+        );
     }
 }
