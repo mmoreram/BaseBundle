@@ -142,4 +142,26 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
             $definition
         );
     }
+
+    /**
+     * Return value of parameter name if exists
+     * Return itself otherwise.
+     *
+     * @param ContainerBuilder $container
+     * @param mixed            $parameterName
+     *
+     * @return mixed
+     */
+    private function resolveParameterName(
+        ContainerBuilder $container,
+        $parameterName
+    ) {
+        if (!is_string($parameterName)) {
+            return $parameterName;
+        }
+
+        return $container->hasParameter($parameterName)
+            ? $container->getParameter($parameterName)
+            : $parameterName;
+    }
 }

@@ -31,11 +31,11 @@
         "mmoreram/php-formatter": "^1.2.0",
 
         "symfony/framework-bundle": "^3.0.0",
-        "doctrine/doctrine-bundle": "~1.6.4",
+        "doctrine/doctrine-bundle": "^1.6.4",
         "symfony/event-dispatcher": "^3.2",
         "sensio/framework-extra-bundle": "^3.0",
         "doctrine/doctrine-fixtures-bundle": "^2.3.0",
-        "mmoreram/simple-doctrine-mapping": "^1.1.0",
+        "mmoreram/simple-doctrine-mapping": "dev-master",
         "symfony/browser-kit": "^3.2"
     },
     "suggest": {
