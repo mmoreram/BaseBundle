@@ -230,7 +230,7 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
     {
         return [
             ['Mmoreram\BaseBundle\Tests\Bundle\Entity\User'],
-            //['TestMappingBundle:User'],
+            ['@TestBaseBundle:User'],
             ['my_prefix.entity.user.class'],
             ['my_prefix:user'],
         ];
