@@ -111,10 +111,10 @@ abstract class BaseExtension implements
 
             $config = $this->processConfiguration($configuration, $config);
             $config = $container->getParameterBag()->resolveValue($config);
-            $this->applyMappingParametrization($config, $container);
-            $this->applyParametrizedValues($config, $container);
         }
 
+        $this->applyMappingParametrization($config, $container);
+        $this->applyParametrizedValues($config, $container);
         $this->overrideEntities($container);
         $this->preLoad($config, $container);
     }
