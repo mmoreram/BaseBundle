@@ -15,11 +15,12 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
+use PHPUnit_Framework_TestCase;
+
 use Mmoreram\BaseBundle\Tests\BaseKernel;
 use Mmoreram\BaseBundle\Tests\Bundle\TestBundle;
 use Mmoreram\BaseBundle\Tests\Bundle\TestEntityBundle;
 use Mmoreram\BaseBundle\Tests\Bundle\TestMappingBundle;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Class BaseKernelTest.

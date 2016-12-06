@@ -16,11 +16,12 @@ declare(strict_types=1);
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+use Symfony\Component\HttpKernel\KernelInterface;
+
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use Mmoreram\BaseBundle\Tests\BaseKernel;
 use Mmoreram\BaseBundle\Tests\Bundle\TestBundle;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class BaseKernelRoutingTest.

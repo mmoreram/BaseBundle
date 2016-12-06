@@ -15,13 +15,13 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Mapping;
 
-use Mmoreram\BaseBundle\Tests\Bundle\Entity\AnotherUser;
-use Mmoreram\BaseBundle\Tests\Bundle\Entity\User;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use Mmoreram\BaseBundle\Tests\BaseKernel;
 use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestMappingBagProvider;
+use Mmoreram\BaseBundle\Tests\Bundle\Entity\AnotherUser;
+use Mmoreram\BaseBundle\Tests\Bundle\Entity\User;
 use Mmoreram\BaseBundle\Tests\Bundle\TestMappingBundle;
 
 /**
