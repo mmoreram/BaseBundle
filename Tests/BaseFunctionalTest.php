@@ -16,13 +16,14 @@ declare(strict_types=1);
 namespace Mmoreram\BaseBundle\Tests;
 
 use Exception;
-use Mmoreram\BaseBundle\DependencyInjection\BaseContainerAccessor;
 use PHPUnit_Framework_TestCase;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\HttpKernel\Client;
 use Symfony\Component\HttpKernel\KernelInterface;
+
+use Mmoreram\BaseBundle\DependencyInjection\BaseContainerAccessor;
 
 /**
  * Class BaseFunctionalTest.

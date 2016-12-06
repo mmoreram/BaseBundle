@@ -16,9 +16,10 @@ declare(strict_types=1);
 namespace Mmoreram\BaseBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Mmoreram\BaseBundle\DependencyInjection\BaseContainerAccessor;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
+use Mmoreram\BaseBundle\DependencyInjection\BaseContainerAccessor;
 
 /**
  * Class BaseFixture.
