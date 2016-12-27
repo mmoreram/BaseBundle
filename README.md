@@ -289,15 +289,12 @@ need to make it work.
 
 Even simpler.
 
-If you think about what is Symfony, about your project stages where you use
-Symfony and about how strict you should be about your code, always depending on
-your real needs, you should notice that there should be always a place for RAD
-(Rapid Application Development), always taking in account that the price spent
-later for changing from RAD to a non-that-rapid-development should be as cheap
-as possible.
+Symfony should provide a RAD infrastructure that, in case you want to create a 
+rapid bundle exposing an essential parts to the framework, didn't make you spend
+too much time and effort on that.
 
 So, for your RAD applications, do you really think you need more than one single
-class to create a simple bundle? Not at all.
+class to create a simple bundle? Not at all. Not anymore.
 
 Please, welcome SimpleBaseBundle, a simple way of creating Bundles with one
 class for your RAD applications.
@@ -383,8 +380,8 @@ and that's it.
 
 With this class, you will create the bundle with its dependencies, you will
 initialize the commands and the Compiler Passes if needed, you will load the
-config files and you will initialize the entities with the given configuration
-defined in the MappingBagProvider.
+yaml config files and you will initialize the entities with the given
+configuration defined in the MappingBagProvider.
 
 No need to create a DependencyInjection folder.
 
@@ -396,8 +393,8 @@ No need to create a DependencyInjection folder.
 > so there's no need to define it.
 
 If your project takes another dimension or quality degree, then feel free to
-change your bundle implementation and start extending BaseBundle and adding this
-DependencyInjection folder.
+change your bundle implementation and start extending BaseBundle instead of
+SimpleBaseBundle. Then, create the needed DependencyInjection folder.
 
 ## Extension
 
