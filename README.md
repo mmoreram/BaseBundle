@@ -253,7 +253,7 @@ classes, and the bundle should know it in a very explicit way.
 
 By default, this BaseBundle abstract class removes the Command autoload,
 allowing you, in your main Bundle class, to return an array of Command
-instances.
+instances. By default, this method returns empty array.
 
 ``` php
 /**
@@ -264,14 +264,13 @@ abstract class BaseBundle extends Bundle
     // ...
 
     /**
-     * Register Commands.
+     * Get command instance array
      *
-     * Disabled as commands are registered as services.
-     *
-     * @param Application $application An Application instance
+     * @return Command[]
      */
-    public function registerCommands(Application $application)
+    public function getCommands() : array
     {
+        return [];
     }
 
     // ...
@@ -343,15 +342,13 @@ class TestSimpleBundle extends SimpleBaseBundle
     }
     
     /**
-     * Register Commands.
+     * Get command instance array
      *
-     * Disabled as commands are registered as services.
-     *
-     * @param Application $application An Application instance
+     * @return Command[]
      */
-    public function registerCommands(Application $application)
+    public function getCommands() : array
     {
-        return;
+        return [];
     }
 
     /**

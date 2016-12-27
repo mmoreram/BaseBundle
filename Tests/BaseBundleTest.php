@@ -34,9 +34,9 @@ class BaseBundleTest extends BaseFunctionalTest
     protected static function getKernel() : KernelInterface
     {
         return new BaseKernel([
-            new FrameworkBundle(),
-            new BaseBundle(),
-            new DoctrineBundle(),
+            FrameworkBundle::class,
+            BaseBundle::class,
+            DoctrineBundle::class,
         ], [
             'imports' => [
                 ['resource' => '@BaseBundle/Resources/config/providers.yml'],
