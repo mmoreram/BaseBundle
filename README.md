@@ -18,6 +18,7 @@ about these three big blocks.
     * [Extension declaration](#extension-declaration)
     * [Compiler Pass declaration](#compiler-pass-declaration)
     * [Commands declaration](#commands-declaration)
+    * [SimpleBaseBundle](#simplebasebundle)
 * [Extension](#extension)
     * [Extending BaseExtension](#extending-baseextension)
     * [Implementing EntitiesOverridableExtension](#implementing-entitiesoverridableextension)
@@ -283,6 +284,120 @@ your domain. You can define your commands as services, injecting there all you
 need to make it work.
 
 [How to define commands as services](http://symfony.com/doc/current/cookbook/console/commands_as_services.html)
+
+### SimpleBaseBundle
+
+Even simpler.
+
+If you think about what is Symfony, about your project stages where you use
+Symfony and about how strict you should be about your code, always depending on
+your real needs, you should notice that there should be always a place for RAD
+(Rapid Application Development), always taking in account that the price spent
+later for changing from RAD to a non-that-rapid-development should be as cheap
+as possible.
+
+So, for your RAD applications, do you really think you need more than one single
+class to create a simple bundle? Not at all.
+
+Please, welcome SimpleBaseBundle, a simple way of creating Bundles with one
+class for your RAD applications.
+
+``` php
+use Mmoreram\BaseBundle\Mapping\MappingBagProvider;
+use Mmoreram\BaseBundle\SimpleBaseBundle;
+use Symfony\Component\HttpKernel\KernelInterface;
+
+/**
+ * Class TestSimpleBundle
+ */
+class TestSimpleBundle extends SimpleBaseBundle
+{
+    /**
+     * get config files
+     */
+    public function getConfigFiles() : array
+    {
+        return [
+            'services'
+        ];
+    }
+
+    /**
+     * get mapping bag provider
+     */
+    public function getMappingBagProvider() : ? MappingBagProvider
+    {
+        return new class implements MappingBagProvider {
+
+            /**
+             * Get mapping bag collection.
+             *
+             * @return MappingBagCollection
+             */
+            public function getMappingBagCollection() : MappingBagCollection
+            {
+                return MappingBagCollection::create(
+                    ['user' => 'User'],
+                    '@TestSimpleBundle',
+                    'Mmoreram\BaseBundle\Tests\Bundle\Entity'
+                );
+            }
+        };
+    }
+    
+    /**
+     * Register Commands.
+     *
+     * Disabled as commands are registered as services.
+     *
+     * @param Application $application An Application instance
+     */
+    public function registerCommands(Application $application)
+    {
+        return;
+    }
+
+    /**
+     * Return a CompilerPass instance array.
+     *
+     * @return CompilerPassInterface[]
+     */
+    public function getCompilerPasses()
+    {
+        return [];
+    }
+
+    /**
+     * Create instance of current bundle, and return dependent bundle namespaces.
+     *
+     * @return array Bundle instances
+     */
+    public static function getBundleDependencies(KernelInterface $kernel)
+    {
+        return [];
+    }
+}
+```
+
+and that's it. 
+
+With this class, you will create the bundle with its dependencies, you will
+initialize the commands and the Compiler Passes if needed, you will load the
+config files and you will initialize the entities with the given configuration
+defined in the MappingBagProvider.
+
+No need to create a DependencyInjection folder.
+
+> The method getMappingBagProvider can return null if you delegate to Doctrine
+> on auto_mapping feature, and can return a real MappingBagProvider instance if
+> you have the class in a file or an anonymous class as exposed in the example.
+> If the mapping configuration defined that the mapping data is overwritable,
+> then a MappingCompilerPass will be appended in your defined Compiler Passes,
+> so there's no need to define it.
+
+If your project takes another dimension or quality degree, then feel free to
+change your bundle implementation and start extending BaseBundle and adding this
+DependencyInjection folder.
 
 ## Extension
 
