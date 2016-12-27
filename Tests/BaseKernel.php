@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 use Symfony\Component\Yaml\Yaml;
 
-use Mmoreram\SymfonyBundleDependencies\CachedBundleDependenciesResolver;
+use Mmoreram\SymfonyBundleDependencies\BundleDependenciesResolver;
 
 /**
  * Class BaseKernel.
@@ -31,7 +31,7 @@ use Mmoreram\SymfonyBundleDependencies\CachedBundleDependenciesResolver;
 final class BaseKernel extends Kernel
 {
     use MicroKernelTrait;
-    use CachedBundleDependenciesResolver;
+    use BundleDependenciesResolver;
 
     /**
      * @var string[]

@@ -29,6 +29,8 @@ class SimpleBaseBundle extends BaseBundle
 {
     /**
      * get config files.
+     *
+     * @return array
      */
     public function getConfigFiles() : array
     {
@@ -37,6 +39,8 @@ class SimpleBaseBundle extends BaseBundle
 
     /**
      * get mapping bag provider.
+     *
+     * @return MappingBagProvider|null
      */
     public function getMappingBagProvider() : ? MappingBagProvider
     {
@@ -64,7 +68,7 @@ class SimpleBaseBundle extends BaseBundle
      *
      * @return CompilerPassInterface[]
      */
-    public function getCompilerPasses()
+    public function getCompilerPasses() : array
     {
         $mappingBagProvider = $this->getMappingBagProvider();
 

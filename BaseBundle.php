@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Mmoreram\BaseBundle;
 
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -61,13 +62,23 @@ class BaseBundle extends Bundle implements DependentBundleInterface
     /**
      * Register Commands.
      *
-     * Disabled as commands are registered as services.
-     *
-     * @param Application $application An Application instance
+     * @param Application $application
      */
     public function registerCommands(Application $application)
     {
-        return;
+        foreach ($this->getCommands() as $command) {
+            $application->register($command);
+        }
+    }
+
+    /**
+     * Get command instance array.
+     *
+     * @return Command[]
+     */
+    public function getCommands() : array
+    {
+        return [];
     }
 
     /**
@@ -75,17 +86,19 @@ class BaseBundle extends Bundle implements DependentBundleInterface
      *
      * @return CompilerPassInterface[]
      */
-    public function getCompilerPasses()
+    public function getCompilerPasses() : array
     {
         return [];
     }
 
     /**
-     * Create instance of current bundle, and return dependent bundle namespaces.
+     * Return all bundle dependencies.
      *
-     * @return array Bundle instances
+     * Values can be a simple bundle namespace or its instance
+     *
+     * @return array
      */
-    public static function getBundleDependencies(KernelInterface $kernel)
+    public static function getBundleDependencies(KernelInterface $kernel) : array
     {
         return [];
     }
