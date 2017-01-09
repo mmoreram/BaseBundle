@@ -8,6 +8,20 @@
 > because the bundle is using features on both versions. If you're not using
 > them yet, I encourage you to do it.
 
+## About dependencies
+
+This bundle has multiple dependencies, but, and because the bundle is not
+providing any extra feature, but a set of *helpers* on top of existing projects
+and parts of the Symfony environment, and because all these features belong to
+very different parts of this environment, we've removed all these dependencies.
+We think that these dependencies should be already resolved before loading this
+bundle, so by default, the package is properly isolated.
+
+Make sure that these dependencies are installed, or install them in your
+project.
+
+## About the content
+
 This bundle aims to be the base for all bundles in your Symfony project. Know
 about these three big blocks.
 
