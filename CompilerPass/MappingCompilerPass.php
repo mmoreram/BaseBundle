@@ -174,12 +174,12 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
         string $objectManagerAliasName,
         string $objectRepositoryAliasName
     ) {
-        $definition = new Definition('Mmoreram\BaseBundle\ORM\Director');
+        $definition = new Definition('Mmoreram\BaseBundle\ORM\ObjectDirector');
         $definition->setArguments([
             new Reference($objectManagerAliasName),
             new Reference($objectRepositoryAliasName),
         ]);
-        $definitionName = ltrim(($mappingBag->getContainerPrefix() . '.director.' . $mappingBag->getEntityName()), '.');
+        $definitionName = ltrim(($mappingBag->getContainerPrefix() . '.object_director.' . $mappingBag->getEntityName()), '.');
         $container->setDefinition(
             $definitionName,
             $definition

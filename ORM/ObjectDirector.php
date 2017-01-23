@@ -19,9 +19,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 
 /**
- * Class Director.
+ * Class ObjectDirector.
  */
-class Director
+final class ObjectDirector
 {
     /**
      * @var ObjectManager
