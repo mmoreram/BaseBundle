@@ -17,6 +17,7 @@ namespace Mmoreram\BaseBundle\Tests\ORM;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 
+use Mmoreram\BaseBundle\ORM\ObjectDirector;
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use Mmoreram\BaseBundle\Tests\BaseKernel;
 use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestMappingBagProvider;
@@ -68,8 +69,12 @@ class DirectorTest extends BaseFunctionalTest
      */
     public function testDirectorBehavior()
     {
-        $this->assertTrue($this->has('director.user'));
-        $director = $this->get('director.user');
+        $this->assertTrue($this->has('object_director.user'));
+        $this->assertInstanceof(
+            ObjectDirector::class,
+            $this->get('object_director.user')
+        );
+        $director = $this->get('object_director.user');
         $this->assertNull($director->find(1));
 
         $user = new User();

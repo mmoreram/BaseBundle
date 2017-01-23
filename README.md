@@ -44,7 +44,7 @@ about these three big blocks.
 * [Provider](#provider)
     * [ObjectManager Provider](#objectmanager-provider)
     * [ObjectRepository Provider](#objectrepository-provider)
-* [Director](#director)
+* [ObjectDirector](#objectdirector)
 
 **Functional Tests**
 
@@ -971,7 +971,7 @@ services:
             - "@app.entity_repository.cart"
 ```
 
-## Director
+## ObjectDirector
 
 Some part of our application consists in a very small scope entity management.
 This means that we don't work wig big sets of data but with specific entities,
@@ -987,8 +987,8 @@ the object manager for the data persistence actions, like persist or flush, and
 the object repository for our searches, but as you can see, most of these
 actions follow the same pattern, and use the same methods.
 
-For this reason, we introduce the Director class, a persistence simplification
-for these cases.
+For this reason, we introduce the ObjectDirector class, a persistence
+simplification for these cases.
 
 Only four methods are exposed to maintain this simplification
 
@@ -1001,8 +1001,8 @@ and you can define the director as follows.
 
 ``` yml
 services:
-    app.director.cart:
-        class: Mmoreram\BaseBundle\ORM\Director
+    app.object_director.cart:
+        class: Mmoreram\BaseBundle\ORM\ObjectDirector
         arguments:
             - "@app.entity_manager.cart"
             - "@app.entity_repository.cart"
@@ -1639,7 +1639,7 @@ and that's it, you model is already built with these amazing features.
       assigned to this entity. You can inject it as well in your services. In
       that case you could the service `object_repository.user` as an instance of
       `Doctrine\Common\Persistence\ObjectRepository`
-    * `director.{entity_name}` is a new Director service assigned to this
+    * `object_director.{entity_name}` is a new Director service assigned to this
       entity.
 * Per each entity mapped, you can find as well 4 parameters defined in your
   container, injectable as well in your services
