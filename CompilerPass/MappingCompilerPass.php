@@ -82,29 +82,38 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
                     $reducedMappingBag->getEntityMappingFile(),
                     $reducedMappingBag->getEntityIsEnabled()
                 );
-            $this
-                ->addEntityManager(
-                    $container,
-                    $mappingBag
-                );
-            $this
-                ->addRepository(
-                    $container,
-                    $mappingBag
-                );
+
+            $objectManagerAliasName = $this->addObjectManager(
+                $container,
+                $mappingBag
+            );
+
+            $objectRepositoryAliasName = $this->addObjectRepository(
+                $container,
+                $mappingBag
+            );
+
+            $this->addObjectDirector(
+                $container,
+                $mappingBag,
+                $objectManagerAliasName,
+                $objectRepositoryAliasName
+            );
         }
     }
 
     /**
-     * Add entity manager alias.
+     * Add object manager alias and return the assigned name.
      *
      * @param ContainerBuilder $container
      * @param MappingBag       $mappingBag
+     *
+     * @return string
      */
-    private function addEntityManager(
+    private function addObjectManager(
         ContainerBuilder $container,
         MappingBag $mappingBag
-    ) {
+    ) : string {
         $reducedMappingBag = $mappingBag->getReducedMappingBag();
         $definition = new Definition('Doctrine\Common\Persistence\ObjectManager');
         $definition->setFactory([
@@ -113,22 +122,27 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
         ]);
         $class = $this->resolveParameterName($container, $reducedMappingBag->getEntityClass());
         $definition->setArguments([$class]);
+        $aliasName = ltrim(($mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectManagerName() . '.' . $mappingBag->getEntityName()), '.');
         $container->setDefinition(
-            ltrim(($mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectManagerName() . '.' . $mappingBag->getEntityName()), '.'),
+            $aliasName,
             $definition
         );
+
+        return $aliasName;
     }
 
     /**
-     * Add entity managers aliases.
+     * Add object repository aliases and return the assigned name.
      *
      * @param ContainerBuilder $container
      * @param MappingBag       $mappingBag
+     *
+     * @return string
      */
-    private function addRepository(
+    private function addObjectRepository(
         ContainerBuilder $container,
         MappingBag $mappingBag
-    ) {
+    ) : string {
         $reducedMappingBag = $mappingBag->getReducedMappingBag();
         $definition = new Definition('Doctrine\Common\Persistence\ObjectRepository');
         $definition->setFactory([
@@ -137,8 +151,37 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
         ]);
         $class = $this->resolveParameterName($container, $reducedMappingBag->getEntityClass());
         $definition->setArguments([$class]);
+        $aliasName = ltrim(($mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectRepositoryName() . '.' . $mappingBag->getEntityName()), '.');
         $container->setDefinition(
-            ltrim(($mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectRepositoryName() . '.' . $mappingBag->getEntityName()), '.'),
+            $aliasName,
+            $definition
+        );
+
+        return $aliasName;
+    }
+
+    /**
+     * Add directors.
+     *
+     * @param ContainerBuilder $container
+     * @param MappingBag       $mappingBag
+     * @param string           $objectManagerAliasName
+     * @param string           $objectRepositoryAliasName
+     */
+    private function addObjectDirector(
+        ContainerBuilder $container,
+        MappingBag $mappingBag,
+        string $objectManagerAliasName,
+        string $objectRepositoryAliasName
+    ) {
+        $definition = new Definition('Mmoreram\BaseBundle\ORM\Director');
+        $definition->setArguments([
+            new Reference($objectManagerAliasName),
+            new Reference($objectRepositoryAliasName),
+        ]);
+        $definitionName = ltrim(($mappingBag->getContainerPrefix() . '.director.' . $mappingBag->getEntityName()), '.');
+        $container->setDefinition(
+            $definitionName,
             $definition
         );
     }
