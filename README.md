@@ -44,6 +44,7 @@ about these three big blocks.
 * [Provider](#provider)
     * [ObjectManager Provider](#objectmanager-provider)
     * [ObjectRepository Provider](#objectrepository-provider)
+* [Director](#director)
 
 **Functional Tests**
 
@@ -970,6 +971,47 @@ services:
             - "@app.entity_repository.cart"
 ```
 
+## Director
+
+Some part of our application consists in a very small scope entity management.
+This means that we don't work wig big sets of data but with specific entities,
+like the scenario where we want to update a single entity.
+
+* We load if exists an entity (find)
+* If does'nt exist, we create a new one
+* We update this entity fields
+* We update the entity in our database (persist/flush)
+
+For this scenario we should have in our service two different classes injected,
+the object manager for the data persistence actions, like persist or flush, and
+the object repository for our searches, but as you can see, most of these
+actions follow the same pattern, and use the same methods.
+
+For this reason, we introduce the Director class, a persistence simplification
+for these cases.
+
+Only four methods are exposed to maintain this simplification
+
+* find
+* findOneBy
+* save
+* remove
+
+and you can define the director as follows.
+
+``` yml
+services:
+    app.director.cart:
+        class: Mmoreram\BaseBundle\ORM\Director
+        arguments:
+            - "@app.entity_manager.cart"
+            - "@app.entity_repository.cart"
+```
+
+This new service will simplify a little bit some persistence related logic
+inside your business classes, by reducing one dependency and the persistence
+scope.
+
 ## Functional Tests
 
 Some of the issues many projects have when they want to start testing their
@@ -1588,7 +1630,7 @@ and that's it, you model is already built with these amazing features.
   Symfony standard by placing these mapping files inside the folder
   `@MyBundle/Resources/config/doctrine` with the standard name `User.orm.yml`.
   At the moment, only available for YAML files.
-* Per each entity mapped, the library has created two services.
+* Per each entity mapped, the library has created these services.
     * `object_manager.{entity_name}` is an alias for the object manager assigned
       to this entity. You can inject it in your services. In that case you could
       use the service `object_manager.user` as an instance of
@@ -1597,6 +1639,8 @@ and that's it, you model is already built with these amazing features.
       assigned to this entity. You can inject it as well in your services. In
       that case you could the service `object_repository.user` as an instance of
       `Doctrine\Common\Persistence\ObjectRepository`
+    * `director.{entity_name}` is a new Director service assigned to this
+      entity.
 * Per each entity mapped, you can find as well 4 parameters defined in your
   container, injectable as well in your services
     * `entity.{entity_name}.class` is the entity namespace used for the mapping.
