@@ -1044,7 +1044,7 @@ final class TagCompilerPassTest extends BaseFunctionalTest
      *
      * @return KernelInterface
      */
-    protected function getKernel()
+    protected static function getKernel() : KernelInterface
     {
         return new BaseKernel(
             [
@@ -1224,7 +1224,7 @@ final class TagCompilerPassTest extends BaseFunctionalTest
      *
      * @return KernelInterface
      */
-    protected function getKernel()
+    protected static function getKernel() : KernelInterface
     {
         return $kernel;
     }

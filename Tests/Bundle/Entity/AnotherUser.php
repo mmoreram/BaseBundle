@@ -18,6 +18,49 @@ namespace Mmoreram\BaseBundle\Tests\Bundle\Entity;
 /**
  * Class AnotherUser.
  */
-class AnotherUser extends User
+class AnotherUser implements UserInterface
 {
+    /**
+     * @var int
+     *
+     * Id
+     */
+    protected $id;
+
+    /**
+     * @var string
+     *
+     * Name
+     */
+    protected $name;
+
+    /**
+     * Get Id.
+     *
+     * @return int|null
+     */
+    public function getId() : ? int
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get Name.
+     *
+     * @return string|null
+     */
+    public function getName() : string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set Name.
+     *
+     * @param string|null $name
+     */
+    public function setName(? string $name)
+    {
+        $this->name = $name;
+    }
 }
