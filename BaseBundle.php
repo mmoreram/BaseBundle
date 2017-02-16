@@ -67,7 +67,7 @@ class BaseBundle extends Bundle implements DependentBundleInterface
     public function registerCommands(Application $application)
     {
         foreach ($this->getCommands() as $command) {
-            $application->register($command);
+            $application->add($command);
         }
     }
 
