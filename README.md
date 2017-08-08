@@ -1269,7 +1269,7 @@ service existence testing
 
 ``` php
 $this->assertTrue(
-    $this->get('service_name')
+    $this->has('service_name')
 );
 ```
 
