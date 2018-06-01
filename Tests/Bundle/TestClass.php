@@ -42,7 +42,7 @@ final class TestClass
      *
      * @return string Name
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }

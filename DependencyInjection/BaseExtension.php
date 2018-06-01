@@ -29,10 +29,7 @@ use Mmoreram\BaseBundle\Mapping\MappingBagProvider;
 /**
  * Class BaseExtension.
  */
-abstract class BaseExtension implements
-    ExtensionInterface,
-    ConfigurationExtensionInterface,
-    PrependExtensionInterface
+abstract class BaseExtension implements ExtensionInterface, ConfigurationExtensionInterface, PrependExtensionInterface
 {
     /**
      * @var MappingBagProvider
@@ -128,7 +125,7 @@ abstract class BaseExtension implements
      */
     public function getNamespace()
     {
-        return 'http://example.org/schema/dic/' . $this->getAlias();
+        return 'http://example.org/schema/dic/'.$this->getAlias();
     }
 
     /**
@@ -148,7 +145,7 @@ abstract class BaseExtension implements
      *
      * @return string
      */
-    protected function getConfigFilesLocation() : string
+    protected function getConfigFilesLocation(): string
     {
         if (!empty($this->getConfigFiles([]))) {
             throw new \RuntimeException(sprintf(
@@ -181,7 +178,7 @@ abstract class BaseExtension implements
      *
      * @return array Config files
      */
-    protected function getConfigFiles(array $config) : array
+    protected function getConfigFiles(array $config): array
     {
         return [];
     }
@@ -198,7 +195,7 @@ abstract class BaseExtension implements
      *
      * @return ConfigurationInterface|null
      */
-    protected function getConfigurationInstance() : ? ConfigurationInterface
+    protected function getConfigurationInstance(): ? ConfigurationInterface
     {
         return null;
     }
@@ -216,7 +213,7 @@ abstract class BaseExtension implements
      *
      * @return array
      */
-    protected function getParametrizationValues(array $config) : array
+    protected function getParametrizationValues(array $config): array
     {
         return [];
     }
@@ -340,7 +337,7 @@ abstract class BaseExtension implements
                 $configFile = $configFile[0];
             }
 
-            $loader->load($configFile . '.yml');
+            $loader->load($configFile.'.yml');
         }
     }
 

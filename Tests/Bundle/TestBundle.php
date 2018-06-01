@@ -33,7 +33,7 @@ final class TestBundle extends BaseBundle
      *
      * @return CompilerPassInterface[]
      */
-    public function getCompilerPasses() : array
+    public function getCompilerPasses(): array
     {
         return [
             new TestCompilerPass(),
@@ -49,7 +49,7 @@ final class TestBundle extends BaseBundle
      *
      * @return array
      */
-    public static function getBundleDependencies(KernelInterface $kernel) : array
+    public static function getBundleDependencies(KernelInterface $kernel): array
     {
         return [
             'Symfony\Bundle\FrameworkBundle\FrameworkBundle',

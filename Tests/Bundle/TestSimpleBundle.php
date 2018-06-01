@@ -45,7 +45,7 @@ class TestSimpleBundle extends SimpleBaseBundle
     /**
      * get config files.
      */
-    public function getConfigFiles() : array
+    public function getConfigFiles(): array
     {
         return [
             'services',
@@ -55,7 +55,7 @@ class TestSimpleBundle extends SimpleBaseBundle
     /**
      * get mapping bag provider.
      */
-    public function getMappingBagProvider() : ? MappingBagProvider
+    public function getMappingBagProvider(): ? MappingBagProvider
     {
         return $this->mappingBagProvider;
     }
@@ -69,7 +69,7 @@ class TestSimpleBundle extends SimpleBaseBundle
      *
      * @return array
      */
-    public static function getBundleDependencies(KernelInterface $kernel) : array
+    public static function getBundleDependencies(KernelInterface $kernel): array
     {
         return [
             'Symfony\Bundle\FrameworkBundle\FrameworkBundle',

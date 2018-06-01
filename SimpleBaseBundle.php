@@ -32,7 +32,7 @@ class SimpleBaseBundle extends BaseBundle
      *
      * @return array
      */
-    public function getConfigFiles() : array
+    public function getConfigFiles(): array
     {
         return [];
     }
@@ -42,7 +42,7 @@ class SimpleBaseBundle extends BaseBundle
      *
      * @return MappingBagProvider|null
      */
-    public function getMappingBagProvider() : ? MappingBagProvider
+    public function getMappingBagProvider(): ? MappingBagProvider
     {
         return null;
     }
@@ -68,7 +68,7 @@ class SimpleBaseBundle extends BaseBundle
      *
      * @return CompilerPassInterface[]
      */
-    public function getCompilerPasses() : array
+    public function getCompilerPasses(): array
     {
         $mappingBagProvider = $this->getMappingBagProvider();
 

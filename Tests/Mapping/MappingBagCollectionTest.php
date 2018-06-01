@@ -36,7 +36,6 @@ class MappingBagCollectionTest extends PHPUnit_Framework_TestCase
         string $containerPrefix,
         bool $isOverwritable,
         array $result
-
     ) {
         $mappingBagCollection = MappingBagCollection::create(
             $entities,
@@ -134,7 +133,7 @@ class MappingBagCollectionTest extends PHPUnit_Framework_TestCase
     public function dataCreateByCrudeData()
     {
         return [
-            /**
+            /*
              * Check all getters.
              */
             [
@@ -168,7 +167,7 @@ class MappingBagCollectionTest extends PHPUnit_Framework_TestCase
                 ],
             ],
 
-            /**
+            /*
              * Check special cases.
              */
             [
@@ -186,7 +185,7 @@ class MappingBagCollectionTest extends PHPUnit_Framework_TestCase
                 ],
             ],
 
-            /**
+            /*
              * Overwritable.
              */
             [

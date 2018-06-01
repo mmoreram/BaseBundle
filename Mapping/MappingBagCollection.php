@@ -42,7 +42,7 @@ class MappingBagCollection
      *
      * @return MappingBag[]
      */
-    public function all() : array
+    public function all(): array
     {
         return $this->mappingBags;
     }
@@ -70,7 +70,7 @@ class MappingBagCollection
         string $containerObjectManagerName = 'object_manager',
         string $containerObjectRepositoryName = 'object_repository',
         bool $isOverwritable = false
-    ) : MappingBagCollection {
+    ): MappingBagCollection {
         $mappingBagCollection = new self();
         foreach ($entities as $entityName => $entityClass) {
             $mappingBagCollection
@@ -79,7 +79,7 @@ class MappingBagCollection
                     $componentNamespace,
                     $entityName,
                     $entityClass,
-                    'Resources/config/doctrine/' . $entityClass . '.orm.yml',
+                    'Resources/config/doctrine/'.$entityClass.'.orm.yml',
                     $managerName,
                     true,
                     $containerObjectManagerName,

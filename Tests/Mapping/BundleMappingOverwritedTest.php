@@ -33,7 +33,7 @@ class BundleMappingOverwritedTest extends BaseFunctionalTest
      *
      * @return KernelInterface
      */
-    protected static function getKernel() : KernelInterface
+    protected static function getKernel(): KernelInterface
     {
         return new BaseKernel([
             new TestMappingBundle(new TestMappingBagProvider(
@@ -106,7 +106,7 @@ class BundleMappingOverwritedTest extends BaseFunctionalTest
         $this->assertTrue($this->getParameter('my_prefix.entity.user.enabled'));
 
         /**
-         * @var ObjectManager $manager
+         * @var ObjectManager
          */
         $manager = $this->get('my_prefix.object_manager.user');
         $entityClass = $this->getParameter('my_prefix.entity.user.class');

@@ -127,7 +127,7 @@ class TestMappingBagProvider implements MappingBagProvider
      *
      * @return MappingBagCollection
      */
-    public function getMappingBagCollection() : MappingBagCollection
+    public function getMappingBagCollection(): MappingBagCollection
     {
         return MappingBagCollection::create(
             $this->entities,

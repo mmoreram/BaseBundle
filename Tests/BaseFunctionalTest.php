@@ -20,6 +20,7 @@ use PHPUnit_Framework_TestCase;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\HttpKernel\Client;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -85,7 +86,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      *
      * @return Client A Client instance
      */
-    protected static function createClient(array $server = []) : Client
+    protected static function createClient(array $server = []): Client
     {
         $client = static::$container->get('test.client');
         $client->setServerParameters($server);
@@ -105,13 +106,11 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
         }
 
         if (static::$application) {
-            static::$application->run(new ArrayInput(
-                self::addDebugInConfiguration([
+            static::runCommand([
                     'command' => 'doctrine:database:drop',
                     '--no-interaction' => true,
                     '--force' => true,
-                ])
-            ));
+            ]);
         }
     }
 
@@ -120,7 +119,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    protected static function loadFixturePaths() : array
+    protected static function loadFixturePaths(): array
     {
         return [];
     }
@@ -148,7 +147,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      *
      * @return bool
      */
-    private static function hasFixturePaths() : bool
+    private static function hasFixturePaths(): bool
     {
         $fixturesBundles = static::loadFixturePaths();
 
@@ -162,7 +161,7 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      *
      * @return bool
      */
-    protected static function loadSchema() : bool
+    protected static function loadSchema(): bool
     {
         return static::hasFixturePaths();
     }
@@ -179,32 +178,56 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
             return;
         }
 
-        static::$application->run(new ArrayInput(
-            self::addDebugInConfiguration([
+        static::runCommand([
                 'command' => 'doctrine:database:drop',
                 '--no-interaction' => true,
                 '--force' => true,
-            ])
-        ));
+            ]);
 
-        static::$application->run(new ArrayInput(
-            self::addDebugInConfiguration([
+        static::runCommand([
                 'command' => 'doctrine:database:create',
                 '--no-interaction' => true,
-            ])
-        ));
+            ]
+        );
 
         foreach (self::getManagersName() as $managerName) {
-            static::$application->run(new ArrayInput(
-                self::addDebugInConfiguration([
+            static::runCommand([
                     'command' => 'doctrine:schema:create',
                     '--no-interaction' => true,
                     '--em' => $managerName,
-                ])
-            ));
+                ]
+            );
         }
 
         static::loadFixtures();
+    }
+
+    /**
+     * Runs a command and returns its output as a string value.
+     *
+     * @param array $command
+     *
+     * @return string
+     */
+    protected static function runCommand(array $command): string
+    {
+        $fp = tmpfile();
+        $input = new ArrayInput($command);
+        $output = new StreamOutput($fp);
+
+        static::$application->run(
+            $input,
+            $output
+        );
+
+        fseek($fp, 0);
+        $output = '';
+        while (!feof($fp)) {
+            $output = $output.fread($fp, 4096);
+        }
+        fclose($fp);
+
+        return $output;
     }
 
     /**
@@ -230,13 +253,12 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
                 return static::$kernel->locateResource($path);
             }, $fixturePaths);
 
-            static::$application->run(new ArrayInput(
-                self::addDebugInConfiguration([
+            static::runCommand([
                     'command' => 'doctrine:fixtures:load',
                     '--no-interaction' => true,
                     '--fixtures' => $formattedPaths,
-                ])
-            ));
+                ]
+            );
         }
 
         return;
@@ -247,25 +269,9 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
      *
      * @return KernelInterface
      */
-    protected static function getKernel() : KernelInterface
+    protected static function getKernel(): KernelInterface
     {
         throw new RuntimeException('You must implement your own getKernel method');
-    }
-
-    /**
-     * Add debug line in array if is defined.
-     *
-     * @param array $configuration
-     *
-     * @return array
-     */
-    private static function addDebugInConfiguration(array $configuration) : array
-    {
-        if (!static::$debug) {
-            $configuration['--quiet'] = true;
-        }
-
-        return $configuration;
     }
 
     /**

@@ -25,14 +25,14 @@ interface UserInterface
      *
      * @return int|null
      */
-    public function getId() : ? int;
+    public function getId(): ? int;
 
     /**
      * Get Name.
      *
      * @return string|null
      */
-    public function getName() : string;
+    public function getName(): string;
 
     /**
      * Set Name.

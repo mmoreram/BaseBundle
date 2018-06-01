@@ -44,7 +44,7 @@ final class TestCollector
      *
      * @return TestClass[] TestClasses
      */
-    public function getTestClasses() : array
+    public function getTestClasses(): array
     {
         return $this->testClasses;
     }

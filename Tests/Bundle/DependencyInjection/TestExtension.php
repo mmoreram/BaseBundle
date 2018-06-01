@@ -41,9 +41,9 @@ class TestExtension extends BaseExtension
      *
      * @return string Config file location
      */
-    protected function getConfigFilesLocation() : string
+    protected function getConfigFilesLocation(): string
     {
-        return __DIR__ . '/../Resources/config';
+        return __DIR__.'/../Resources/config';
     }
 
     /**
@@ -67,7 +67,7 @@ class TestExtension extends BaseExtension
      *
      * @return array Config files
      */
-    protected function getConfigFiles(array $config) : array
+    protected function getConfigFiles(array $config): array
     {
         return [
             'services',
