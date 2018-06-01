@@ -25,5 +25,5 @@ interface MappingBagProvider
      *
      * @return MappingBagCollection
      */
-    public function getMappingBagCollection() : MappingBagCollection;
+    public function getMappingBagCollection(): MappingBagCollection;
 }

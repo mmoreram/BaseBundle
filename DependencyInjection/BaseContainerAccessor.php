@@ -50,7 +50,7 @@ trait BaseContainerAccessor
      *
      * @return bool
      */
-    public function has(string $serviceName) : bool
+    public function has(string $serviceName): bool
     {
         return self::$container->has($serviceName);
     }
@@ -74,7 +74,7 @@ trait BaseContainerAccessor
      *
      * @return ObjectRepository|null
      */
-    protected function getObjectRepository(string $entityNamespace) : ? ObjectRepository
+    protected function getObjectRepository(string $entityNamespace): ? ObjectRepository
     {
         return $this
             ->get('base.object_repository_provider')
@@ -90,7 +90,7 @@ trait BaseContainerAccessor
      *
      * @return ObjectManager|null
      */
-    protected function getObjectManager(string $entityNamespace) : ? ObjectManager
+    protected function getObjectManager(string $entityNamespace): ? ObjectManager
     {
         return $this
             ->get('base.object_manager_provider')
@@ -140,7 +140,7 @@ trait BaseContainerAccessor
      *
      * @return array
      */
-    public function findAll($entityNamespace) : array
+    public function findAll($entityNamespace): array
     {
         return $this
             ->getObjectRepository($this->locateEntity($entityNamespace))
@@ -158,7 +158,7 @@ trait BaseContainerAccessor
     public function findBy(
         string $entityNamespace,
         array $criteria
-    ) : array {
+    ): array {
         return $this
             ->getObjectRepository($this->locateEntity($entityNamespace))
             ->findBy($criteria);
@@ -221,7 +221,7 @@ trait BaseContainerAccessor
         }
 
         if (1 === preg_match('/^[^:]+:[^:]+$/', $entityAlias)) {
-            $possibleEntityAliasShortMapping = str_replace(':', '.entity.', $entityAlias . '.class');
+            $possibleEntityAliasShortMapping = str_replace(':', '.entity.', $entityAlias.'.class');
             if (self::$container->hasParameter($possibleEntityAliasShortMapping)) {
                 return $this->getParameter($possibleEntityAliasShortMapping);
             }

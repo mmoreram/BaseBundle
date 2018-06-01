@@ -43,9 +43,9 @@ class TestMappingExtension extends BaseExtension
      *
      * @return string Config file location
      */
-    protected function getConfigFilesLocation() : string
+    protected function getConfigFilesLocation(): string
     {
-        return __DIR__ . '/../Resources/config';
+        return __DIR__.'/../Resources/config';
     }
 
     /**
@@ -60,7 +60,7 @@ class TestMappingExtension extends BaseExtension
      *
      * @return ConfigurationInterface|null
      */
-    protected function getConfigurationInstance() : ? ConfigurationInterface
+    protected function getConfigurationInstance(): ? ConfigurationInterface
     {
         return new TestMappingConfiguration(
             $this->getAlias(),
@@ -89,7 +89,7 @@ class TestMappingExtension extends BaseExtension
      *
      * @return array Config files
      */
-    protected function getConfigFiles(array $config) : array
+    protected function getConfigFiles(array $config): array
     {
         return [
             'services',

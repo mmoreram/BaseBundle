@@ -34,7 +34,7 @@ class BaseFunctionalTestSchemaNoFixturesTest extends BaseFunctionalTest
      *
      * @return KernelInterface
      */
-    protected static function getKernel() : KernelInterface
+    protected static function getKernel(): KernelInterface
     {
         return new BaseKernel([
             new DoctrineFixturesBundle(),
@@ -54,7 +54,7 @@ class BaseFunctionalTestSchemaNoFixturesTest extends BaseFunctionalTest
      *
      * @return bool
      */
-    protected static function loadSchema() : bool
+    protected static function loadSchema(): bool
     {
         return true;
     }

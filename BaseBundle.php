@@ -39,7 +39,7 @@ class BaseBundle extends Bundle implements DependentBundleInterface
     {
         parent::build($container);
 
-        /**
+        /*
          * Adds compiler passes.
          */
         foreach ($this->getCompilerPasses() as $compilerPass) {
@@ -76,7 +76,7 @@ class BaseBundle extends Bundle implements DependentBundleInterface
      *
      * @return Command[]
      */
-    public function getCommands() : array
+    public function getCommands(): array
     {
         return [];
     }
@@ -86,7 +86,7 @@ class BaseBundle extends Bundle implements DependentBundleInterface
      *
      * @return CompilerPassInterface[]
      */
-    public function getCompilerPasses() : array
+    public function getCompilerPasses(): array
     {
         return [];
     }
@@ -98,7 +98,7 @@ class BaseBundle extends Bundle implements DependentBundleInterface
      *
      * @return array
      */
-    public static function getBundleDependencies(KernelInterface $kernel) : array
+    public static function getBundleDependencies(KernelInterface $kernel): array
     {
         return [];
     }

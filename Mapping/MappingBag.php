@@ -223,9 +223,9 @@ class MappingBag
      *
      * @return string
      */
-    public function getEntityNamespace() : string
+    public function getEntityNamespace(): string
     {
-        return rtrim($this->componentNamespace, '\\') . '\\' . ltrim($this->entityClass, '\\');
+        return rtrim($this->componentNamespace, '\\').'\\'.ltrim($this->entityClass, '\\');
     }
 
     /**
@@ -243,9 +243,9 @@ class MappingBag
      *
      * @return string
      */
-    public function getEntityMappingFilePath() : string
+    public function getEntityMappingFilePath(): string
     {
-        return $this->bundleNamespace . '/' . ltrim($this->entityMappingFile, '/');
+        return $this->bundleNamespace.'/'.ltrim($this->entityMappingFile, '/');
     }
 
     /**
@@ -263,7 +263,7 @@ class MappingBag
      *
      * @return bool|string
      */
-    public function getEntityIsEnabled() : bool
+    public function getEntityIsEnabled(): bool
     {
         return $this->entityIsEnabled;
     }
@@ -303,7 +303,7 @@ class MappingBag
      *
      * @return bool
      */
-    public function isOverwritable() : bool
+    public function isOverwritable(): bool
     {
         return $this->isOverwritable;
     }
@@ -313,7 +313,7 @@ class MappingBag
      *
      * @return ReducedMappingBag
      */
-    public function getReducedMappingBag() : ReducedMappingBag
+    public function getReducedMappingBag(): ReducedMappingBag
     {
         return $this->reducedMappingBag;
     }
@@ -325,9 +325,9 @@ class MappingBag
      *
      * @return string
      */
-    public function getParamFormat(string $type) : string
+    public function getParamFormat(string $type): string
     {
-        return ltrim(($this->containerPrefix . '.entity.' . $this->entityName . '.' . $type), '.');
+        return ltrim(($this->containerPrefix.'.entity.'.$this->entityName.'.'.$type), '.');
     }
 
     /**
@@ -338,7 +338,7 @@ class MappingBag
      *
      * @return ReducedMappingBag
      */
-    private function createReducedMappingBag(bool $isOverwritable) : ReducedMappingBag
+    private function createReducedMappingBag(bool $isOverwritable): ReducedMappingBag
     {
         return new ReducedMappingBag(
             $isOverwritable ? $this->getParamFormat('class') : $this->getEntityNamespace(),

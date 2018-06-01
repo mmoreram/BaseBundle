@@ -63,19 +63,19 @@ abstract class TagCompilerPass implements CompilerPassInterface
      *
      * @return string Collector service name
      */
-    abstract public function getCollectorServiceName() : string;
+    abstract public function getCollectorServiceName(): string;
 
     /**
      * Get collector method name.
      *
      * @return string Collector method name
      */
-    abstract public function getCollectorMethodName() : string;
+    abstract public function getCollectorMethodName(): string;
 
     /**
      * Get tag name.
      *
      * @return string Tag name
      */
-    abstract public function getTagName() : string;
+    abstract public function getTagName(): string;
 }

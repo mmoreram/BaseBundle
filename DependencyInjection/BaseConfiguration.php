@@ -104,7 +104,7 @@ class BaseConfiguration implements ConfigurationInterface
         string $entityMappingFile,
         string $entityManager,
         bool $entityEnabled
-    ) : NodeDefinition {
+    ): NodeDefinition {
         $builder = new TreeBuilder();
         $node = $builder->root($nodeName);
         $node

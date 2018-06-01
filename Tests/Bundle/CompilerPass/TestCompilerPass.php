@@ -27,7 +27,7 @@ final class TestCompilerPass extends TagCompilerPass
      *
      * @return string Collector service name
      */
-    public function getCollectorServiceName() : string
+    public function getCollectorServiceName(): string
     {
         return 'test.collector';
     }
@@ -37,7 +37,7 @@ final class TestCompilerPass extends TagCompilerPass
      *
      * @return string Collector method name
      */
-    public function getCollectorMethodName() : string
+    public function getCollectorMethodName(): string
     {
         return 'add';
     }
@@ -47,7 +47,7 @@ final class TestCompilerPass extends TagCompilerPass
      *
      * @return string Tag name
      */
-    public function getTagName() : string
+    public function getTagName(): string
     {
         return 'test.tag';
     }

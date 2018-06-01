@@ -84,11 +84,11 @@ class SimpleBaseExtension extends BaseExtension
      *
      * @return string
      */
-    protected function getConfigFilesLocation() : string
+    protected function getConfigFilesLocation(): string
     {
         return $this
             ->bundle
-            ->getPath() . '/Resources/config';
+            ->getPath().'/Resources/config';
     }
 
     /**
@@ -112,7 +112,7 @@ class SimpleBaseExtension extends BaseExtension
      *
      * @return array Config files
      */
-    protected function getConfigFiles(array $config) : array
+    protected function getConfigFiles(array $config): array
     {
         return $this->configFiles;
     }
@@ -129,7 +129,7 @@ class SimpleBaseExtension extends BaseExtension
      *
      * @return ConfigurationInterface|null
      */
-    protected function getConfigurationInstance() : ? ConfigurationInterface
+    protected function getConfigurationInstance(): ? ConfigurationInterface
     {
         return $this->mappingBagProvider
             ? new BaseConfiguration(

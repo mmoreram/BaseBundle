@@ -113,7 +113,7 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
     private function addObjectManager(
         ContainerBuilder $container,
         MappingBag $mappingBag
-    ) : string {
+    ): string {
         $reducedMappingBag = $mappingBag->getReducedMappingBag();
         $definition = new Definition('Doctrine\Common\Persistence\ObjectManager');
         $definition->setFactory([
@@ -122,7 +122,7 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
         ]);
         $class = $this->resolveParameterName($container, $reducedMappingBag->getEntityClass());
         $definition->setArguments([$class]);
-        $aliasName = ltrim(($mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectManagerName() . '.' . $mappingBag->getEntityName()), '.');
+        $aliasName = ltrim(($mappingBag->getContainerPrefix().'.'.$mappingBag->getContainerObjectManagerName().'.'.$mappingBag->getEntityName()), '.');
         $container->setDefinition(
             $aliasName,
             $definition
@@ -142,7 +142,7 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
     private function addObjectRepository(
         ContainerBuilder $container,
         MappingBag $mappingBag
-    ) : string {
+    ): string {
         $reducedMappingBag = $mappingBag->getReducedMappingBag();
         $definition = new Definition('Doctrine\Common\Persistence\ObjectRepository');
         $definition->setFactory([
@@ -151,7 +151,7 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
         ]);
         $class = $this->resolveParameterName($container, $reducedMappingBag->getEntityClass());
         $definition->setArguments([$class]);
-        $aliasName = ltrim(($mappingBag->getContainerPrefix() . '.' . $mappingBag->getContainerObjectRepositoryName() . '.' . $mappingBag->getEntityName()), '.');
+        $aliasName = ltrim(($mappingBag->getContainerPrefix().'.'.$mappingBag->getContainerObjectRepositoryName().'.'.$mappingBag->getEntityName()), '.');
         $container->setDefinition(
             $aliasName,
             $definition
@@ -179,7 +179,7 @@ class MappingCompilerPass extends AbstractMappingCompilerPass
             new Reference($objectManagerAliasName),
             new Reference($objectRepositoryAliasName),
         ]);
-        $definitionName = ltrim(($mappingBag->getContainerPrefix() . '.object_director.' . $mappingBag->getEntityName()), '.');
+        $definitionName = ltrim(($mappingBag->getContainerPrefix().'.object_director.'.$mappingBag->getEntityName()), '.');
         $container->setDefinition(
             $definitionName,
             $definition

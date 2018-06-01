@@ -31,7 +31,7 @@ class SimpleBaseBundleAnonymousTest extends BaseFunctionalTest
      *
      * @return KernelInterface
      */
-    protected static function getKernel() : KernelInterface
+    protected static function getKernel(): KernelInterface
     {
         return new BaseKernel([
             new TestSimpleBundle(new class() implements MappingBagProvider {
@@ -40,7 +40,7 @@ class SimpleBaseBundleAnonymousTest extends BaseFunctionalTest
                  *
                  * @return MappingBagCollection
                  */
-                public function getMappingBagCollection() : MappingBagCollection
+                public function getMappingBagCollection(): MappingBagCollection
                 {
                     return MappingBagCollection::create(
                         ['user' => 'User'],

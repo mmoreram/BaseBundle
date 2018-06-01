@@ -28,7 +28,7 @@ class TestStandardMappingBagProvider implements MappingBagProvider
      *
      * @return MappingBagCollection
      */
-    public function getMappingBagCollection() : MappingBagCollection
+    public function getMappingBagCollection(): MappingBagCollection
     {
         return MappingBagCollection::create(
             ['user' => 'User'],

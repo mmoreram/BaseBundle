@@ -78,7 +78,6 @@ class BaseKernel extends Kernel
         string $environment = 'test',
         bool $debug = false,
         string $rootDirPrefix = null
-
     ) {
         $this->rootDirPrefix = $rootDirPrefix;
         $this->bundlesToLoad = $bundlesToLoad;
@@ -133,7 +132,7 @@ class BaseKernel extends Kernel
         LoaderInterface $loader
     ) {
         $yamlContent = Yaml::dump($this->configuration);
-        $filePath = sys_get_temp_dir() . '/base-test-' . rand(1, 9999999) . '.yml';
+        $filePath = sys_get_temp_dir().'/base-test-'.rand(1, 9999999).'.yml';
         file_put_contents($filePath, $yamlContent);
         $loader->load($filePath);
         unlink($filePath);
@@ -182,7 +181,7 @@ class BaseKernel extends Kernel
         sort($routes);
         $this->sortArray($config);
 
-        return sys_get_temp_dir() . '/base-kernel/' . 'kernel-' . (
+        return sys_get_temp_dir().'/base-kernel/'.'kernel-'.(
             hash(
                 'md5',
                 json_encode([
