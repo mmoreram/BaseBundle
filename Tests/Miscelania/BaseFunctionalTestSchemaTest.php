@@ -74,8 +74,7 @@ class BaseFunctionalTestSchemaTest extends BaseFunctionalTest
      */
     public function testReloadFixtures()
     {
-        $user = new User();
-        $user->setName('alehop');
+        $user = new User('4', 'alehop');
         $this->save($user);
         $this->assertCount(4, $this->findAll('my_prefix:user'));
 

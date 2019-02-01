@@ -64,8 +64,7 @@ class BaseFunctionalTestSchemaNoFixturesTest extends BaseFunctionalTest
      */
     public function testReloadSchema()
     {
-        $user = new User();
-        $user->setName('alehop');
+        $user = new User('4', 'alehop');
         $this->save($user);
         $this->assertCount(1, $this->findAll('my_prefix:user'));
 

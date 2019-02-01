@@ -32,16 +32,13 @@ class UserData extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        $user1 = new User();
-        $user1->setName('Joan');
+        $user1 = new User('1', 'Joan');
         $this->save($user1);
 
-        $user2 = new User();
-        $user2->setName('Maria');
+        $user2 = new User('2', 'Maria');
         $this->save($user2);
 
-        $user3 = new User();
-        $user3->setName('Pere');
+        $user3 = new User('3', 'Pere');
         $this->save($user3);
     }
 }
