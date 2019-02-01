@@ -23,9 +23,9 @@ interface UserInterface
     /**
      * Get Id.
      *
-     * @return int|null
+     * @return string
      */
-    public function getId(): ? int;
+    public function getId(): string;
 
     /**
      * Get Name.
@@ -37,7 +37,7 @@ interface UserInterface
     /**
      * Set Name.
      *
-     * @param string|null $name
+     * @param string $name
      */
-    public function setName(? string $name);
+    public function changeName(string $name);
 }

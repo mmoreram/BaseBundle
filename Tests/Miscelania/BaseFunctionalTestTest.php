@@ -30,6 +30,13 @@ use Mmoreram\BaseBundle\Tests\Bundle\TestMappingBundle;
 class BaseFunctionalTestTest extends BaseFunctionalTest
 {
     /**
+     * @var bool
+     *
+     * Debug mode
+     */
+    protected static $debug = true;
+
+    /**
      * Get kernel.
      *
      * @return KernelInterface
@@ -177,8 +184,7 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
     {
         $this->reloadFixtures();
 
-        $user = new User();
-        $user->setName('Joan');
+        $user = new User('4', 'Joan');
         $this->save($user);
 
         $this->assertCount(
@@ -193,24 +199,21 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
      * Test save.
      *
      * @dataProvider getEntityNamespace
+     *
+     * @group lala
      */
     public function testSave(string $entityNamespace)
     {
         $this->reloadFixtures();
 
         // In fixtures, saved 3 users already
-        $user4 = new User();
-        $user4->setName('Marc');
-
+        $user4 = new User('4', 'Marc');
         $this->save($user4);
         $this->assertNotNull($user4->getId());
 
-        $user4->setName('India');
-        $user5 = new User();
-        $user5->setName('Sara');
-
-        $user6 = new User();
-        $user6->setName('Yepa');
+        $user4->changeName('India');
+        $user5 = new User('5', 'Sara');
+        $user6 = new User('6', 'Yepa');
 
         $this->save([
             $user4,

@@ -208,4 +208,18 @@ class BaseKernel extends Kernel
                 : ksort($element);
         }
     }
+
+    /**
+     * Gets the application root dir (path of the project's composer file).
+     *
+     * @return string The project root dir
+     */
+    public function getProjectDir()
+    {
+        if (file_exists(__DIR__.'/../../../../composer.json')) {
+            return realpath(__DIR__.'/../../../..');
+        }
+
+        return parent::getProjectDir();
+    }
 }

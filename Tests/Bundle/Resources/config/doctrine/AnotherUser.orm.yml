@@ -3,9 +3,7 @@ Mmoreram\BaseBundle\Tests\Bundle\Entity\AnotherUser:
     table: another_user
     id:
         id:
-            type: integer
-            generator:
-                strategy: AUTO
+            type: string
     fields:
         name:
             column: name

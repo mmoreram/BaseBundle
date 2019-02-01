@@ -20,7 +20,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use Mmoreram\BaseBundle\Tests\BaseKernel;
 use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestMappingBagProvider;
-use Mmoreram\BaseBundle\Tests\Bundle\Entity\AnotherUser;
 use Mmoreram\BaseBundle\Tests\Bundle\Entity\User;
 use Mmoreram\BaseBundle\Tests\Bundle\TestMappingBundle;
 
@@ -94,12 +93,10 @@ class BundleMappingManyManagersTest extends BaseFunctionalTest
      */
     public function testHasExtension()
     {
-        $sara = new User();
-        $sara->setName('Sara');
-        $this->save($sara);
+        $user = new User('1', 'Sara');
+        $this->save($user);
 
-        $pacho = new AnotherUser();
-        $pacho->setName('Pacho');
-        $this->save($pacho);
+        $user = new User('2', 'Pacho');
+        $this->save($user);
     }
 }

@@ -21,7 +21,7 @@ namespace Mmoreram\BaseBundle\Tests\Bundle\Entity;
 class User implements UserInterface
 {
     /**
-     * @var int
+     * @var string
      *
      * Id
      */
@@ -35,11 +35,25 @@ class User implements UserInterface
     protected $name;
 
     /**
+     * User constructor.
+     *
+     * @param string $id
+     * @param string $name
+     */
+    public function __construct(
+        string $id,
+        string $name
+    ) {
+        $this->id = $id;
+        $this->name = $name;
+    }
+
+    /**
      * Get Id.
      *
-     * @return int|null
+     * @return string
      */
-    public function getId(): ? int
+    public function getId(): string
     {
         return $this->id;
     }
@@ -57,9 +71,9 @@ class User implements UserInterface
     /**
      * Set Name.
      *
-     * @param string|null $name
+     * @param string $name
      */
-    public function setName(? string $name)
+    public function changeName(string $name)
     {
         $this->name = $name;
     }

@@ -179,24 +179,22 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
         }
 
         static::runCommand([
-                'command' => 'doctrine:database:drop',
-                '--no-interaction' => true,
-                '--force' => true,
-            ]);
+            'command' => 'doctrine:database:drop',
+            '--no-interaction' => true,
+            '--force' => true,
+        ]);
 
         static::runCommand([
-                'command' => 'doctrine:database:create',
-                '--no-interaction' => true,
-            ]
-        );
+            'command' => 'doctrine:database:create',
+            '--no-interaction' => true,
+        ]);
 
         foreach (self::getManagersName() as $managerName) {
             static::runCommand([
-                    'command' => 'doctrine:schema:create',
-                    '--no-interaction' => true,
-                    '--em' => $managerName,
-                ]
-            );
+                'command' => 'doctrine:schema:create',
+                '--no-interaction' => true,
+                '--em' => $managerName,
+            ]);
         }
 
         static::loadFixtures();
@@ -254,11 +252,10 @@ abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
             }, $fixturePaths);
 
             static::runCommand([
-                    'command' => 'doctrine:fixtures:load',
-                    '--no-interaction' => true,
-                    '--fixtures' => $formattedPaths,
-                ]
-            );
+                'command' => 'doctrine:fixtures:load',
+                '--no-interaction' => true,
+                '--fixtures' => $formattedPaths,
+            ]);
         }
 
         return;

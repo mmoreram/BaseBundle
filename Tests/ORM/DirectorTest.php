@@ -77,8 +77,7 @@ class DirectorTest extends BaseFunctionalTest
         $director = $this->get('object_director.user');
         $this->assertNull($director->find(1));
 
-        $user = new User();
-        $user->setName('Marc');
+        $user = new User('1', 'Marc');
         $director->save($user);
 
         $this->assertNotNull($director->find(1));

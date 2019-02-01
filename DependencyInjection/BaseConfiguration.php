@@ -36,7 +36,7 @@ class BaseConfiguration implements ConfigurationInterface
     private $extensionAlias;
 
     /**
-     * @var null|MappingBagProvider
+     * @var MappingBagProvider|null
      *
      * Mapping bag provider
      */
