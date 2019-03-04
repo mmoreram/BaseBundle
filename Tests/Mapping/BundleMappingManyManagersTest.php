@@ -98,5 +98,7 @@ class BundleMappingManyManagersTest extends BaseFunctionalTest
 
         $user = new User('2', 'Pacho');
         $this->save($user);
+
+        $this->assertTrue(true);
     }
 }

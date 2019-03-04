@@ -70,5 +70,6 @@ class BaseKernelRoutingTest extends BaseFunctionalTest
             'GET',
             '/small'
         );
+        $this->assertTrue(true);
     }
 }

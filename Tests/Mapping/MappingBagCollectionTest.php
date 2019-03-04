@@ -15,14 +15,14 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Mapping;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 use Mmoreram\BaseBundle\Mapping\MappingBagCollection;
 
 /**
  * File header placeholder.
  */
-class MappingBagCollectionTest extends PHPUnit_Framework_TestCase
+class MappingBagCollectionTest extends TestCase
 {
     /**
      * Test create by crude.

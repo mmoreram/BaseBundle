@@ -83,5 +83,6 @@ class BundleMappingNotOverwritableTest extends BaseFunctionalTest
      */
     public function testKernelCreation()
     {
+        $this->assertTrue(true);
     }
 }
