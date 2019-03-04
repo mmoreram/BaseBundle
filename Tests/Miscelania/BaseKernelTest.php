@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 use Mmoreram\BaseBundle\Tests\BaseKernel;
 use Mmoreram\BaseBundle\Tests\Bundle\TestBundle;
@@ -25,7 +25,7 @@ use Mmoreram\BaseBundle\Tests\Bundle\TestMappingBundle;
 /**
  * Class BaseKernelTest.
  */
-class BaseKernelTest extends PHPUnit_Framework_TestCase
+class BaseKernelTest extends TestCase
 {
     /**
      * Test unsorted but equals == same kernel.

@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Mmoreram\BaseBundle\Tests;
 
 use Exception;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -29,7 +29,7 @@ use Mmoreram\BaseBundle\DependencyInjection\BaseContainerAccessor;
 /**
  * Class BaseFunctionalTest.
  */
-abstract class BaseFunctionalTest extends PHPUnit_Framework_TestCase
+abstract class BaseFunctionalTest extends TestCase
 {
     use BaseContainerAccessor;
 
