@@ -56,7 +56,7 @@ class BaseBundle extends Bundle implements DependentBundleInterface
      */
     public function getContainerExtension()
     {
-        return;
+        return null;
     }
 
     /**

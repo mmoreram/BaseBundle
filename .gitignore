@@ -1,3 +1,4 @@
+.php_cs
 vendor
 composer.phar
 composer.lock

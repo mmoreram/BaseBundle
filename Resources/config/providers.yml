@@ -17,6 +17,7 @@ services:
         arguments:
             - '@doctrine'
             - '@base.container_parameters'
+        public: true
 
     base.abstract_object_manager:
         class: Doctrine\Common\Persistence\ObjectManager
@@ -33,6 +34,7 @@ services:
         arguments:
             - '@base.object_manager_provider'
             - '@base.container_parameters'
+        public: true
 
     base.abstract_object_repository:
         class: Doctrine\Common\Persistence\ObjectRepository

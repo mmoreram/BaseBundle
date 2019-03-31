@@ -61,8 +61,15 @@ class BaseConfiguration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root($this->extensionAlias);
+        $treeBuilder = new TreeBuilder($this->extensionAlias);
+
+        // Keep compatibility with symfony/config < 4.2
+        if (!method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->root($this->extensionAlias);
+        } else {
+            $rootNode = $treeBuilder->getRootNode();
+        }
+
         $this->setupTree($rootNode);
 
         if ($this->mappingBagProvider instanceof MappingBagProvider) {
