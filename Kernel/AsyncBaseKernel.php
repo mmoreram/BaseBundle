@@ -15,12 +15,12 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Kernel;
 
-use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\AsyncKernel;
 
 /**
- * Class BaseKernel
+ * Class AsyncBaseKernel
  */
-class BaseKernel extends Kernel
+class AsyncBaseKernel extends AsyncKernel
 {
     use BaseKernelTrait;
 }
