@@ -17,6 +17,7 @@ namespace Mmoreram\BaseBundle\Tests;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 
+use Mmoreram\BaseBundle\Provider\ObjectManagerProvider;
 use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestMappingBagProvider;
 use Mmoreram\BaseBundle\Tests\Bundle\TestSimpleBundle;
 
@@ -78,6 +79,7 @@ class SimpleBaseBundleTest extends BaseFunctionalTest
     public function testBundleInstance()
     {
         $this->assertTrue($this->has('base.object_manager_provider'));
+        $this->assertInstanceOf(ObjectManagerProvider::class, $this->get('base.object_manager_provider'));
     }
 
     /**
