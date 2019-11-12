@@ -15,12 +15,10 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Bundle;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\BaseBundle;
-use Mmoreram\BaseBundle\Tests\Bundle\CompilerPass\TestCompilerPass;
 use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestExtension;
 
 /**
@@ -28,18 +26,6 @@ use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestExtension;
  */
 final class TestBundle extends BaseBundle
 {
-    /**
-     * Return a CompilerPass instance array.
-     *
-     * @return CompilerPassInterface[]
-     */
-    public function getCompilerPasses(): array
-    {
-        return [
-            new TestCompilerPass(),
-        ];
-    }
-
     /**
      * Return all bundle dependencies.
      *
@@ -52,9 +38,7 @@ final class TestBundle extends BaseBundle
     public static function getBundleDependencies(KernelInterface $kernel): array
     {
         return [
-            'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
-            'Mmoreram\BaseBundle\Tests\Bundle\TestBaseBundle',
-            'Mmoreram\BaseBundle\BaseBundle',
+            'Symfony\Bundle\FrameworkBundle\FrameworkBundle'
         ];
     }
 

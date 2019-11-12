@@ -21,17 +21,21 @@ use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\StreamOutput;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Client;
 use Symfony\Component\HttpKernel\KernelInterface;
-
-use Mmoreram\BaseBundle\DependencyInjection\BaseContainerAccessor;
 
 /**
  * Class BaseFunctionalTest.
  */
 abstract class BaseFunctionalTest extends TestCase
 {
-    use BaseContainerAccessor;
+    /**
+     * @var ContainerInterface
+     *
+     * Container
+     */
+    protected static $container;
 
     /**
      * @var Application
@@ -75,8 +79,6 @@ abstract class BaseFunctionalTest extends TestCase
                 $e
             );
         }
-
-        static::createSchema();
     }
 
     /**
@@ -84,7 +86,7 @@ abstract class BaseFunctionalTest extends TestCase
      *
      * @param array $server An array of server parameters
      *
-     * @return Client A Client instance
+     * @return Client
      */
     protected static function createClient(array $server = []): Client
     {
@@ -92,112 +94,6 @@ abstract class BaseFunctionalTest extends TestCase
         $client->setServerParameters($server);
 
         return $client;
-    }
-
-    /**
-     * Tear down after class.
-     *
-     * @throws Exception When doRun returns Exception
-     */
-    public static function tearDownAfterClass()
-    {
-        if (!static::loadSchema()) {
-            return;
-        }
-
-        if (static::$application) {
-            static::runCommand([
-                    'command' => 'doctrine:database:drop',
-                    '--no-interaction' => true,
-                    '--force' => true,
-            ]);
-        }
-    }
-
-    /**
-     * Load fixtures of these bundles.
-     *
-     * @return array
-     */
-    protected static function loadFixturePaths(): array
-    {
-        return [];
-    }
-
-    /**
-     * Reset fixtures.
-     *
-     * Performs a completed fixtures reset
-     */
-    protected function reloadFixtures()
-    {
-        static::loadFixtures();
-    }
-
-    /**
-     * Reset schema.
-     */
-    protected function reloadSchema()
-    {
-        static::createSchema();
-    }
-
-    /**
-     * Has fixtures to load.
-     *
-     * @return bool
-     */
-    private static function hasFixturePaths(): bool
-    {
-        $fixturesBundles = static::loadFixturePaths();
-
-        return
-            is_array($fixturesBundles) &&
-            !empty($fixturesBundles);
-    }
-
-    /**
-     * Schema must be loaded in all test cases.
-     *
-     * @return bool
-     */
-    protected static function loadSchema(): bool
-    {
-        return static::hasFixturePaths();
-    }
-
-    /**
-     * Creates schema.
-     *
-     * Only creates schema if loadSchema() is set to true.
-     * All other methods will be loaded if this one is loaded.
-     */
-    protected static function createSchema()
-    {
-        if (!static::loadSchema()) {
-            return;
-        }
-
-        static::runCommand([
-            'command' => 'doctrine:database:drop',
-            '--no-interaction' => true,
-            '--force' => true,
-        ]);
-
-        static::runCommand([
-            'command' => 'doctrine:database:create',
-            '--no-interaction' => true,
-        ]);
-
-        foreach (self::getManagersName() as $managerName) {
-            static::runCommand([
-                'command' => 'doctrine:schema:create',
-                '--no-interaction' => true,
-                '--em' => $managerName,
-            ]);
-        }
-
-        static::loadFixtures();
     }
 
     /**
@@ -229,39 +125,6 @@ abstract class BaseFunctionalTest extends TestCase
     }
 
     /**
-     * load fixtures method.
-     *
-     * This method is only called if create Schema is set to true
-     *
-     * Only load fixtures if loadFixtures() is set to true.
-     * All other methods will be loaded if this one is loaded.
-     *
-     * Otherwise, will skip.
-     */
-    protected static function loadFixtures()
-    {
-        if (!static::hasFixturePaths()) {
-            return;
-        }
-
-        $fixturePaths = static::loadFixturePaths();
-
-        if (!empty($fixturePaths)) {
-            $formattedPaths = array_map(function ($path) {
-                return static::$kernel->locateResource($path);
-            }, $fixturePaths);
-
-            static::runCommand([
-                'command' => 'doctrine:fixtures:load',
-                '--no-interaction' => true,
-                '--fixtures' => $formattedPaths,
-            ]);
-        }
-
-        return;
-    }
-
-    /**
      * Get kernel.
      *
      * @return KernelInterface
@@ -272,16 +135,38 @@ abstract class BaseFunctionalTest extends TestCase
     }
 
     /**
-     * Get all available entity_managers.
+     * Get container service.
      *
-     * @return string[]
+     * @param string $serviceName
+     *
+     * @return mixed
      */
-    private static function getManagersName()
+    public function get(string $serviceName)
     {
-        return array_keys(self::
-            $container
-            ->get('doctrine')
-            ->getManagers()
-        );
+        return self::$container->get($serviceName);
+    }
+
+    /**
+     * Container has service.
+     *
+     * @param string $serviceName
+     *
+     * @return bool
+     */
+    public function has(string $serviceName): bool
+    {
+        return self::$container->has($serviceName);
+    }
+
+    /**
+     * Get container parameter.
+     *
+     * @param string $parameterName
+     *
+     * @return mixed
+     */
+    public function getParameter(string $parameterName)
+    {
+        return self::$container->getParameter($parameterName);
     }
 }

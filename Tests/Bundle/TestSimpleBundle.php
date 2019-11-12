@@ -17,7 +17,6 @@ namespace Mmoreram\BaseBundle\Tests\Bundle;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 
-use Mmoreram\BaseBundle\Mapping\MappingBagProvider;
 use Mmoreram\BaseBundle\SimpleBaseBundle;
 
 /**
@@ -26,23 +25,6 @@ use Mmoreram\BaseBundle\SimpleBaseBundle;
 class TestSimpleBundle extends SimpleBaseBundle
 {
     /**
-     * @var MappingBagProvider
-     *
-     * Mapping bag provider
-     */
-    private $mappingBagProvider;
-
-    /**
-     * TestMappingBundle constructor.
-     *
-     * @param MappingBagProvider $mappingBagProvider
-     */
-    public function __construct(MappingBagProvider $mappingBagProvider)
-    {
-        $this->mappingBagProvider = $mappingBagProvider;
-    }
-
-    /**
      * get config files.
      */
     public function getConfigFiles(): array
@@ -50,14 +32,6 @@ class TestSimpleBundle extends SimpleBaseBundle
         return [
             'services',
         ];
-    }
-
-    /**
-     * get mapping bag provider.
-     */
-    public function getMappingBagProvider(): ? MappingBagProvider
-    {
-        return $this->mappingBagProvider;
     }
 
     /**

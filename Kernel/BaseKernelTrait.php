@@ -165,31 +165,7 @@ trait BaseKernelTrait
      */
     public function getRootDir()
     {
-        if (!is_null($this->rootDirPrefix)) {
-            return $this->rootDirPrefix;
-        }
-
-        $bundles = array_map(function ($bundle) {
-            return is_object($bundle)
-                ? get_class($bundle)
-                : $bundle;
-        }, $this->bundlesToLoad);
-        $config = $this->configuration;
-        $routes = $this->routes;
-        sort($bundles);
-        sort($routes);
-        $this->sortArray($config);
-
-        return sys_get_temp_dir().'/base-kernel/'.'kernel-'.(
-            hash(
-                'md5',
-                json_encode([
-                    $bundles,
-                    $config,
-                    $routes,
-                ])
-            )
-        );
+        return $this->getProjectDir();
     }
 
     /**
@@ -215,10 +191,29 @@ trait BaseKernelTrait
      */
     public function getProjectDir()
     {
-        if (file_exists(__DIR__.'/../../../../composer.json')) {
-            return realpath(__DIR__.'/../../../..');
+        if (!is_null($this->rootDirPrefix)) {
+            return $this->rootDirPrefix;
         }
 
-        return parent::getProjectDir();
+        $bundles = array_map(function ($bundle) {
+            return is_object($bundle)
+                ? get_class($bundle)
+                : $bundle;
+        }, $this->bundlesToLoad);
+        $config = $this->configuration;
+        $routes = $this->routes;
+        sort($bundles);
+        sort($routes);
+        $this->sortArray($config);
+        $kernelHash = hash(
+            'md5',
+            json_encode([
+                $bundles,
+                $config,
+                $routes,
+            ])
+        );
+
+        return parent::getProjectDir().'/var/test/'.$kernelHash;
     }
 }

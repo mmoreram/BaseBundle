@@ -15,12 +15,11 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+use Mmoreram\BaseBundle\Kernel\BaseKernel;
+use Mmoreram\BaseBundle\Tests\Bundle\Controller;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
-use Mmoreram\BaseBundle\Tests\BaseKernel;
 use Mmoreram\BaseBundle\Tests\Bundle\TestBundle;
 
 /**
@@ -37,14 +36,16 @@ class BaseKernelRoutingTest extends BaseFunctionalTest
     {
         return new BaseKernel([
             TestBundle::class,
-            SensioFrameworkExtraBundle::class,
         ], [
-            'imports' => [
-                ['resource' => '@BaseBundle/Resources/test/framework.test.yml'],
+            'parameters' => [
+                'kernel.secret' => '1234'
             ],
+            'framework' => [
+                'test' => true
+            ]
         ], [
-            '@TestBaseBundle/Resources/config/routing.yml',
-            ['/small', 'TestBaseBundle:Default:small', 'small_route'],
+            '@TestBundle/Resources/config/routing.yml',
+            ['/age', Controller::class . '::age', 'age'],
         ]);
     }
 
@@ -53,23 +54,33 @@ class BaseKernelRoutingTest extends BaseFunctionalTest
      */
     public function testRoutes()
     {
-        AnnotationRegistry::registerFile(self::$kernel
-            ->locateResource('@SensioFrameworkExtraBundle/Configuration/Route.php')
-        );
-
         $client = self::createClient();
         $router = $this->get('router');
         $routeCollection = $router->getRouteCollection();
         $client->request(
             'GET',
             $routeCollection
-                ->get('small_annotatted')
-                ->getPath()
+                ->get('name')
+                ->getPath(),
+            ['name' => 'marc']
         );
+
+        $this->assertEquals('marc', $client
+            ->getResponse()
+            ->getContent()
+        );
+
         $client->request(
             'GET',
-            '/small'
+            $routeCollection
+                ->get('age')
+                ->getPath(),
+            ['age' => '12']
         );
-        $this->assertTrue(true);
+
+        $this->assertEquals('12', $client
+            ->getResponse()
+            ->getContent()
+        );
     }
 }

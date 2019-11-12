@@ -4,47 +4,27 @@
 
 -----
 
-> The minimum requirements of this bundle is **PHP 7.1** and **Symfony 3.2** 
+> The minimum requirements of this bundle is **PHP 7.2** and **Symfony 4.3** 
 > because the bundle is using features on both versions. If you're not using
 > them yet, I encourage you to do it.
-
-## About dependencies
-
-This bundle has multiple dependencies, but, and because the bundle is not
-providing any extra feature, but a set of *helpers* on top of existing projects
-and parts of the Symfony environment, and because all these features belong to
-very different parts of this environment, we've removed all these dependencies.
-We think that these dependencies should be already resolved before loading this
-bundle, so by default, the package is properly isolated.
-
-Make sure that these dependencies are installed, or install them in your
-project.
 
 ## About the content
 
 This bundle aims to be the base for all bundles in your Symfony project. Know
-about these three big blocks.
+about these big blocks.
 
 **Bundles**
 
 * [Bundle extension](#bundle-extension)
     * [Bundle dependencies](#bundle-dependencies)
     * [Extension declaration](#extension-declaration)
-    * [Compiler Pass declaration](#compiler-pass-declaration)
     * [Commands declaration](#commands-declaration)
     * [SimpleBaseBundle](#simplebasebundle)
 * [Extension](#extension)
     * [Extending BaseExtension](#extending-baseextension)
-    * [Implementing EntitiesOverridableExtension](#implementing-entitiesoverridableextension)
 * [Configuration](#configuration)
     * [Extension alias](#extension-alias)
     * [Extending BaseConfiguration](#extending-baseconfiguration)
-* [Compiler Pass](#compiler-pass)
-    * [Tag Compiler Pass](#tag-compiler-pass)
-* [Provider](#provider)
-    * [ObjectManager Provider](#objectmanager-provider)
-    * [ObjectRepository Provider](#objectrepository-provider)
-* [ObjectDirector](#objectdirector)
 
 **Functional Tests**
 
@@ -52,17 +32,6 @@ about these three big blocks.
     * [BaseKernel](#basekernel)
     * [BaseFunctionalTest](#basefuncionaltest)
     * [Fast testing methods](#fast-testing-methods)
-    * [Working with Database](#working-with-database)
-    * [Working with Fixtures](#working-with-fixtures)
-    * [BaseFixture](#basefixture)
-
-**Entity mapping**
-
-* [Entity Mapping](#entity-mapping)
-    * [Private bundles](#private-bundles)
-    * [Public bundles](#public-bundles)
-    * [Bundles and Components](#bundles-and-components)
-    * [Exposing your mapping without BaseBundle](#exposing-your-mapping-without-basebundle)
 
 ## Bundle extension
 
@@ -146,12 +115,12 @@ First step to do in your project: avoid this magic and define always your
 extension by instancing it in your bundle.
 
 ```php
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Mmoreram\BaseBundle\BaseBundle;
 
 /**
  * My bundle
  */
-final class MyBundle extends Bundle
+final class MyBundle extends BaseBundle
 {
     /**
      * Returns the bundle's container extension.
@@ -175,12 +144,12 @@ method to define that your bundle is not using any extension. That will help you
 to comprehend a little bit more your bundle requirements.
 
 ```php
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Mmoreram\BaseBundle\BaseBundle;
 
 /**
  * My bundle
  */
-final class MyBundle extends Bundle
+final class MyBundle extends BaseBundle
 {
     /**
      * Returns the bundle's container extension.
@@ -332,29 +301,6 @@ class TestSimpleBundle extends SimpleBaseBundle
             'services'
         ];
     }
-
-    /**
-     * get mapping bag provider
-     */
-    public function getMappingBagProvider() : ? MappingBagProvider
-    {
-        return new class implements MappingBagProvider {
-
-            /**
-             * Get mapping bag collection.
-             *
-             * @return MappingBagCollection
-             */
-            public function getMappingBagCollection() : MappingBagCollection
-            {
-                return MappingBagCollection::create(
-                    ['user' => 'User'],
-                    '@TestSimpleBundle',
-                    'Mmoreram\BaseBundle\Tests\Bundle\Entity'
-                );
-            }
-        };
-    }
     
     /**
      * Get command instance array
@@ -396,13 +342,6 @@ yaml config files and you will initialize the entities with the given
 configuration defined in the MappingBagProvider.
 
 No need to create a DependencyInjection folder.
-
-> The method getMappingBagProvider can return null if you delegate to Doctrine
-> on auto_mapping feature, and can return a real MappingBagProvider instance if
-> you have the class in a file or an anonymous class as exposed in the example.
-> If the mapping configuration defined that the mapping data is overwritable,
-> then a MappingCompilerPass will be appended in your defined Compiler Passes,
-> so there's no need to define it.
 
 If your project takes another dimension or quality degree, then feel free to
 change your bundle implementation and start extending BaseBundle instead of
@@ -611,49 +550,6 @@ protected function postLoad(array $config, ContainerBuilder $container)
 //...
 ```
 
-### Implementing EntitiesOverridableExtension
-
-One of the coolest features this bundle can bring to your projects is the
-extremely easy way you can use Interfaces in your Doctrine declaration instead
-of specific implementations.
-
-To understand a little bit more about this topic, take a look at this Symfony
-cookbook [How to define Relationships with abstracts classes and interfaces](http://symfony.com/doc/current/cookbook/doctrine/resolve_target_entity.html).
-
-This bundle allows you to define this relation between used interfaces or
-abstract classes and their specific implementation. The only thing you have to
-do is make your extension an implementation of the interface
-EntitiesOverridableExtension. Let's check an example.
-
-``` php
-use Mmoreram\BaseBundle\DependencyInjection\BaseExtension;
-use Mmoreram\BaseBundle\DependencyInjection\EntitiesOverridableExtension;
-
-/**
- * This is the class that loads and manages your bundle configuration
- */
-class MyExtension extends BaseExtension implements EntitiesOverridableExtension
-{
-    // ...
-
-    /**
-     * Get entities overrides.
-     *
-     * Result must be an array with:
-     * index: Original Interface
-     * value: Parameter where class is defined.
-     *
-     * @return array Overrides definition
-     */
-    public function getEntitiesOverrides()
-    {
-        return [
-            'My\Interface' => 'My\Entity'
-        ];
-    }
-}
-```
-
 ## Configuration
 
 The way your bundle will request and validate some data from the outside (app)
@@ -774,243 +670,6 @@ protected function setupTree(ArrayNodeDefinition $rootNode)
 By default, if you don't overwrite this method, no parametrization will be added
 under your bundle.
 
-## Compiler Pass
-
-This library provides you some abstractions for your compiler passes to cover
-some specific use cases. Let's check them all.
-
-In case you don't know what a Compiler Pass is yet, I encourage you to start with
-the documentation with
-[How to work with compiler passes in bundles](http://symfony.com/doc/current/service_container/compiler_passes.html).
-The sooner you understand the importance of this class, the sooner you will have
-better bundles in your projects.
-
-That simple.
-
-### Tag Compiler Pass
-
-Imagine you want to get all service with an specific tag. Then you want to call
-another service's method with each one of these found services. This scenario is
-so common, and the Symfony documentation refers to it as
-[How to Work with Service Tags](http://symfony.com/doc/current/service_container/tags.html).
-
-Symfony allows you to do this, as the documentation says, in a very simple way,
-but this is not simple neither clear enough. Too many lines written once and
-again doing non-domain-related stuff.
-
-Let's check the TagCompilerPass, an abstract class that will make this task
-as easy as implementing just 3 tiny methods.
-
-``` php
-use Mmoreram\BaseBundle\CompilerPass\FeederCompilerPass;
-
-/**
- * Class FeederCompilerPass.
- */
-final class FeederCompilerPass extends AbstractTagCompilerPass
-{
-    /**
-     * Get collector service name.
-     *
-     * @return string Collector service name
-     */
-    public function getCollectorServiceName()
-    {
-        return 'my.collector.service';
-    }
-
-    /**
-     * Get collector method name.
-     *
-     * @return string Collector method name
-     */
-    public function getCollectorMethodName()
-    {
-        return 'addClass';
-    }
-
-    /**
-     * Get tag name.
-     *
-     * @return string Tag name
-     */
-    public function getTagName()
-    {
-        return 'my.tag';
-    }
-}
-```
-
-In this case, first of all we will check that a service with name
-*my.collector.service* exists. If exists, we will look for all services with tag
-*my.tag* and we will add them into this collector by using the collector method
-*addClass*.
-
-Simple.
-
-> The Compiler Pass sorts as well the services before adding them all in the
-> collector. To make this happen, you can add the `priority` in your tag line.
-
-## Provider
-
-If you want to create this aliases of repositories and entity managers for your
-entities, even if you're not using any Mapping external library, you can do it
-by using these two provider services.
-
-For using them, you should add, first of all, a reference of the *providers.yml*
-file in your application configuration.
-
-``` yml
-imports:
-    - { resource: '../../vendor/mmoreram/base-bundle/Resources/config/providers.yml' }
-```
-
-If BaseBundle is instanced in your kernel you can use the short bundle mode as
-well.
-
-``` yml
-imports:
-    - { resource: '@BaseBundle/Resources/config/providers.yml' }
-```
-
-### ObjectManager Provider
-
-Imagine that you're using Symfony and Doctrine in your project. You have an app,
-and for any reason you allowed DoctrineBundle to auto-discover all your
-entities by default. If you've created many connections and entity managers in
-your project, that example will fit your needs as well.
-
-Let's think what happens in your dependency injection files.
-
-``` yml
-services:
-    cart_manager:
-        class: AppBundle\CartManager
-        arguments:
-            - "@doctrine.orm.default_entity_manager"
-```
-
-Whats happening here? Well your service is now coupled to the entity manager
-assigned to manage your entity. If your application has only one single entity
-or one service, that should be OK, but what happens if your applications has
-many entities and many dependency injection files? What if your entity is no
-longer managed by the default entity manager, and now is being managed by
-another one called *new_entity_manager*?
-
-Will you change all your *yml* files, one by one, looking for references to the
-right entity manager, changing them all? And what happens if a service is using
-the same entity manager ofr managing two entities, and one of them is not longer
-managed by it?
-
-Think about it.
-
-Well, one of the best options here is changing a little bit the way you think
-about the entity managers. Let's assume that each entity should have it's own
-entity manager, even if all of them are the same one.
-
-Let's use the same entity example. We have an entity called cart, and is part of
-our bundle *AppBundle*. Our *CartManager* service is managing some Cart features
-and its entity manager is needed.
-
-First step, creation of a new service pointing our Cart entity manager.
-
-``` yml
-services:
-    app.entity_manager.cart:
-        parent: base.abstract_object_manager
-        arguments:
-            - App\Entity\Cart
-```
-
-After that, you will be able to use this new service in your other services.
-Let's go back to the last example.
-
-``` yml
-services:
-    cart_manager:
-        class: AppBundle\CartManager
-        arguments:
-            - "@app.entity_manager.cart"
-```
-
-If you're using the default Symfony implementation, with the mapping
-auto-discover, the result of both implementations will be exactly the same, but
-in the future, if you decide to remove the mapping auto-discovering, or you
-split your applications in two different connections with several entity
-managers, you will only have to focus on your doctrine configuration. After
-that, your services will continue using the right entity manager.
-
-> As you could think, using this strategy means that you should never use the
-> default entity manager again, and start using one entity manager per entity.
-> So, what if your service is managing two entities at the same time? Easy,
-> managing *n* entities means coupling to *n* entity managers, even if they are
-> the same one. So please, make sure your services are small and do **only**
-> what they have to do.
-
-### ObjectRepository Provider
-
-Same for repositories. What if you want to inject your entity repository in your
-services? Well, you can do it by using the same strategy that you did in entity
-managers.
-
-``` yml
-services:
-    app.entity_repository.cart:
-        parent: base.abstract_object_repository
-        arguments:
-            - App\Entity\Cart
-```
-
-After that, you'll be able to inject this new service in your domain.
-
-``` yml
-services:
-    cart_manager:
-        class: AppBundle\CartManager
-        arguments:
-            - "@app.entity_repository.cart"
-```
-
-## ObjectDirector
-
-Some part of our application consists in a very small scope entity management.
-This means that we don't work wig big sets of data but with specific entities,
-like the scenario where we want to update a single entity.
-
-* We load if exists an entity (find)
-* If does'nt exist, we create a new one
-* We update this entity fields
-* We update the entity in our database (persist/flush)
-
-For this scenario we should have in our service two different classes injected,
-the object manager for the data persistence actions, like persist or flush, and
-the object repository for our searches, but as you can see, most of these
-actions follow the same pattern, and use the same methods.
-
-For this reason, we introduce the ObjectDirector class, a persistence
-simplification for these cases.
-
-Only four methods are exposed to maintain this simplification
-
-* find
-* findOneBy
-* save
-* remove
-
-and you can define the director as follows.
-
-``` yml
-services:
-    app.object_director.cart:
-        class: Mmoreram\BaseBundle\ORM\ObjectDirector
-        arguments:
-            - "@app.entity_manager.cart"
-            - "@app.entity_repository.cart"
-```
-
-This new service will simplify a little bit some persistence related logic
-inside your business classes, by reducing one dependency and the persistence
-scope.
 
 ## Functional Tests
 
@@ -1031,13 +690,13 @@ Well, this is not going to be a problem anymore, at least with this library.
 Let's see a functional test and the way you can do it since this moment.
 
 ``` php
+use Mmoreram\BaseBundle\Kernel\BaseKernel;
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
-use Mmoreram\BaseBundle\Tests\BaseKernel;
 
 /**
- * Class TagCompilerPassTest.
+ * Class MyTest.
  */
-final class TagCompilerPassTest extends BaseFunctionalTest
+final class MyTest extends BaseFunctionalTest
 {
     /**
      * Get kernel.
@@ -1191,17 +850,17 @@ new BaseKernel(
 The question here would be... okay, but where can I find my Kernel cache and
 logs? Well, each kernel configuration (bundles, configuration and routing) is
 hashed in a unique string. Then, the system creates a folder under the 
-`/tmp/base-kernel` folder and creates a unique `kernel-{hash}` folder
+`var/test` folder and creates a unique `{hash}` folder
 inside.
 
 Each time you reuse the same kernel configuration, this previous generated cache
 will be used in order to increase the performance of the tests.
 
 To increase *much more* this performance, don't hesitate to create a tmpfs
-inside this `/tmp/base-kernel` folder by using this command. 
+inside this `var/test/` folder by using this command. 
 
 ``` bash
-sudo mount -t tmpfs -o size=512M tmpfs /tmp/base-kernel/
+sudo mount -t tmpfs -o size=512M tmpfs var/test/
 ```
 
 ### BaseFunctionalTest
@@ -1284,631 +943,3 @@ $this->assertEqual(
     $this->getParameter('locale')
 );
 ```
-
-#### ->getObjectRepository()
-
-find in a fast way the object repository associated to an entity. You can define
-your entity namespace in several ways
-
-* MyBundle\Entity\Namespace\User
-* MyBundle:User
-
-``` php
-$this->assetInstanceOf(
-    '\Doctrine\Common\Persistence\ObjectRepository',
-    $this->getRepository('MyBundle:User')
-);
-```
-
-#### ->getObjectManager()
-
-find in a fast way the object manager associated to an entity. You can define
-your entity namespace like in *->getObjectRepository()* method
-
-``` php
-$this->assetInstanceOf(
-    '\Doctrine\Common\Persistence\ObjectManager',
-    $this->getManager('MyBundle:User')
-);
-```
-
-#### ->find()
-
-find one entity instance by its namespace and id. You can define your entity 
-namespace like in *->getObjectRepository()* method
-
-``` php
-$this->assetInstanceOf(
-    '\MyBundle\Entity\User',
-    $this->find('MyBundle:User', 1)
-);
-```
-
-#### ->findOneBy()
-
-find one entity instance complaining the passed criteria. You can define your
-entity namespace like in *->getObjectRepository()* method
-
-``` php
-$this->assetInstanceOf(
-    '\MyBundle\Entity\User',
-    $this->findOneBy('MyBundle:User', [
-        'name' => 'mmoreram',
-    ])
-);
-```
-
-#### ->findAll()
-
-get all entities given the namespace. You can define your entity namespace like
-in *->getObjectRepository()* method
-
-``` php
-$this->assertCount(
-    10,
-    $this->findAll('MyBundle:User')
-);
-```
-
-#### ->findBy()
-
-get all entities complaining the passed criteria. You can define your entity
-namespace like in *->getObjectRepository()* method
-
-``` php
-$this->assertCount(
-    3,
-    $this->findBy('MyBundle:User', [
-        'name' => 'mmoreram',
-    ])
-);
-```
-
-#### ->clear()
-
-Clear the entity manager associated to an entity. This means that you force
-doctrine to detach the entity type passed. You can define your entity namespace
-like in *->getObjectRepository()* method
-
-``` php
-$this->clear('MyBundle:User');
-```
-
-This is useful when you save entities or changes from already existing entities
-and you want to test if the changes have really been applied. This flushes this
-cache.
-
-#### ->save()
-
-Save any entity in an easy way. You can save an entity or an array of entities.
-
-``` php
-$this->save($user1);
-$this->save([
-    $user2,
-    $user3,
-]);
-```
-
-The method always persists, even if the entity is already attached to the object
-manager.
-
-### Working with Database
-
-Of course, you may need to build the database schema in your tests, and because
-most of the cases your database creation are the same, you will be able to apply
-these steps just overwriting this method in your test.
-
-``` php
-/**
- * Schema must be loaded in all test cases.
- *
- * @return bool Load schema
- */
-protected static function loadSchema()
-{
-    return true;
-}
-```
-
-If you allow to load the schema, your database will be loaded at the beginning
-of your test case and will be dropped after it. By loaded we mean these steps
-
-``` bash
-> bin/console doctrine:database:drop --force
-> bin/console doctrine:database:create
-> bin/console doctrine:schema:create
-```
-
-You can reload the schema during a test scenario as well, by invoking the
-`->reloadSchema()` method. After this call, your schema will be clean (unless
-you use fixtures).
-
-``` php
-$this->reloadSchema();
-```
-
-You can debug your console output by overwriding the `debug` protected variable
-in your test case.
-
-``` php
-/**
- * @var bool
- *
- * Debug mode
- */
-protected static $debug = true;
-```
-
-### Working with Fixtures
-
-The other need you may have in your functional tests is, after loading the
-database, load some fixtures. Because like the kernel, each fixtures
-configuration should be unique per each test case, you can define a set of
-fixtures in each test case overwriting a method, by default empty.
-
-``` php
-/**
- * Load fixtures of these bundles.
- *
- * @return array
- */
-protected static function loadFixturePaths() : array
-{
-    return [
-        '@MyBundle',
-        '@MyOtherBundle,
-    ];
-}
-```
-
-By default, if you return an array of fixtures, the system will understand that
-you want to enable the database schema loading, so you don't need to overwrite
-the method `loadSchema()`.
-
-In this method you can add folders where to look for the fixtures, for example
-a bundle with short notation, or even a single file. To make sure you treat your
-fixtures properly, make sure you use the
-[DependentFixtureInterface](https://github.com/doctrine/data-fixtures/blob/master/lib/Doctrine/Common/DataFixtures/DependentFixtureInterface.php)
-feature to define each fixture dependencies.
-
-You can as well reset the fixtures in any part of your tests with the method 
-`reloadFixtures`. This method will set the database as clean as before starting
-with the first current Test Case method.
-
-```php
-$this->reloadFixtures();
-```
-
-This method will cause the same change in your database state than the method
-`->reloadSchema()`, so apart of cleaning your schema and building it again, all
-fixtures will be loaded as well.
-
-### BaseFixture
-
-As long as you need to create your Fixtures, this library provides you as well
-the same container accessors than provided in tests. Just make sure that your
-fixtures extend the `BaseFixture` class, and you'll be able to use all these
-methods as well.
-
-``` php
-/**
- * Class UserData.
- */
-class UserData extends BaseFixture
-{
-    /**
-     * Load data fixtures with the passed EntityManager.
-     *
-     * @param ObjectManager $manager
-     */
-    public function load(ObjectManager $manager)
-    {
-        $user1 = new User();
-        $user1->setName('Joan');
-        $this->save($user1);
-
-        $this->find('my_prefix:user');
-        $this->getObjectManager('my_prefix:user');
-
-        // ...
-    }
-}
-```
-
-Even if you extend `BaseFixture` you can implement the same interfaces you've
-been using until now for dependent fixtures and ordered fixtures.
-
-> To make sure your fixtures are valid even if you decide in the future that
-> your entity User is not managed anymore by the default Doctrine entity
-> manager, use the ->save() method to persist and flush all entities. With these
-> helpers should should never use the manager passed as parameter. If you need
-> to get the whole object manager, use the ->getObjectManager() method.
-
-## Entity Mapping
-
-Imagine this scenario.
-
-You have a bundle with a model inside of it. By a model I mean a set of entity
-classes and a set of mapping files. You want to provide a simple way of
-defining this relation between the mapping files and the entity classes, and at
-the same, and by default, create some extra services and configuration layers
-to manage this configuration.
-
-By default, Doctrine adds an auto-mapping layer with a not-very-good overwriting
-policy, so. let's see how can I disable this auto-mapping layer and start by
-using this super easy mapping layer.
-
-### Private bundles
-
-In your private bundles, you may need only a soft layer of your model
-definition.
-
-Let's introduce a simple interface called `MappingBagProvider`. If your bundle
-has a model, then your bundle has an instance of this class.
-
-``` php
-/**
- * Interface MappingBagProvider.
- */
-interface MappingBagProvider
-{
-    /**
-     * Get mapping bag collection.
-     *
-     * @return MappingBagCollection
-     */
-    public function getMappingBagCollection() : MappingBagCollection;
-}
-```
-
-As you can see, one simple method and that will be enough. Let's see a simple
-implementation of this class for your bundle. For this scenario, imagine that we
-have this bundle configuration.
-
-* One entity called User under `MyBundle\Entity` namespace.
-* One mapping file under `@MyBundle/Resources/config/doctrine` folder called
-  `User.orm.yml`
-
-Our MappingBagProvider should be something like this
-
-``` php
-/**
- * Class MappingBagProvider.
- */
-class MyBundleMappingBagProvider implements MappingBagProvider
-{
-    /**
-     * Get mapping bag collection.
-     *
-     * @return MappingBagCollection
-     */
-    public function getMappingBagCollection() : MappingBagCollection
-    {
-        return MappingBagCollection::create(
-            ['user' => 'User'],
-            '@MyBundle',
-            'MyBundle\Entity'
-        );
-    }
-}
-```
-
-As you can see, this method returns a `MappingBagCollection` instance with some
-simple data.
-
-* An associative array of your entities
-* A bundle path where to look for the mapping files (you can use the short
-  notation here)
-* The namespace where to find the entity classes
-
-The second and last step to start working with your entities is the creation of
-a compiler pass in your bundle class. If you work with BaseBundle, then make use
-of the method defined for that.
-
-``` php
-final class MyBundle extends BaseBundle
-{
-    /**
-     * Return a CompilerPass instance array.
-     *
-     * @return CompilerPassInterface[]
-     */
-    public function getCompilerPasses()
-    {
-        return [
-            new MappingCompilerPass(new MyBundleMappingBagProvider()),
-        ];
-    }
-}
-```
-
-and that's it, you model is already built with these amazing features.
-
-* Your entities are mapped with the YAML files inside the Resources path,
-  created from the MappingBagCollection construct data. You should follow the
-  Symfony standard by placing these mapping files inside the folder
-  `@MyBundle/Resources/config/doctrine` with the standard name `User.orm.yml`.
-  At the moment, only available for YAML files.
-* Per each entity mapped, the library has created these services.
-    * `object_manager.{entity_name}` is an alias for the object manager assigned
-      to this entity. You can inject it in your services. In that case you could
-      use the service `object_manager.user` as an instance of
-      `Doctrine\Common\Persistence\ObjectManager`
-    * `object_repository.{entity_name}` is an alias for the object repository
-      assigned to this entity. You can inject it as well in your services. In
-      that case you could the service `object_repository.user` as an instance of
-      `Doctrine\Common\Persistence\ObjectRepository`
-    * `object_director.{entity_name}` is a new Director service assigned to this
-      entity.
-* Per each entity mapped, you can find as well 4 parameters defined in your
-  container, injectable as well in your services
-    * `entity.{entity_name}.class` is the entity namespace used for the mapping.
-      in that case, `entity.user.class` with a value of `MyBundle\Entity\User`.
-    * `entity.{entity_name}.mapping_file` is the path of the mapping file used
-      for the mapping of this class. in that case `entity.user.mapping_file`
-      with a value of `@MyBundle/Resources/config/doctrine/User.orm.yml`
-    * `entity.{entity_name}.manager` is the manager assigned to this entity, by
-      default always `default`. In that case `entity.user.manager` with a value
-      of `default`.
-    * `entity.{entity_name}.enabled` is useful for next chapter, and has whether
-      the entity is enabled or not. By default true. In that case 
-      `entity.user.enabled` with a value of *true*
-
-Of course, many of these things can be configured by adding more parameters in
-our MappingBagProvider implementation.
-
-``` php
-/**
- * Class MappingBagProvider.
- */
-class MyBundleMappingBagProvider implements MappingBagProvider
-{
-    /**
-     * Get mapping bag collection.
-     *
-     * @return MappingBagCollection
-     */
-    public function getMappingBagCollection() : MappingBagCollection
-    {
-        return MappingBagCollection::create(
-            ['user' => 'User'],
-            '@MyBundle',
-            'MyBundle\Entity',
-            'my_prefix',
-            'another_manager',
-            'manager',
-            'repository',
-            false
-        );
-    }
-}
-```
-
-Let's explain each of these extra parameters
-
-* 'my_prefix' will be used when defining container entries (services and 
-  parameters), so with a value of `my_prefix`, we will have these values instead
-  of the ones defined below
-    * my_prefix.object_manager.user
-    * my_prefix.object_repository.user
-    * my_prefix.entity.user.class
-    * my_prefix.entity.user.mapping_file
-    * my_prefix.entity.user.manager
-    * my_prefix.entity.user.enabled
-* `another_manager` will be used as the default object manager in all defined
-  entities. With the value `another_manager` the value of the parameter
-  `my_prefix.entity.user.mapping_file` would be `another_manager' instead of 
-  `default`. Take in account that the object_manager defined here must be
-  defined as well under the Doctrine ORM configuration
-* `manager` will be used as the name of the generated object manager aliases.
-  With this value, we would generate a service called `my_prefix.manager.user`
-  instead of `my_prefix.object_manager.user`
-* `repository` will be used as the name of the generated object repository
-  aliases. With this value, we would generate a service called
-  `my_prefix.repository.user` instead of `my_prefix.object_manager.user`
-* the last method optional boolean parameter, `false`, is the way you have to
-  enable the mapping external configuration. We will see this feature in next
-  chapters. By default, always `false`.
-  
-### Public bundles
-
-So, what if you want to expose you bundles for everyone? And what if you want to
-enable other user to overwrite the entity class, the mapping file, the object
-manager assigned to this entity or even disable the entity?
-
-Do it in 3 simple steps.
-
-First step, define that you want to enable this feature in the last
-`MappingBagProvider` parameter.
-
-``` php
-/**
- * Class MappingBagProvider.
- */
-class MyBundleMappingBagProvider implements MappingBagProvider
-{
-    /**
-     * Get mapping bag collection.
-     *
-     * @return MappingBagCollection
-     */
-    public function getMappingBagCollection() : MappingBagCollection
-    {
-        return MappingBagCollection::create(
-            ['user' => 'User'],
-            '@MyBundle',
-            'MyBundle\Entity',
-            'my_prefix',
-            'another_manager',
-            'manager',
-            'repository',
-            true // Change this value from false to true
-        );
-    }
-}
-```
-
-In that case, make sure all other values are properly defined.
-
-Second step, pass the MappingBagProvider instance to your Configuration in your
-bundle class.
-
-``` php
-/**
- * Class TestMappingBundle.
- */
-final class TestMappingBundle extends BaseBundle
-{
-    /**
-     * Return a CompilerPass instance array.
-     *
-     * @return CompilerPassInterface[]
-     */
-    public function getCompilerPasses()
-    {
-        return [
-            new MappingCompilerPass(new MyBundleMappingBagProvider()),
-        ];
-    }
-
-    /**
-     * Returns the bundle's container extension.
-     *
-     * @return ExtensionInterface|null The container extension
-     *
-     * @throws \LogicException
-     */
-    public function getContainerExtension()
-    {
-        return new TestMappingExtension(new MyBundleMappingBagProvider());
-    }
-}
-```
-
-Last step, in your Extension, if you don't have any configuration defined yet,
-you can use a BaseConfiguration instance, so you don't need to create any extra
-class. Important! Pass the MappingBagProvider saved locally as the second
-parameter.
-
-``` php
-/**
- * Class TestMappingExtension.
- */
-class MyBundleExtension extends BaseExtension
-{
-    /**
-     * Return a new Configuration instance.
-     *
-     * If object returned by this method is an instance of
-     * ConfigurationInterface, extension will use the Configuration to read all
-     * bundle config definitions.
-     *
-     * Also will call getParametrizationValues method to load some config values
-     * to internal parameters.
-     *
-     * @return ConfigurationInterface|null
-     */
-    protected function getConfigurationInstance() : ? ConfigurationInterface
-    {
-        return new BaseConfiguration(
-            $this->getAlias(),
-            $this->mappingBagProvider
-        );
-    }
-}
-```
-
-If you have your Extension created already, just pass the MappingBagProvider
-as the second parameter. No extra classes to create, just one line.
-
-``` php
-/**
- * Class TestMappingExtension.
- */
-class MyBundleExtension extends BaseExtension
-{
-    /**
-     * Return a new Configuration instance.
-     *
-     * If object returned by this method is an instance of
-     * ConfigurationInterface, extension will use the Configuration to read all
-     * bundle config definitions.
-     *
-     * Also will call getParametrizationValues method to load some config values
-     * to internal parameters.
-     *
-     * @return ConfigurationInterface|null
-     */
-    protected function getConfigurationInstance() : ? ConfigurationInterface
-    {
-        return new MyBundleConfiguration(
-            $this->getAlias(),
-            $this->mappingBagProvider
-        );
-    }
-}
-```
-
-And that's it! Now you can overwrite all your mapping values from the config 
-application.
-
-``` yml
-{extension_alias}:
-    mapping:
-        user:
-            class: "AnotherBundle\Entity\AnotherUser"
-            mapping_file: "@AnotherBundle/Resources/config/doctrine/AnotherUser.orm.yml"
-            manager: "another_manager"
-            enabled: false
-```
-
-The *extension_alias* value will always depend on the Extension alias, and in
-that case, your mapping_file value can point to a YML or XML mapping file.
-
-### Bundles and Components
-
-This library is useful as well when you want to change your bundle and split it
-between the Symfony Bundle and the PHP Component.
-
-After this split, make sure that your MappingBagProvider defines the new mapping
-namespace properly
-
-``` php
-/**
- * Class MappingBagProvider.
- */
-class MyBundleMappingBagProvider implements MappingBagProvider
-{
-    /**
-     * Get mapping bag collection.
-     *
-     * @return MappingBagCollection
-     */
-    public function getMappingBagCollection() : MappingBagCollection
-    {
-        return MappingBagCollection::create(
-            ['user' => 'User'],
-            '@MyBundle',
-            'MyOtherNamespace\Entity'
-        );
-    }
-}
-```
-
-### Exposing your mapping without BaseBundle
-
-You can expose your mapping without using BaseExtension and BaseConfiguration.
-What these two classes do for you is just adding all the fields in your
-configuration tree, validating them all and adding the resulting values in your
-container as parameters, so if you want to do these steps without BaseBundle
-make sure that, at the end, you have the right parameters in your container.
-
-## Documentation extra
-
-Some libraries will be used as well during the documentation. We encourage you
-to check them all in order to increase the quality of your bundles and the way
-you know them.
-
-* [Simple Doctrine Mapping](http://github.com/mmoreram/SimpleDoctrineMapping)
-* [Symfony Bundle Dependencies](http://github.com/mmoreram/symfony-bundle-dependencies)
