@@ -24,30 +24,11 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-use Mmoreram\BaseBundle\Mapping\MappingBagProvider;
-
 /**
  * Class BaseExtension.
  */
 abstract class BaseExtension implements ExtensionInterface, ConfigurationExtensionInterface, PrependExtensionInterface
 {
-    /**
-     * @var MappingBagProvider
-     *
-     * Mapping bag provider
-     */
-    protected $mappingBagProvider;
-
-    /**
-     * BaseExtension constructor.
-     *
-     * @param MappingBagProvider $mappingBagProvider
-     */
-    public function __construct(MappingBagProvider $mappingBagProvider = null)
-    {
-        $this->mappingBagProvider = $mappingBagProvider;
-    }
-
     /**
      * Returns extension configuration.
      *
@@ -110,9 +91,7 @@ abstract class BaseExtension implements ExtensionInterface, ConfigurationExtensi
             $config = $container->getParameterBag()->resolveValue($config);
         }
 
-        $this->applyMappingParametrization($config, $container);
         $this->applyParametrizedValues($config, $container);
-        $this->overrideEntities($container);
         $this->preLoad($config, $container);
     }
 
@@ -274,51 +253,6 @@ abstract class BaseExtension implements ExtensionInterface, ConfigurationExtensi
     }
 
     /**
-     * Apply parametrization for Mapping data.
-     * This method is only applied if the extension implements
-     * EntitiesMappedExtension.
-     *
-     * @param array            $config
-     * @param ContainerBuilder $container
-     */
-    private function applyMappingParametrization(
-        array $config,
-        ContainerBuilder $container
-    ) {
-        if (!$this->mappingBagProvider instanceof MappingBagProvider) {
-            return;
-        }
-
-        $mappingBagCollection = $this
-            ->mappingBagProvider
-            ->getMappingBagCollection();
-
-        $mappedParameters = [];
-        foreach ($mappingBagCollection->all() as $mappingBag) {
-            $entityName = $mappingBag->getEntityName();
-            $isOverwritable = $mappingBag->isOverwritable();
-            $mappedParameters = array_merge($mappedParameters, [
-                $mappingBag->getParamFormat('class') => $isOverwritable
-                    ? $config['mapping'][$entityName]['class']
-                    : $mappingBag->getEntityNamespace(),
-                $mappingBag->getParamFormat('mapping_file') => $isOverwritable
-                    ? $config['mapping'][$entityName]['mapping_file']
-                    : $mappingBag->getEntityMappingFilePath(),
-                $mappingBag->getParamFormat('manager') => $isOverwritable
-                    ? $config['mapping'][$entityName]['manager']
-                    : $mappingBag->getManagerName(),
-                $mappingBag->getParamFormat('enabled') => $isOverwritable
-                    ? $config['mapping'][$entityName]['enabled']
-                    : $mappingBag->getEntityIsEnabled(),
-            ]);
-        }
-
-        $container
-            ->getParameterBag()
-            ->add($mappedParameters);
-    }
-
-    /**
      * Load multiple files.
      *
      * @param array            $configFiles Config files
@@ -338,27 +272,6 @@ abstract class BaseExtension implements ExtensionInterface, ConfigurationExtensi
             }
 
             $loader->load($configFile.'.yml');
-        }
-    }
-
-    /**
-     * Override Doctrine entities.
-     *
-     * @param ContainerBuilder $container Container
-     */
-    private function overrideEntities(ContainerBuilder $container)
-    {
-        if ($this instanceof EntitiesOverridableExtension) {
-            $overrides = $this->getEntitiesOverrides();
-            foreach ($overrides as $interface => $override) {
-                $overrides[$interface] = $container->getParameter($override);
-            }
-
-            $container->prependExtensionConfig('doctrine', [
-                'orm' => [
-                    'resolve_target_entities' => $overrides,
-                ],
-            ]);
         }
     }
 }

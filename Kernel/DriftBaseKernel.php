@@ -13,13 +13,14 @@
 
 declare(strict_types=1);
 
-namespace Mmoreram\BaseBundle\Tests;
+namespace Mmoreram\BaseBundle\Kernel;
 
-use Mmoreram\BaseBundle\Kernel\BaseKernel as MainBaseKernel;
+use Drift\HttpKernel\AsyncKernel;
 
 /**
- * Class BaseKernel.
+ * Class AsyncBaseKernel
  */
-final class BaseKernel extends MainBaseKernel
+class DriftBaseKernel extends AsyncKernel
 {
+    use BaseKernelTrait;
 }

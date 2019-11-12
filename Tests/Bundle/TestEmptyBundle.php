@@ -36,9 +36,7 @@ final class TestEmptyBundle extends BaseBundle
     public static function getBundleDependencies(KernelInterface $kernel): array
     {
         return [
-            'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
-            'Mmoreram\BaseBundle\Tests\Bundle\TestBaseBundle',
-            'Mmoreram\BaseBundle\BaseBundle',
+            'Symfony\Bundle\FrameworkBundle\FrameworkBundle'
         ];
     }
 }

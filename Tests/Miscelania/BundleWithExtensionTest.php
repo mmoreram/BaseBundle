@@ -15,10 +15,12 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
+use Mmoreram\BaseBundle\Kernel\BaseKernel;
+use Mmoreram\BaseBundle\Tests\Bundle\TestBundle;
+use Mmoreram\BaseBundle\Tests\Bundle\TestClass;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
-use Mmoreram\BaseBundle\Tests\BaseKernel;
 
 /**
  * Class BundleWithExtensionTest.
@@ -33,15 +35,20 @@ class BundleWithExtensionTest extends BaseFunctionalTest
     protected static function getKernel(): KernelInterface
     {
         return new BaseKernel([
-            'Mmoreram\BaseBundle\Tests\Bundle\TestBundle',
+            TestBundle::class,
         ]);
     }
 
     /**
-     * Test bundle has extension.
+     * Test get.
      */
-    public function testHasExtension()
+    public function testGet()
     {
-        $this->assertTrue($this->has('test.service'));
+        $this->assertInstanceOf(
+            TestClass::class,
+            $this->get('test.service2')
+        );
+
+        $this->assertEquals('value2', $this->get('test.service2')->getName());
     }
 }

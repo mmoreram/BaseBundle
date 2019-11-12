@@ -15,10 +15,7 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-
-use Mmoreram\BaseBundle\Mapping\MappingBagProvider;
 
 /**
  * Class SimpleBaseExtension.
@@ -44,15 +41,12 @@ class SimpleBaseExtension extends BaseExtension
      *
      * @param BundleInterface    $bundle
      * @param array              $configFiles
-     * @param MappingBagProvider $mappingBagProvider
      */
     public function __construct(
         BundleInterface $bundle,
-        array $configFiles,
-        MappingBagProvider $mappingBagProvider = null)
+        array $configFiles
+    )
     {
-        parent::__construct($mappingBagProvider);
-
         $this->bundle = $bundle;
         $this->configFiles = $configFiles;
     }
@@ -115,27 +109,5 @@ class SimpleBaseExtension extends BaseExtension
     protected function getConfigFiles(array $config): array
     {
         return $this->configFiles;
-    }
-
-    /**
-     * Return a new Configuration instance.
-     *
-     * If object returned by this method is an instance of
-     * ConfigurationInterface, extension will use the Configuration to read all
-     * bundle config definitions.
-     *
-     * Also will call getParametrizationValues method to load some config values
-     * to internal parameters.
-     *
-     * @return ConfigurationInterface|null
-     */
-    protected function getConfigurationInstance(): ? ConfigurationInterface
-    {
-        return $this->mappingBagProvider
-            ? new BaseConfiguration(
-                $this->getAlias(),
-                $this->mappingBagProvider
-            )
-            : null;
     }
 }

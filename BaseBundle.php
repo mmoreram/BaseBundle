@@ -28,7 +28,7 @@ use Mmoreram\SymfonyBundleDependencies\DependentBundleInterface;
 /**
  * Class AbstractBundle.
  */
-class BaseBundle extends Bundle implements DependentBundleInterface
+abstract class BaseBundle extends Bundle implements DependentBundleInterface
 {
     /**
      * Builds bundle.

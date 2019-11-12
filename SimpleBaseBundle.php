@@ -15,17 +15,14 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
-use Mmoreram\BaseBundle\CompilerPass\MappingCompilerPass;
 use Mmoreram\BaseBundle\DependencyInjection\SimpleBaseExtension;
-use Mmoreram\BaseBundle\Mapping\MappingBagProvider;
 
 /**
  * Class AbstractBundle.
  */
-class SimpleBaseBundle extends BaseBundle
+abstract class SimpleBaseBundle extends BaseBundle
 {
     /**
      * get config files.
@@ -35,16 +32,6 @@ class SimpleBaseBundle extends BaseBundle
     public function getConfigFiles(): array
     {
         return [];
-    }
-
-    /**
-     * get mapping bag provider.
-     *
-     * @return MappingBagProvider|null
-     */
-    public function getMappingBagProvider(): ? MappingBagProvider
-    {
-        return null;
     }
 
     /**
@@ -58,25 +45,7 @@ class SimpleBaseBundle extends BaseBundle
     {
         return new SimpleBaseExtension(
             $this,
-            $this->getConfigFiles(),
-            $this->getMappingBagProvider()
+            $this->getConfigFiles()
         );
-    }
-
-    /**
-     * Return a CompilerPass instance array.
-     *
-     * @return CompilerPassInterface[]
-     */
-    public function getCompilerPasses(): array
-    {
-        $mappingBagProvider = $this->getMappingBagProvider();
-
-        return $mappingBagProvider instanceof MappingBagProvider
-            ? array_merge(
-                parent::getCompilerPasses(),
-                [new MappingCompilerPass($mappingBagProvider)]
-            )
-            : parent::getCompilerPasses();
     }
 }

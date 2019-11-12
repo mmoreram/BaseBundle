@@ -70,7 +70,7 @@ class TestExtension extends BaseExtension
     protected function getConfigFiles(array $config): array
     {
         return [
-            'services',
+            'services2',
         ];
     }
 }

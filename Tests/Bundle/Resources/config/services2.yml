@@ -1,7 +1,7 @@
 services:
 
-  test.service:
+  test.service2:
     class: Mmoreram\BaseBundle\Tests\Bundle\TestClass
     public: true
     arguments:
-      - "value1"
+      - "value2"
