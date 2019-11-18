@@ -214,6 +214,9 @@ trait BaseKernelTrait
             ])
         );
 
-        return parent::getProjectDir().'/var/test/'.$kernelHash;
+        $possibleComposerPath = parent::getProjectDir() . '/../../..';
+        return ((file_exists($possibleComposerPath . '/composer.json'))
+            ? $possibleComposerPath
+            : parent::getProjectDir()) . '/var/test/' . $kernelHash;
     }
 }
