@@ -19,10 +19,11 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Client;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -69,8 +70,12 @@ abstract class BaseFunctionalTest extends TestCase
         try {
             static::$kernel = static::getKernel();
             static::$kernel->boot();
-            static::$application = new Application(static::$kernel);
-            static::$application->setAutoExit(false);
+
+            if (class_exists('\Symfony\Component\Console\Application')) {
+                static::$application = new Application(static::$kernel);
+                static::$application->setAutoExit(false);
+            }
+
             static::$container = static::$kernel->getContainer();
         } catch (Exception $e) {
             throw new RuntimeException(
@@ -86,9 +91,9 @@ abstract class BaseFunctionalTest extends TestCase
      *
      * @param array $server An array of server parameters
      *
-     * @return Client
+     * @return HttpKernelBrowser
      */
-    protected static function createClient(array $server = []): Client
+    protected static function createClient(array $server = []): HttpKernelBrowser
     {
         $client = static::$container->get('test.client');
         $client->setServerParameters($server);
@@ -105,6 +110,10 @@ abstract class BaseFunctionalTest extends TestCase
      */
     protected static function runCommand(array $command): string
     {
+        if (!static::$application instanceof Application) {
+            throw new \Exception('You should install the symfony/console component to run commands');
+        }
+
         $fp = tmpfile();
         $input = new ArrayInput($command);
         $output = new StreamOutput($fp);
