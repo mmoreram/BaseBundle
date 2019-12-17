@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Bundle;
 
+use Mmoreram\BaseBundle\BaseBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\SimpleBaseBundle;
@@ -46,9 +48,8 @@ class TestSimpleBundle extends SimpleBaseBundle
     public static function getBundleDependencies(KernelInterface $kernel): array
     {
         return [
-            'Symfony\Bundle\FrameworkBundle\FrameworkBundle',
-            'Doctrine\Bundle\DoctrineBundle\DoctrineBundle',
-            'Mmoreram\BaseBundle\BaseBundle',
+            FrameworkBundle::class,
+            BaseBundle::class
         ];
     }
 }

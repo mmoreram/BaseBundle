@@ -12,6 +12,7 @@ jobs:
           name: Install PHPUnit
           command: |
             composer require phpunit/phpunit:7.5.17 --no-update
+            composer require mmoreram/symfony-bundle-dependencies:^2.2 --no-update
 
       - run:
           name: Run tests / Symfony 4^3
@@ -23,7 +24,7 @@ jobs:
           name: Run tests / Symfony 5^0
           command: |
             composer update -n --prefer-dist --no-suggest
-            php vendor/bin/phpunit
+            php vendor/bin/phpunit --testsuite=with-bundle-dependencies
 
   test-php74:
     docker:
@@ -37,12 +38,31 @@ jobs:
           name: Install PHPUnit
           command: |
             composer require phpunit/phpunit:7.5.17 --no-update
+            composer require mmoreram/symfony-bundle-dependencies:^2.2 --no-update
 
       - run:
           name: Run tests / Symfony 5^0
           command: |
             composer update -n --prefer-dist --no-suggest
-            php vendor/bin/phpunit
+            php vendor/bin/phpunit --testsuite=with-bundle-dependencies
+
+  test-no-dependencies:
+    docker:
+      - image: circleci/php:7.4-cli
+
+    working_directory: ~/project
+    steps:
+      - checkout
+      - run:
+          name: Install PHPUnit
+          command: |
+            composer require phpunit/phpunit:7.5.17 --no-update
+
+      - run:
+          name: Run tests / Symfony 5^0
+          command: |
+            composer update -n --prefer-dist --no-suggest
+            php vendor/bin/phpunit --testsuite=no-bundle-dependencies
 
 workflows:
   version: 2
@@ -50,3 +70,4 @@ workflows:
     jobs:
       - test-php72
       - test-php74
+      - test-no-dependencies

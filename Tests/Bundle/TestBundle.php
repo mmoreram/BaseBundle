@@ -15,16 +15,18 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Bundle;
 
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\BaseBundle;
 use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestExtension;
+use Mmoreram\SymfonyBundleDependencies\DependentBundleInterface;
 
 /**
  * Class TestBundle.
  */
-final class TestBundle extends BaseBundle
+final class TestBundle extends BaseBundle implements DependentBundleInterface
 {
     /**
      * Return all bundle dependencies.
@@ -38,7 +40,8 @@ final class TestBundle extends BaseBundle
     public static function getBundleDependencies(KernelInterface $kernel): array
     {
         return [
-            'Symfony\Bundle\FrameworkBundle\FrameworkBundle'
+            FrameworkBundle::class,
+            AnotherBundle::class
         ];
     }
 
