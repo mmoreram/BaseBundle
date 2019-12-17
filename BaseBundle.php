@@ -23,12 +23,10 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-use Mmoreram\SymfonyBundleDependencies\DependentBundleInterface;
-
 /**
  * Class AbstractBundle.
  */
-abstract class BaseBundle extends Bundle implements DependentBundleInterface
+abstract class BaseBundle extends Bundle
 {
     /**
      * Builds bundle.

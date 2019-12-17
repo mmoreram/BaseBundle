@@ -16,8 +16,10 @@ declare(strict_types=1);
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
 use Mmoreram\BaseBundle\Kernel\BaseKernel;
+use Mmoreram\BaseBundle\Tests\Bundle\AnotherBundle;
 use Mmoreram\BaseBundle\Tests\Bundle\TestClass;
 use Mmoreram\BaseBundle\Tests\Bundle\TestEmptyBundle;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
@@ -51,6 +53,15 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
                 'kernel.secret' => '1234'
             ],
         ]);
+    }
+
+    /**
+     * Test dependencies.
+     */
+    public function testDependencies()
+    {
+        $bundle = static::$kernel->getBundle("AnotherBundle");
+        $this->assertInstanceof(Bundle::class, $bundle);
     }
 
     /**

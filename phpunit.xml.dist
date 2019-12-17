@@ -11,8 +11,12 @@
          bootstrap="vendor/autoload.php"
 >
     <testsuites>
-        <testsuite name="Test Suite">
-            <directory>./Tests</directory>
+        <testsuite name="with-bundle-dependencies">
+            <directory>./Tests/Miscelania</directory>
+        </testsuite>
+
+        <testsuite name="no-bundle-dependencies">
+            <directory>./Tests/NoBundleDeps</directory>
         </testsuite>
     </testsuites>
 

@@ -15,14 +15,13 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Kernel;
 
+use Mmoreram\BaseBundle\Dependencies\BundleDependenciesResolver;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 use Symfony\Component\Yaml\Yaml;
-
-use Mmoreram\SymfonyBundleDependencies\BundleDependenciesResolver;
 
 /**
  * Trait BaseKernelTrait.

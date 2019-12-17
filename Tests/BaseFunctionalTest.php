@@ -19,7 +19,6 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
