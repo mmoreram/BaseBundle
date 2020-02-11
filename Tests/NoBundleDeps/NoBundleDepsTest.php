@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,14 +15,12 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
-use Mmoreram\BaseBundle\Kernel\BaseKernel;
-use Mmoreram\BaseBundle\Tests\Bundle\AnotherBundle;
-use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+use Mmoreram\BaseBundle\Kernel\BaseKernel;
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
-use Mmoreram\BaseBundle\Tests\Bundle\TestBundle;
+use Mmoreram\BaseBundle\Tests\Bundle\AnotherBundle;
 
 /**
  * Class NoBundleDepsTest.
@@ -41,11 +39,11 @@ class NoBundleDepsTest extends BaseFunctionalTest
             AnotherBundle::class,
         ], [
             'parameters' => [
-                'kernel.secret' => '1234'
+                'kernel.secret' => '1234',
             ],
             'framework' => [
-                'test' => true
-            ]
+                'test' => true,
+            ],
         ]);
     }
 
@@ -54,9 +52,9 @@ class NoBundleDepsTest extends BaseFunctionalTest
      */
     public function testDependencies()
     {
-        static::$kernel->getBundle("AnotherBundle");
+        static::$kernel->getBundle('AnotherBundle');
 
-        /**
+        /*
          * No exception is expected
          */
         $this->assertTrue(true);

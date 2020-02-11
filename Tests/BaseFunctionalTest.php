@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -79,11 +79,7 @@ abstract class BaseFunctionalTest extends TestCase
 
             static::$container = static::$kernel->getContainer();
         } catch (Exception $e) {
-            throw new RuntimeException(
-                sprintf('Unable to start the application: %s', $e->getMessage()),
-                $e->getCode(),
-                $e
-            );
+            throw new RuntimeException(sprintf('Unable to start the application: %s', $e->getMessage()), $e->getCode(), $e);
         }
     }
 
@@ -135,7 +131,7 @@ abstract class BaseFunctionalTest extends TestCase
     }
 
     /**
-     * Runs a command in async mode and return a Process
+     * Runs a command in async mode and return a Process.
      *
      * @param array $command
      *
@@ -149,17 +145,17 @@ abstract class BaseFunctionalTest extends TestCase
 
         $kernel = self::$kernel;
         $jsonSerializedKernel = json_encode($kernel->toArray());
-        $jsonSerializedKernelHash = '/kernel' . rand(1, 99999999999999) . '.kernel.json';
-        $jsonSerializedKernelPath = $kernel->getProjectDir() . $jsonSerializedKernelHash;
+        $jsonSerializedKernelHash = '/kernel'.rand(1, 99999999999999).'.kernel.json';
+        $jsonSerializedKernelPath = $kernel->getProjectDir().$jsonSerializedKernelHash;
 
         file_put_contents(
             $jsonSerializedKernelPath,
             $jsonSerializedKernel
         );
 
-        $devConsolePath = realpath(__DIR__ . '/../bin/dev-console');
+        $devConsolePath = realpath(__DIR__.'/../bin/dev-console');
         array_unshift($command, 'php', $devConsolePath);
-        array_push($command, '--kernel-hash-path=' . $jsonSerializedKernelPath);
+        array_push($command, '--kernel-hash-path='.$jsonSerializedKernelPath);
 
         $process = new Process($command);
         $process->start();

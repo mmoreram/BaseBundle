@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,7 +18,7 @@ namespace Mmoreram\BaseBundle\Kernel;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
- * Class BaseKernel
+ * Class BaseKernel.
  */
 class BaseKernel extends Kernel
 {

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,9 +17,9 @@ namespace Mmoreram\BaseBundle\Tests\Bundle;
 
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Mmoreram\SymfonyBundleDependencies\DependentBundleInterface;
 
 use Mmoreram\BaseBundle\BaseBundle;
+use Mmoreram\SymfonyBundleDependencies\DependentBundleInterface;
 
 /**
  * Class TestEmptyBundle.
@@ -39,7 +39,7 @@ final class TestEmptyBundle extends BaseBundle implements DependentBundleInterfa
     {
         return [
             FrameworkBundle::class,
-            AnotherBundle::class
+            AnotherBundle::class,
         ];
     }
 }

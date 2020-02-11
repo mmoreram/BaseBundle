@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -127,10 +127,7 @@ abstract class BaseExtension implements ExtensionInterface, ConfigurationExtensi
     protected function getConfigFilesLocation(): string
     {
         if (!empty($this->getConfigFiles([]))) {
-            throw new \RuntimeException(sprintf(
-                'Method "getConfigFiles" returns non-empty, but "getConfigFilesLocation" is not implemented in "%s" extension.',
-                $this->getAlias()
-            ));
+            throw new \RuntimeException(sprintf('Method "getConfigFiles" returns non-empty, but "getConfigFilesLocation" is not implemented in "%s" extension.', $this->getAlias()));
         }
 
         return '';

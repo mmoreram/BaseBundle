@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,14 +15,13 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
-use Mmoreram\BaseBundle\Kernel\BaseKernel;
-use Mmoreram\BaseBundle\Tests\Bundle\AnotherBundle;
-use Mmoreram\BaseBundle\Tests\Bundle\TestClass;
-use Mmoreram\BaseBundle\Tests\Bundle\TestEmptyBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+use Mmoreram\BaseBundle\Kernel\BaseKernel;
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
+use Mmoreram\BaseBundle\Tests\Bundle\TestClass;
+use Mmoreram\BaseBundle\Tests\Bundle\TestEmptyBundle;
 
 /**
  * Class BaseFunctionalTestTest.
@@ -44,13 +43,13 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
     protected static function getKernel(): KernelInterface
     {
         return new BaseKernel([
-            TestEmptyBundle::class
+            TestEmptyBundle::class,
         ], [
             'imports' => [
-                ['resource' => '@TestEmptyBundle/Resources/config/services.yml']
+                ['resource' => '@TestEmptyBundle/Resources/config/services.yml'],
             ],
             'parameters' => [
-                'kernel.secret' => '1234'
+                'kernel.secret' => '1234',
             ],
         ]);
     }
@@ -60,7 +59,7 @@ class BaseFunctionalTestTest extends BaseFunctionalTest
      */
     public function testDependencies()
     {
-        $bundle = static::$kernel->getBundle("AnotherBundle");
+        $bundle = static::$kernel->getBundle('AnotherBundle');
         $this->assertInstanceof(Bundle::class, $bundle);
     }
 
