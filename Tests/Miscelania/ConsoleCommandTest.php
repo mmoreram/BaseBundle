@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,11 +15,11 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
-use Mmoreram\BaseBundle\Kernel\BaseKernel;
-use Mmoreram\BaseBundle\Tests\Bundle\TestEmptyBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+use Mmoreram\BaseBundle\Kernel\BaseKernel;
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
+use Mmoreram\BaseBundle\Tests\Bundle\TestEmptyBundle;
 
 /**
  * Class ConsoleCommandTest.
@@ -34,27 +34,27 @@ class ConsoleCommandTest extends BaseFunctionalTest
     protected static function getKernel(): KernelInterface
     {
         return new BaseKernel([
-            TestEmptyBundle::class
+            TestEmptyBundle::class,
         ], [
             'imports' => [
-                ['resource' => '@TestEmptyBundle/Resources/config/services.yml']
+                ['resource' => '@TestEmptyBundle/Resources/config/services.yml'],
             ],
             'parameters' => [
-                'kernel.secret' => '1234'
+                'kernel.secret' => '1234',
             ],
             'framework' => [
-                'test' => true
-            ]
+                'test' => true,
+            ],
         ]);
     }
 
     /**
-     * Test sync command
+     * Test sync command.
      */
     public function testSyncConsoleCommand()
     {
         $output = $this->runCommand([
-            'test:command'
+            'test:command',
         ]);
 
         $this->assertContains('First step', $output);
@@ -62,12 +62,12 @@ class ConsoleCommandTest extends BaseFunctionalTest
     }
 
     /**
-     * Test async command
+     * Test async command.
      */
     public function testAsyncConsoleCommand()
     {
         $process = $this->runAsyncCommand([
-            'test:command'
+            'test:command',
         ]);
 
         $this->assertNotContains('First step', $process->getOutput());

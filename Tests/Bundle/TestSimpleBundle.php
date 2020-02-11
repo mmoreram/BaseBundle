@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,10 +15,10 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Bundle;
 
-use Mmoreram\BaseBundle\BaseBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+use Mmoreram\BaseBundle\BaseBundle;
 use Mmoreram\BaseBundle\SimpleBaseBundle;
 
 /**
@@ -49,7 +49,7 @@ class TestSimpleBundle extends SimpleBaseBundle
     {
         return [
             FrameworkBundle::class,
-            BaseBundle::class
+            BaseBundle::class,
         ];
     }
 }

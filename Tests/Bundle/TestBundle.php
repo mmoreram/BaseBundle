@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -41,7 +41,7 @@ final class TestBundle extends BaseBundle implements DependentBundleInterface
     {
         return [
             FrameworkBundle::class,
-            AnotherBundle::class
+            AnotherBundle::class,
         ];
     }
 

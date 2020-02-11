@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class Controller
+ * Class Controller.
  */
 class Controller
 {

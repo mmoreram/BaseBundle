@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,11 +15,11 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
-use Mmoreram\BaseBundle\Kernel\BaseKernel;
-use Mmoreram\BaseBundle\Tests\Bundle\Controller;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+use Mmoreram\BaseBundle\Kernel\BaseKernel;
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
+use Mmoreram\BaseBundle\Tests\Bundle\Controller;
 use Mmoreram\BaseBundle\Tests\Bundle\TestBundle;
 
 /**
@@ -38,14 +38,14 @@ class BaseKernelRoutingTest extends BaseFunctionalTest
             TestBundle::class,
         ], [
             'parameters' => [
-                'kernel.secret' => '1234'
+                'kernel.secret' => '1234',
             ],
             'framework' => [
-                'test' => true
-            ]
+                'test' => true,
+            ],
         ], [
             '@TestBundle/Resources/config/routing.yml',
-            ['/age', Controller::class . '::age', 'age'],
+            ['/age', Controller::class.'::age', 'age'],
         ]);
     }
 

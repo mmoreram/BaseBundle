@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the BaseBundle for Symfony2.
+ * This file is part of the BaseBundle for Symfony.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,13 +15,14 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Kernel;
 
-use Mmoreram\BaseBundle\Dependencies\BundleDependenciesResolver;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 use Symfony\Component\Yaml\Yaml;
+
+use Mmoreram\BaseBundle\Dependencies\BundleDependenciesResolver;
 
 /**
  * Trait BaseKernelTrait.
@@ -199,18 +200,19 @@ trait BaseKernelTrait
             json_encode($this->toArray())
         );
 
-        $possibleComposerPath = parent::getProjectDir() . '/../../..';
-        return ((file_exists($possibleComposerPath . '/composer.json'))
+        $possibleComposerPath = parent::getProjectDir().'/../../..';
+
+        return ((file_exists($possibleComposerPath.'/composer.json'))
             ? $possibleComposerPath
-            : parent::getProjectDir()) . '/var/test/' . $kernelHash;
+            : parent::getProjectDir()).'/var/test/'.$kernelHash;
     }
 
     /**
-     * Get kernel as array
+     * Get kernel as array.
      *
      * @return array
      */
-    public function toArray() : array
+    public function toArray(): array
     {
         $routes = $this->routes;
         $bundles = $this->bundlesToLoad;
@@ -232,12 +234,12 @@ trait BaseKernelTrait
     }
 
     /**
-     * Create kernel from array
+     * Create kernel from array.
      *
-     * @param array $data
-     * @param string   $environment
-     * @param bool     $debug
-     * @param string   $rootDirPrefix
+     * @param array  $data
+     * @param string $environment
+     * @param bool   $debug
+     * @param string $rootDirPrefix
      *
      * @return object
      */
@@ -246,8 +248,7 @@ trait BaseKernelTrait
         string $environment = 'test',
         bool $debug = false,
         string $rootDirPrefix = null
-    )
-    {
+    ) {
         $namespace = $data['namespace'];
 
         return new $namespace(
