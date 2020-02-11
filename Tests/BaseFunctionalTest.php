@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests;
 
+use Drift\HttpKernel\AsyncKernel;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -24,6 +25,7 @@ use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelBrowser;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Process\Process;
 
 /**
  * Class BaseFunctionalTest.
@@ -45,7 +47,7 @@ abstract class BaseFunctionalTest extends TestCase
     protected static $application;
 
     /**
-     * @var KernelInterface
+     * @var KernelInterface|AsyncKernel
      *
      * kernel being used
      */
@@ -130,6 +132,39 @@ abstract class BaseFunctionalTest extends TestCase
         fclose($fp);
 
         return $output;
+    }
+
+    /**
+     * Runs a command in async mode and return a Process
+     *
+     * @param array $command
+     *
+     * @return Process
+     */
+    protected static function runAsyncCommand(array $command): Process
+    {
+        if (!static::$application instanceof Application) {
+            throw new \Exception('You should install the symfony/console component to run commands');
+        }
+
+        $kernel = self::$kernel;
+        $jsonSerializedKernel = json_encode($kernel->toArray());
+        $jsonSerializedKernelHash = '/kernel' . rand(1, 99999999999999) . '.kernel.json';
+        $jsonSerializedKernelPath = $kernel->getProjectDir() . $jsonSerializedKernelHash;
+
+        file_put_contents(
+            $jsonSerializedKernelPath,
+            $jsonSerializedKernel
+        );
+
+        $devConsolePath = realpath(__DIR__ . '/../bin/dev-console');
+        array_unshift($command, 'php', $devConsolePath);
+        array_push($command, '--kernel-hash-path=' . $jsonSerializedKernelPath);
+
+        $process = new Process($command);
+        $process->start();
+
+        return $process;
     }
 
     /**

@@ -1,0 +1,52 @@
+#!/usr/bin/env php
+
+<?php
+
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Mmoreram\BaseBundle\Kernel\BaseKernel;
+use Mmoreram\BaseBundle\Kernel\DriftBaseKernel as DriftKernel;
+use React\EventLoop\Factory as EventLoopFactory;
+
+set_time_limit(0);
+require dirname(__DIR__).'/vendor/autoload.php';
+
+/**
+ * @param array $argv
+ *
+ * @return ArgvInput
+ */
+function createInput(array $argv) : ArgvInput
+{
+    $input = new ArgvInput($argv);
+    if (null !== $env = $input->getParameterOption(['--env', '-e'], null, true)) {
+        putenv('APP_ENV='.$_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $env);
+    }
+
+    if ($input->hasParameterOption('--no-debug', true)) {
+        putenv('APP_DEBUG='.$_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = '0');
+    }
+
+    return $input;
+}
+
+$argv = $_SERVER['argv'];
+$input = createInput($argv);
+$kernelFile = $input->getParameterOption('--kernel-hash-path');
+$argv = array_filter($argv, function($element) {
+    return strpos($element, '--kernel-hash-path=') === false;
+});
+$input = createInput($argv);
+$data = json_decode(file_get_contents($kernelFile), true);
+$kernel = BaseKernel::createFromArray($data, $_SERVER['APP_ENV'] ?? 'test', (bool)($_SERVER['APP_DEBUG'] ?? false));
+$kernel->boot();
+
+if ($kernel instanceof DriftKernel) {
+    $kernel
+        ->getContainer()
+        ->set('reactphp.event_loop', EventLoopFactory::create());
+}
+
+$application = new Application($kernel);
+$application->run($input);
+

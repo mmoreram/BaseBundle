@@ -5,3 +5,8 @@ services:
     public: true
     arguments:
       - "value1"
+
+  test.command:
+    class: Mmoreram\BaseBundle\Tests\Bundle\ConsoleCommand
+    public: true
+    tags: ["console.command"]
