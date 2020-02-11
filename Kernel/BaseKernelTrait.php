@@ -194,28 +194,69 @@ trait BaseKernelTrait
             return $this->rootDirPrefix;
         }
 
-        $bundles = array_map(function ($bundle) {
-            return is_object($bundle)
-                ? get_class($bundle)
-                : $bundle;
-        }, $this->bundlesToLoad);
-        $config = $this->configuration;
-        $routes = $this->routes;
-        sort($bundles);
-        sort($routes);
-        $this->sortArray($config);
         $kernelHash = hash(
             'md5',
-            json_encode([
-                $bundles,
-                $config,
-                $routes,
-            ])
+            json_encode($this->toArray())
         );
 
         $possibleComposerPath = parent::getProjectDir() . '/../../..';
         return ((file_exists($possibleComposerPath . '/composer.json'))
             ? $possibleComposerPath
             : parent::getProjectDir()) . '/var/test/' . $kernelHash;
+    }
+
+    /**
+     * Get kernel as array
+     *
+     * @return array
+     */
+    public function toArray() : array
+    {
+        $routes = $this->routes;
+        $bundles = $this->bundlesToLoad;
+        sort($bundles);
+        sort($routes);
+        $config = $this->configuration;
+        $this->sortArray($config);
+
+        return [
+            'namespace' => get_class($this),
+            'bundles' => array_map(function ($bundle) {
+                return is_object($bundle)
+                    ? get_class($bundle)
+                    : $bundle;
+            }, $bundles),
+            'config' => $config,
+            'routes' => $routes,
+        ];
+    }
+
+    /**
+     * Create kernel from array
+     *
+     * @param array $data
+     * @param string   $environment
+     * @param bool     $debug
+     * @param string   $rootDirPrefix
+     *
+     * @return object
+     */
+    public static function createFromArray(
+        array $data,
+        string $environment = 'test',
+        bool $debug = false,
+        string $rootDirPrefix = null
+    )
+    {
+        $namespace = $data['namespace'];
+
+        return new $namespace(
+            $data['bundles'],
+            $data['config'],
+            $data['routes'],
+            $environment,
+            $debug,
+            $rootDirPrefix
+        );
     }
 }
