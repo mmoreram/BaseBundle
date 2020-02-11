@@ -9,7 +9,12 @@ use Mmoreram\BaseBundle\Kernel\DriftBaseKernel as DriftKernel;
 use React\EventLoop\Factory as EventLoopFactory;
 
 set_time_limit(0);
-require dirname(__DIR__).'/vendor/autoload.php';
+$autoloadFile = is_file(dirname(__DIR__).'/vendor/autoload.php')
+    ? dirname(__DIR__).'/vendor/autoload.php'
+    : dirname(__DIR__).'/../../autoload.php';
+
+$autoloadFile = realpath($autoloadFile);
+require($autoloadFile);
 
 /**
  * @param array $argv
