@@ -21,6 +21,7 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelBrowser;
@@ -133,12 +134,15 @@ abstract class BaseFunctionalTest extends TestCase
     /**
      * Runs a command in async mode and return a Process.
      *
-     * @param array $command
+     * @param array          $command
+     * @param InputInterface $input
      *
      * @return Process
      */
-    protected static function runAsyncCommand(array $command): Process
-    {
+    protected static function runAsyncCommand(
+        array $command,
+        InputInterface $input = null
+    ): Process {
         if (!static::$application instanceof Application) {
             throw new \Exception('You should install the symfony/console component to run commands');
         }
@@ -158,6 +162,11 @@ abstract class BaseFunctionalTest extends TestCase
         array_push($command, '--kernel-hash-path='.$jsonSerializedKernelPath);
 
         $process = new Process($command);
+
+        if (!is_null($input)) {
+            $process->setInput($input);
+        }
+
         $process->start();
 
         return $process;
