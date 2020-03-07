@@ -21,11 +21,11 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelBrowser;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Process;
 
 /**
@@ -135,13 +135,13 @@ abstract class BaseFunctionalTest extends TestCase
      * Runs a command in async mode and return a Process.
      *
      * @param array          $command
-     * @param InputInterface $input
+     * @param mixed $input
      *
      * @return Process
      */
     protected static function runAsyncCommand(
         array $command,
-        InputInterface $input = null
+        $input = null
     ): Process {
         if (!static::$application instanceof Application) {
             throw new \Exception('You should install the symfony/console component to run commands');
