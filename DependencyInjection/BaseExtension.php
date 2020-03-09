@@ -82,6 +82,10 @@ abstract class BaseExtension implements ExtensionInterface, ConfigurationExtensi
      */
     public function prepend(ContainerBuilder $container)
     {
+        if (!$this->doPrepend()) {
+            return;
+        }
+
         $config = [];
         $configuration = $this->getConfigurationInstance();
         if ($configuration instanceof ConfigurationInterface) {
@@ -270,5 +274,15 @@ abstract class BaseExtension implements ExtensionInterface, ConfigurationExtensi
 
             $loader->load($configFile.'.yml');
         }
+    }
+
+    /**
+     * Do prepend
+     *
+     * @return bool
+     */
+    protected function doPrepend() : bool
+    {
+        return false;
     }
 }
