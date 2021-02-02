@@ -15,11 +15,10 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
-use Symfony\Component\HttpKernel\KernelInterface;
-
 use Mmoreram\BaseBundle\Kernel\BaseKernel;
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use Mmoreram\BaseBundle\Tests\Bundle\TestEmptyBundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class ConsoleCommandTest.
@@ -57,8 +56,8 @@ class ConsoleCommandTest extends BaseFunctionalTest
             'test:command',
         ]);
 
-        $this->assertContains('First step', $output);
-        $this->assertContains('Second step', $output);
+        $this->assertStringContainsString('First step', $output);
+        $this->assertStringContainsString('Second step', $output);
     }
 
     /**
@@ -70,18 +69,18 @@ class ConsoleCommandTest extends BaseFunctionalTest
             'test:command',
         ]);
 
-        $this->assertNotContains('First step', $process->getOutput());
-        $this->assertNotContains('Second step', $process->getOutput());
+        $this->assertStringNotContainsString('First step', $process->getOutput());
+        $this->assertStringNotContainsString('Second step', $process->getOutput());
 
         usleep(200000);
 
-        $this->assertContains('First step', $process->getOutput());
-        $this->assertNotContains('Second step', $process->getOutput());
+        $this->assertStringContainsString('First step', $process->getOutput());
+        $this->assertStringNotContainsString('Second step', $process->getOutput());
 
         usleep(200000);
 
-        $this->assertContains('First step', $process->getOutput());
-        $this->assertContains('Second step', $process->getOutput());
+        $this->assertStringContainsString('First step', $process->getOutput());
+        $this->assertStringContainsString('Second step', $process->getOutput());
         $process->stop();
     }
 }

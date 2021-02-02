@@ -15,13 +15,12 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Bundle;
 
-use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
-
 use Mmoreram\BaseBundle\BaseBundle;
 use Mmoreram\BaseBundle\Tests\Bundle\DependencyInjection\TestExtension;
 use Mmoreram\SymfonyBundleDependencies\DependentBundleInterface;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class TestBundle.
