@@ -15,9 +15,8 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle;
 
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-
 use Mmoreram\BaseBundle\DependencyInjection\SimpleBaseExtension;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 /**
  * Class AbstractBundle.

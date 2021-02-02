@@ -277,11 +277,11 @@ abstract class BaseExtension implements ExtensionInterface, ConfigurationExtensi
     }
 
     /**
-     * Do prepend
+     * Do prepend.
      *
      * @return bool
      */
-    protected function doPrepend() : bool
+    protected function doPrepend(): bool
     {
         return false;
     }

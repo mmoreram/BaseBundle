@@ -15,13 +15,12 @@ declare(strict_types=1);
 
 namespace Mmoreram\BaseBundle\Tests\Miscelania;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\HttpKernel\KernelInterface;
-
 use Mmoreram\BaseBundle\Kernel\BaseKernel;
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use Mmoreram\BaseBundle\Tests\Bundle\TestClass;
 use Mmoreram\BaseBundle\Tests\Bundle\TestEmptyBundle;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class BaseFunctionalTestTest.

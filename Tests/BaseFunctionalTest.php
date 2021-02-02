@@ -25,7 +25,6 @@ use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelBrowser;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Process;
 
 /**
@@ -67,7 +66,7 @@ abstract class BaseFunctionalTest extends TestCase
      *
      * @throws RuntimeException unable to start the application
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         try {
             static::$kernel = static::getKernel();
@@ -134,7 +133,7 @@ abstract class BaseFunctionalTest extends TestCase
     /**
      * Runs a command in async mode and return a Process.
      *
-     * @param array          $command
+     * @param array $command
      * @param mixed $input
      *
      * @return Process
