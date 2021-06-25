@@ -1,9 +1,9 @@
 version: 2
 jobs:
 
-  test-php74:
+  test-php80:
     docker:
-      - image: circleci/php:7.4-cli
+      - image: circleci/php:8.0-cli
 
     working_directory: ~/project
     steps:
@@ -17,7 +17,7 @@ jobs:
       - run:
           name: Run tests / Symfony 5^0
           command: |
-            composer update -n --prefer-dist --prefer-lowest --no-suggest
+            composer update -n --prefer-dist --no-suggest
             php vendor/bin/phpunit --testsuite=with-bundle-dependencies
 
   test-php80-no-dependencies:
@@ -38,5 +38,5 @@ workflows:
   version: 2
   test:
     jobs:
-      - test-php74
+      - test-php80
       - test-php80-no-dependencies
