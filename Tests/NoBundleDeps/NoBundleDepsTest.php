@@ -51,11 +51,7 @@ class NoBundleDepsTest extends BaseFunctionalTest
      */
     public function testDependencies()
     {
+        $this->expectNotToPerformAssertions();
         static::$kernel->getBundle('AnotherBundle');
-
-        /*
-         * No exception is expected
-         */
-        $this->assertTrue(true);
     }
 }

@@ -20,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -33,41 +33,33 @@ trait BaseKernelTrait
 
     /**
      * @var string[]
-     *
-     * Bundle array
      */
-    private $bundlesToLoad;
+    private array $bundlesToLoad;
 
     /**
      * @var array[]
-     *
-     * Configuration
      */
-    private $configuration;
+    private array $configuration;
 
     /**
      * @var array[]
-     *
-     * Routes
      */
-    private $routes;
+    private array $routes;
 
     /**
-     * @var string
-     *
-     * Root dir prefix
+     * @var string|null
      */
-    private $rootDirPrefix;
+    private ?string $rootDirPrefix;
 
     /**
      * BaseKernel constructor.
      *
-     * @param string[] $bundlesToLoad
-     * @param array[]  $configuration
-     * @param array[]  $routes
-     * @param string   $environment
-     * @param bool     $debug
-     * @param string   $rootDirPrefix
+     * @param string[]    $bundlesToLoad
+     * @param array[]     $configuration
+     * @param array[]     $routes
+     * @param string      $environment
+     * @param bool        $debug
+     * @param string|null $rootDirPrefix
      */
     public function __construct(
         array $bundlesToLoad,
@@ -142,17 +134,16 @@ trait BaseKernelTrait
      *     $routes->import('config/routing.yml');
      *     $routes->add('/admin', 'AppBundle:Admin:dashboard', 'admin_dashboard');
      *
-     * @param RouteCollectionBuilder $routes
+     * @param RoutingConfigurator $routes
      */
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    protected function configureRoutes(RoutingConfigurator $routes)
     {
         foreach ($this->routes as $route) {
             is_array($route)
                 ? $routes->add(
-                    $route[0],
-                    $route[1],
-                    $route[2]
-                )
+                    $route[2],
+                    $route[0]
+                )->controller($route[1])
                 : $routes->import($route);
         }
     }
