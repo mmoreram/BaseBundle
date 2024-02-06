@@ -1,42 +1,63 @@
+# PHP CircleCI 2.0 configuration file
+# See: https://circleci.com/docs/language-php/
 version: 2
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
-
-  test-php80:
+  build:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      - image: circleci/php:8.0-cli
+      # Specify the version you desire here
+      - image: circleci/php:7.1-node-browsers
 
-    working_directory: ~/project
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/circleci-images/
+      # Using the RAM variation mitigates I/O contention
+      # for database intensive operations.
+      # - image: circleci/mysql:5.7-ram
+      #
+      # - image: redis:2.8.19
+
+    # Add steps to the job
+    # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
       - checkout
 
-      - run:
-          name: Install PHPUnit
-          command: |
-            composer require mmoreram/symfony-bundle-dependencies:^2.2 --no-update
+      - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
+      - run: sudo docker-php-ext-install zip
 
-      - run:
-          name: Run tests / Symfony 5^0
-          command: |
-            composer update -n --prefer-dist --no-suggest
-            php vendor/bin/phpunit --testsuite=with-bundle-dependencies
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v1-dependencies-{{ checksum "composer.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
-  test-php80-no-dependencies:
-    docker:
-      - image: circleci/php:8.0-cli
+      - run: composer install -n --prefer-dist
 
-    working_directory: ~/project
-    steps:
-      - checkout
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+      - restore_cache:
+          keys:
+            - node-v1-{{ checksum "package.json" }}
+            - node-v1-
+      - run: yarn install
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
 
-      - run:
-          name: Run tests / Symfony 5^0
-          command: |
-            composer update -n --prefer-dist --no-suggest
-            php vendor/bin/phpunit --testsuite=no-bundle-dependencies
+      # prepare the database
+      - run: touch storage/testing.sqlite
+      - run: php artisan migrate --env=testing --database=sqlite_testing --force
 
-workflows:
-  version: 2
-  test:
-    jobs:
-      - test-php80
-      - test-php80-no-dependencies
+      # run tests with phpunit or codecept
+      #- run: ./vendor/bin/phpunit
+      - run: ./vendor/bin/codecept build
+      - run: ./vendor/bin/codecept run
