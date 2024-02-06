@@ -89,7 +89,7 @@ trait BaseKernelTrait
      *
      * @return BundleInterface[] An array of bundle instances
      */
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         return $this->getBundleInstances(
             $this,
@@ -179,7 +179,7 @@ trait BaseKernelTrait
      *
      * @return string The project root dir
      */
-    public function getProjectDir()
+    public function getProjectDir(): string
     {
         if (!is_null($this->rootDirPrefix)) {
             return $this->rootDirPrefix;

@@ -4,7 +4,7 @@
 
 -----
 
-> The minimum requirements of this bundle is **PHP 7.2** and **Symfony 4.3** 
+> The minimum requirements of this bundle is **PHP 8.0** and **Symfony 5.1** 
 > because the bundle is using features on both versions. If you're not using
 > them yet, I encourage you to do it.
 

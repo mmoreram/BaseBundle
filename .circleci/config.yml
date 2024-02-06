@@ -1,7 +1,40 @@
 version: 2
 jobs:
 
-  test-php80:
+  test-php80-symfony6:
+    docker:
+      - image: circleci/php:8.0-cli
+
+    working_directory: ~/project
+    steps:
+      - checkout
+
+      - run:
+          name: Install PHPUnit
+          command: |
+            composer require mmoreram/symfony-bundle-dependencies:^2.2 --no-update
+
+      - run:
+          name: Run tests / Symfony 6^0
+          command: |
+            composer update -n --prefer-dist --no-suggest
+            php vendor/bin/phpunit --testsuite=with-bundle-dependencies
+
+  test-php80-symfony6-no-dependencies:
+    docker:
+      - image: circleci/php:8.0-cli
+
+    working_directory: ~/project
+    steps:
+      - checkout
+
+      - run:
+          name: Run tests / Symfony 6^0
+          command: |
+            composer update -n --prefer-dist --no-suggest
+            php vendor/bin/phpunit --testsuite=no-bundle-dependencies
+
+  test-php80-symfony5:
     docker:
       - image: circleci/php:8.0-cli
 
@@ -18,25 +51,29 @@ jobs:
           name: Run tests / Symfony 5^0
           command: |
             composer update -n --prefer-dist --no-suggest
+            composer require "symfony/framework-bundle:^5.1" "symfony/yaml:^5.1" --with-all-dependencies
             php vendor/bin/phpunit --testsuite=with-bundle-dependencies
 
-  test-php80-no-dependencies:
-    docker:
-      - image: circleci/php:8.0-cli
+  test-php80-symfony5-no-dependencies:
+      docker:
+        - image: circleci/php:8.0-cli
 
-    working_directory: ~/project
-    steps:
-      - checkout
+      working_directory: ~/project
+      steps:
+        - checkout
 
-      - run:
-          name: Run tests / Symfony 5^0
-          command: |
-            composer update -n --prefer-dist --no-suggest
-            php vendor/bin/phpunit --testsuite=no-bundle-dependencies
+        - run:
+            name: Run tests / Symfony 5^0
+            command: |
+              composer update -n --prefer-dist --no-suggest
+              composer require "symfony/framework-bundle:^5.1" "symfony/yaml:^5.1" --with-all-dependencies
+              php vendor/bin/phpunit --testsuite=no-bundle-dependencies
 
 workflows:
   version: 2
   test:
     jobs:
-      - test-php80
-      - test-php80-no-dependencies
+      - test-php80-symfony6
+      - test-php80-symfony6-no-dependencies
+      - test-php80-symfony5
+      - test-php80-symfony5-no-dependencies
